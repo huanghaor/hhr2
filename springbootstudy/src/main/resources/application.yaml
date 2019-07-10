@@ -1,0 +1,10 @@
+#server:
+ # port: 8080
+
+person:
+  name: 小明
+  age:  18
+  boss: false
+  birth: 2019/09/12
+  maps: {key1: value1, key2: value2}
+  lists: {list1,list2,list3}
