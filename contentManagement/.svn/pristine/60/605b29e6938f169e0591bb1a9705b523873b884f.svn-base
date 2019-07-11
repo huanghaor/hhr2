@@ -1,0 +1,19 @@
+package com.hafiz.www.mapper;
+
+import com.hafiz.www.po.TechnologyModule;
+
+public interface TechnologyModuleMapper {
+    int deleteByPrimaryKey(Integer m_id);
+
+    int insert(TechnologyModule record);
+
+    int insertSelective(TechnologyModule record);
+
+    TechnologyModule selectByPrimaryKey(Integer m_id);
+
+    int updateByPrimaryKeySelective(TechnologyModule record);
+
+    int updateByPrimaryKeyWithBLOBs(TechnologyModule record);
+
+    int updateByPrimaryKey(TechnologyModule record);
+}

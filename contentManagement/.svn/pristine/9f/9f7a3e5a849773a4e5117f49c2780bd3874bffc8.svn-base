@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>注册</title>
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/angular.css" rel="stylesheet">
+    <link href="../../css/toastr.css">
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="../../js/jquery/html5shiv.min.js"></script>
+    <script src="../../js/jquery/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/angular-js/angular.js"></script>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="../../js/jquery/jquery1.9.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../js/jquery/toastr.min.js"></script>
+    <script src="../../js/functionJS/register.js"></script>
+    <style>
+        .w-100{
+            width: 100%!important;
+        }
+        .form-group ,.btn-primary{
+            width:70%!important;
+        }
+        .content{
+            margin-left: 20%!important;
+        }
+        .mt-5{
+            margin-top: 7%;
+        }
+        .inputError{
+            color: red;
+        }
+        .wrapper{
+            width: 200px;
+            margin: 20px auto;
+        }
+        .wram{
+            position: relative;
+        }
+        .moveCheck{
+            position: absolute;
+            top:35px;
+            left: 180px;
+            color: green;
+        }
+        #yzm{
+            height: 46px;
+        }
+    </style>
+</head>
+<body class="home-template" ng-app="Register">
+<div class="container-fluid">
+    <div class="row">
+        <div  class="col-12 row m-0 p-0" style="margin-top: 7%;">
+            <div  class="col-lg-5 row m-0 min-h-100 bg-light d-none d-lg-flex pt-4 px-sm-5 clearfix" style="margin-left: 5%;">
+                <div class="row px-sm-5">
+                    <div  class="col-md-12 mx-0">
+                        <img alt="" class="img-fluid mx-auto d-block" src="../../img/login.svg">
+                    </div>
+                </div>
+            </div>
+            <div  class="col-lg-6 col-12 px-sm-5"  ng-controller="register">
+                <div  class="col-12 px-sm-5 justify-content-center d-flex align-items-center mh-80 content py-4">
+                    <cc-login _nghost-c4="">
+                        <cc-information-header  class="mb-5 d-block">
+                            <h2  class="_300"  style="margin-left: 15%!important;"><b>注&emsp;&emsp; 册</b></h2>
+                        </cc-information-header>
+                        <div  class="mt-5" >
+                            <cc-login-password >
+                                <form  class="mt-5" name="signUpForm" ng-submit="submitForm()">
+                                    <div  class="form-group input-group-lg">
+                                        <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_name.$valid}">
+                                            <input type="text"
+                                                   name="u_name"
+                                                   placeholder="账号"
+                                                   class="form-control"
+                                                   ng-model="userdata.u_name"
+                                                   required>
+                                            <p class="fa fa-check moveCheck" ng-if="signUpForm.u_name.$valid"></p>
+                                            <p class="inputError" ng-if="signUpForm.u_name.$error.required && signUpForm.u_name.$touched">账号不可为空</p>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group input-group-lg">
+                                        <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_password.$valid}">
+                                            <input type="password"
+                                                   name="u_password"
+                                                   placeholder="密码"
+                                                   class="form-control"
+                                                   ng-model="userdata.u_password"
+                                                   ng-minlength="6"
+                                                   placeholder="请输入6位以上的密码"
+                                                   required>
+                                            <p class="fa fa-check moveCheck" ng-if="signUpForm.u_password.$valid"></p>
+                                            <p class="inputError" ng-if="signUpForm.u_password.$error.minlength && signUpForm.u_password.$touched">请输入至少6位的密码</p>
+                                            <p class="inputError" ng-if="signUpForm.u_password.$error.required && signUpForm.u_password.$touched">密码不可为空</p>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group input-group-lg">
+                                        <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_truename.$valid}">
+                                            <input type="text"
+                                                   name="u_truename"
+                                                   placeholder="系统昵称"
+                                                   class="form-control"
+                                                   ng-model="userdata.u_truename"
+                                                   required>
+                                            <p class="fa fa-check moveCheck" ng-if="signUpForm.u_truename.$valid"></p>
+                                            <p class="inputError" ng-if="signUpForm.u_truename.$error.required && signUpForm.u_truename.$touched">系统昵称不可为空</p>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group input-group-lg">
+                                        <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_phone.$valid}">
+                                            <input type="text"
+                                                   name="u_phone"
+                                                   placeholder="联系电话"
+                                                   class="form-control"
+                                                   ng-model="userdata.u_phone"
+                                                   ng-pattern="/^1[3|5|8|7|9][0-9]\d{8}$/"
+                                                   required>
+                                            <p style="color:red" ng-show="signUpForm.u_phone.$dirty && signUpForm.u_phone.$invalid">联系电话格式不正确！</p>
+                                            <p class="inputError" ng-if="signUpForm.u_phone.$error.required && signUpForm.u_phone.$touched">联系电话不可为空</p>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group input-group-lg">
+                                        <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_email.$valid}">
+                                            <input type="email"
+                                                   name="u_email"
+                                                   placeholder="电子邮箱"
+                                                   class="form-control"
+                                                   ng-model="userdata.u_email"
+                                                   required>
+                                            <p class="fa fa-check moveCheck" ng-if="signUpForm.u_email.$valid"></p>
+                                            <p class="inputError" ng-if="signUpForm.u_phone.$error.required && signUpForm.u_phone.$touched">邮箱不可为空</p>
+                                        </div>
+                                    </div>
+
+                                    <div  class="form-group input-group-lg">
+                                        <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.password2.$valid}">
+                                            <input type="password"
+                                                   name="password2"
+                                                   class="form-control"
+                                                   ng-model="userdata.password2"
+                                                   compare="userdata.u_password"
+                                                   placeholder="确认密码"
+                                                   required>
+                                            <p class="fa fa-check moveCheck" ng-if="signUpForm.password2.$valid"></p>
+                                            <p class="inputError" ng-if="signUpForm.password2.$error.compare && signUpForm.password2.$touched">请输入相同的密码</p>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group input-group-lg" ng-class="{'has-success':signUpForm.code.$valid}">
+                                        <div class="row">
+                                            <div class="col-lg-4 ">
+                                                <input class="form-control" name="code" id="yzm" type="text" placeholder="邮箱验证码"
+                                                       ng-model="userdata.code"
+                                                       required>
+                                                <p class="inputError" ng-if="signUpForm.code.$error.required && signUpForm.code.$touched">邮箱验证码不可为空</p>
+                                            </div>
+                                            <div class="col-lg-6 ">
+                                                <button    ng-disabled="timer" class="btn btn-lg w-100 btn-primary radius" id="send" ng-click="sendEmail()">
+                                                    <span ng-if="showTimer">{{timerCount}}</span>{{text}}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group input-group-lg">
+                                    <button  type="submit" ng-disabled="signUpForm.$invalid" class="btn btn-lg w-100 btn-primary  _300 mt-4 radius d-block text-uppercase" id="login" >
+                                        <span  translate="">立即注册</span>
+                                    </button>
+                                    </div>
+                                </form>
+                            </cc-login-password>
+                        </div>
+                    </cc-login>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

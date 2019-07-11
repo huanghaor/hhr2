@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>博客留言墙</title>
+    <!-- Bootstrap -->
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/angular.css" rel="stylesheet">
+    <link href="../../../css/index/index.css" rel="stylesheet">
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="../../../js/jquery/html5shiv.min.js"></script>
+    <script src="../../../js/jquery/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/angular-js/angular.js"></script>
+    <script src="../../../js/angular-js/angular-route.min.js"></script>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="../../../js/jquery/jquery1.9.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="../../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../../js/functionJS/messageWal/messageWal.js"></script>
+    <style>
+        .title{
+            padding: 0px;
+        }
+        .container{
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+        .btnlogin{
+            position: relative;
+           float:right;
+        }
+
+        .btn-default{
+            background-color: #c7e0f3;
+            border:1px solid #c7e0f3;
+        }
+        .text{
+            color: #3c97e6;
+        }
+        .paginations{
+            padding-left: 40%;
+        }
+        hr{
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body class="home-template">
+<!--详细内容-->
+<section class="content-wrap" ng-app="messageWal">
+    <div class="container">
+        <div class="row title">
+            <span> 千里之行，始于足下。留下最美的箴言，与人分享你此刻的心情</span>
+        </div>
+        <div class="panel panel-default"  ng-controller="messageData">
+            <div class="panel-heading">
+                <span>留言墙</span>
+                <a href="/message/myMessage"><button type="button" class="btn btn-default btnlogin"><span class="text">我的留言墙</span></button></a>
+                <a href="/message/publish"><button type="button" class="btn btn-default btnlogin"><span class="text" >发表</span></button></a>
+
+            </div>
+            <div class="panel-body" style="min-height: 480px;">
+                <div class="row">
+                    <div class="media">
+                        <div class="media-left media-top">
+                            <img src="../../../img/pic01.jpg" class="media-object" style="width:60px;height:60px;">
+                        </div>
+                        <div class="media-body">
+                            <p>这是一些示例文本...</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="glyphicon glyphicon-thumbs-up" style="font-size: 18px;cursor: pointer" ng-click="GiveThumbsUp()"></span>
+                    </div>
+                    <hr style="border: 1px solid #d1d4d6"/>
+                </div>
+                <div class="row paginations">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination  pagination-lg">
+                            <li>
+                                <a href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li>
+                                <a href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

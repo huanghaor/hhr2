@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>博客留言墙</title>
+    <!-- Bootstrap -->
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/angular.css" rel="stylesheet">
+    <link href="../../../css/pagination.css" rel="stylesheet">
+    <link href="../../../css/index/index.css" rel="stylesheet">
+    <link href="../../../css/demo.css" rel="stylesheet">
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="../../../js/jquery/html5shiv.min.js"></script>
+    <script src="../../../js/jquery/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/angular-js/angular.js"></script>
+    <script src="../../../js/angular-js/angular-route.min.js"></script>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="../../../js/jquery/jquery1.9.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="../../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../../js/angular-js/tm.pagination.min.js"></script>
+    <script src="../../../js/functionJS/messageWal/messageWal.js"></script>
+    <style>
+        .title{
+            padding: 0px;
+        }
+        .container{
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+        .btnlogin{
+            position: relative;
+           float:right;
+        }
+
+        .btn-default{
+            background-color: #c7e0f3;
+            border:1px solid #c7e0f3;
+        }
+        .text{
+            color: #3c97e6;
+        }
+        .paginations{
+            margin-left: 38%;
+        }
+        hr{
+            margin-top: 5px;
+        }
+        .row{
+            margin-right: 0px;
+        }
+        a{
+            text-decoration:none;
+        }
+    </style>
+</head>
+<body class="home-template"  ng-app="messageWal">
+<header class="main-header" style="background-image: url(../../../img/banner.jpg)"></header>
+<nav class="main-navigation">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="navbar-header">
+                    <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                    <span class="sr-only">Toggle navigation</span>
+                    <i class="fa fa-bars"></i>
+                    </span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-menu" style="text-align: center">
+                <ul class="menu" ng-controller="NavCtrl">
+                    <div class="col-lg-8">
+                        <li  class="active" role="presentation" ng-repeat="nav in navLists">
+                            <a href="{{nav.n_url}}"  style="font-size: 16px;cursor: pointer" target="">{{nav.n_name}}</a>
+                        </li>
+                    </div>
+                    <div class="col-lg-2" style="text-align: right;margin-top: 10px;" class="dropdown" ng-init="judgeIsLogin()">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"style="margin-right: 5%;">
+                            <img src="{{u_userhead}}" alt="..." class="img-circle" style="width: 40px;height: 40px;">
+                            <span>{{u_truename}},欢迎您！</span>
+                        </a>
+                        <div class="dropdown-menu pull-center" style="background: rgb(255, 255, 255);width: 120px;overflow: hidden;margin-left: 40%;text-align: center;font-size: 15px;">
+                            <span  data-toggle="modal" data-target="#myModal" style="cursor: pointer">登&emsp;&emsp;陆</span><br/>
+                            <a href="/index/register"  target="_Blank" style="cursor: pointer">注&emsp;&emsp;册</a><br/>
+                            <a href="/index/personalCenter"><span style="cursor: pointer">个人中心</span></a><br/>
+                            <span style="cursor: pointer" ng-click="Sign_out()">退出登陆</span>
+                        </div>
+                    </div>
+                    <!--<button type="button" class="btn btn-default" id="btnlogin" data-toggle="modal" data-target="#myModal">登陆</button>&lt;!&ndash;</a>&ndash;&gt;
+                    <a href="/index/register"  target="_Blank"><button type="button" class="btn btn-default" >注册</button></a>-->
+                </ul>
+            </div>
+            <!--登陆弹出框-->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="text-align: center">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title" id="myModalLabel">登&emsp;&emsp;陆</h3>
+                        </div>
+                        <div class="modal-body" ng-controller="login">
+                            <div  class="col-lg-8 col-12 px-sm-5 model">
+                                <div  class="col-12 px-sm-5 justify-content-center d-flex align-items-center mh-80 content py-4">
+                                    <cc-login _nghost-c4="">
+                                        <div  class="mt-5">
+                                            <cc-login-password >
+                                                <form  class="mt-5" id="modelForm" name="signUpForm" ng-submit="LoginsubmitForm()">
+                                                    <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_name.$valid}">
+                                                        <span style="font-size: 18px;">Username</span>
+                                                        <input class="form-control" name="u_uname" id="email" type="text" placeholder="账号"
+                                                               ng-model="userdata.u_name" required>
+                                                        <p class="inputError" ng-if="signUpForm.u_name.$error.required && signUpForm.u_name.$touched">请输入账号</p>
+                                                    </div>
+                                                    <div  class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_password.$valid}">
+                                                        <span style="font-size: 18px;">Password</span>
+                                                        <input class="form-control" name="u_password" id="password" type="password" placeholder="密码"
+                                                               ng-model="userdata.u_password" required>
+                                                        <p class="inputError" ng-if="signUpForm.u_password.$error.required && signUpForm.u_password.$touched">请输入密码</p>
+                                                    </div>
+                                                    <div  class="form-group input-group-lg">
+                                                        <div class="row">
+                                                            <div class="col-lg-5 wram" ng-class="{'has-success':signUpForm.code.$valid}">
+                                                                <input class="form-control" name="code" id="yzm" type="text" placeholder="验证码"
+                                                                       ng-model="userdata.code" required>
+                                                                <p class="inputError" ng-if="signUpForm.code.$error.required && signUpForm.code.$touched">请输入验证码</p>
+                                                            </div>
+                                                            <div class="col-lg-6 "><!--src="/user/getImage"-->
+                                                                <img id="imageCode" src="/user/getImage"
+                                                                     title="看不清，点击换一张" style="cursor: pointer;" ng-click="refreshCheckCode()" width="100%" height="45px"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button  ng-disabled="signUpForm.$invalid" type="submit" class="btn btn-lg btn-block w-100 btn-primary  _300 mt-4 radius d-block text-uppercase">
+                                                        <span  translate="">立即登陆</span>
+                                                    </button>
+                                                </form>
+                                            </cc-login-password>
+                                        </div>
+                                        <div class="mt-3 pb-3 px-0 d-flex flex-wrap justify-content-between">
+                                            <div class="row mt3">
+                                                <div class="col-lg-12">
+                                                    <a class="text-muted _300 text-sm px-0 mr-3"  translate="" href="#">Forgot password?</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </cc-login>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
+</nav>
+<!--详细内容-->
+<section class="content-wrap"  id="body_">
+    <div class="container" ng-controller="messageData">
+        <div class="row title">
+            <span> 千里之行，始于足下。留下最美的箴言，与人分享你此刻的心情</span>
+            <span style="margin-left: 80%;cursor: pointer;color: #e67e22" ng-click="searchDat('1')">根据点赞数排列</span>&emsp;&emsp;
+            <span style="cursor: pointer;color: #e67e22;" ng-click="searchDat('2')">根据时间排列</span>
+        </div>
+        <div class="panel panel-default"  id="ssss">
+            <div class="panel-heading">
+                <span>留言墙</span>
+
+                <a href="/message/myMessage"><button type="button" class="btn btn-default btnlogin"><span class="text">我的留言墙</span></button></a>
+                <a href="/message/publish"><button type="button" class="btn btn-default btnlogin"><span class="text" >发表</span></button></a>
+
+            </div>
+            <div class="panel-body" style="min-height: 700px;" id="content"><!--style="min-height: 480px;"-->
+                <div class="row" ng-repeat="list in messageDatas" repeat-finish>
+                    <div class="col-lg-12">
+                        <div class="media">
+                            <div class="media-left media-top">
+                                <img ng-src="{{list.userinfo.u_userhead}}" class="media-object" style="width:60px;height:60px;">
+                            </div>
+                            <div class="media-body" >
+                                <div class="col-lg-12">{{list.userinfo.u_truename}}</div><br/><br/>
+                                <div class="col-lg-12" ng-bind-html="list.w_content|trusted"></div>
+                            </div>
+                        </div>
+                        <div style="font-size: 14px;">
+                            <div class="col-lg-3" style="text-align: left">
+                                <span >发布时间：{{list.w_addtime}}</span>
+                            </div>
+                            <div class="col-lg-9" style="text-align: right"><!--<span class="glyphicon glyphicon-thumbs-up" style="cursor: pointer">-->
+                                <a href="/messageRemark/messageRemark_jump?w_id={{list.w_id}}"><span style="cursor: pointer">评论({{list.count_remark}})</span></a>&emsp;&emsp;
+                                <span class="glyphicon glyphicon-thumbs-up" ng-click="GiveThumbsUp(list.w_id)"  style="cursor: pointer;color:#e67e22 "></span>
+                                    &nbsp;<span style="color:#e67e22 ">{{list.w_praisenumber}}</span> &emsp;&emsp;
+                            </div>
+                        </div>
+                        <div style="margin-top: 3%;">
+                            <hr style="border: 1px solid #d1d4d6"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row paginations">
+                    <!--分页插件使用angularjs-->
+                    <tm-pagination conf="paginationConf"></tm-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="main-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="widget">
+                    <h4 class="title">友链</h4>
+                    <div class="content tag-cloud friend-links">
+                        <a href="http://www.bootcss.com" title="Bootstrap中文网" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Bootstrap中文网'])" target="_blank">Bootstrap中文网</a>
+                        <a href="http://lodashjs.com/" title="Lodash中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Lodash中文文档'])" target="_blank">Lodash中文文档</a>
+                        <a href="https://www.jquery123.com/" title="jQuery中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'jQuery中文文档'])" target="_blank">jQuery中文文档</a>
+                        <a href="https://www.webpackjs.com/" title="Webpack中文网" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Webpack中文网'])" target="_blank">Webpack中文网</a>
+                        <a href="https://www.nodeapp.cn/" title="Node.js中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Node.js中文文档'])" target="_blank">Node.js中文文档</a>
+                        <a href="https://www.quanzhanketang.com/" title="全栈课堂" onclick="_hmt.push(['_trackEvent', 'link', 'click', '全栈课堂'])" target="_blank">全栈课堂</a>
+                        <a href="http://www.91php.com/" title="91PHP" onclick="_hmt.push(['_trackEvent', 'link', 'click', '91PHP'])" target="_blank">91PHP</a>
+                        <a href="https://www.npmjs.com.cn/" title="NPM中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'NPM中文文档'])" target="_blank">NPM中文文档</a>
+                        <a href="http://www.sasschina.com/" title="SASS中文网" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'SASS中文网'])" target="_blank">SASS中文网</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://www.ghostchina.com/">Ghost中文网</a></span> |
+                <span><a href="http://www.miibeian.gov.cn/" target="_blank">京ICP备11008151号</a></span> |
+                <span>京公网安备11010802014853</span>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="#" id="back-to-top" style="display: none;"><i class="fa fa-angle-up"></i></a>
+
+</body>
+</html>

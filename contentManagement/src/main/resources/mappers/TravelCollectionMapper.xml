@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.TravelCollectionMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.TravelCollection" >
+    <id column="t_id" property="t_id" jdbcType="INTEGER" />
+    <result column="u_id" property="u_id" jdbcType="INTEGER" />
+    <result column="t_title" property="t_title" jdbcType="VARCHAR" />
+    <result column="t_place" property="t_place" jdbcType="VARCHAR" />
+    <result column="t_remarks" property="t_remarks" jdbcType="VARCHAR" />
+    <result column="t_praisenumber" property="t_praisenumber" jdbcType="INTEGER" />
+    <result column="t_create_time" property="t_create_time" jdbcType="VARCHAR" />
+    <result column="t_travelperson" property="t_travelperson" jdbcType="VARCHAR" />
+    <result column="t_per_capita_consumption" property="t_per_capita_consumption" jdbcType="VARCHAR" />
+    <result column="t_begin_time" property="t_begin_time" jdbcType="VARCHAR" />
+    <result column="t_end_time" property="t_end_time" jdbcType="VARCHAR" />
+    <result column="travel_comment" property="travel_comment" jdbcType="VARCHAR" />
+    <result column="t_fine_paste" property="t_fine_paste" jdbcType="VARCHAR" />
+    <result column="t_tourism_strategy" property="t_tourism_strategy" jdbcType="VARCHAR" />
+    <!--一对一关系   一条留言信息的用户id-->
+    <association property="userinfo" javaType="com.hafiz.www.po.Userinfo">
+      <id column="u_id" jdbcType="INTEGER" property="u_id" />
+      <result property="u_userhead" column="u_userhead"/>
+      <result property="u_truename" column="u_truename"/>
+    </association>
+    <!--一对多关系  一条留言信息对应多条评论-->
+    <collection property="travel_picture_url" ofType="com.hafiz.www.po.TravelPictureUrl">
+      <id column="p_id" property="p_id" jdbcType="INTEGER"/>
+      <result column="p_picture_url" jdbcType="VARCHAR" property="p_picture_url" />
+    </collection>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hafiz.www.po.TravelCollection" extends="BaseResultMap" >
+    <result column="t_tourism_strategy" property="t_tourism_strategy" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    t_id, u_id, t_title, t_place, t_remarks, t_praisenumber, t_create_time, t_travelperson, 
+    t_per_capita_consumption, t_begin_time, t_end_time,t_fine_paste
+  </sql>
+  <sql id="Blob_Column_List" >
+    t_tourism_strategy
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from travel_collection
+    where t_id = #{t_id,jdbcType=INTEGER}
+  </select>
+  <select id="getCount" parameterType="com.hafiz.www.po.PublicPagingQuery" resultType="Integer">
+    select COUNT(*)from travel_collection where 1=1
+    <if test="queryObj.u_id!=null">
+      and u_id=#{queryObj.u_id}
+    </if>
+  </select>
+
+  <select id="selectMessageData" parameterType="com.hafiz.www.po.PublicPagingQuery" resultMap="BaseResultMap">
+    select
+    *,(select count(*) from travel_comment r where r.tc_id=m.t_id) as travel_comment
+    from travel_collection m,userinfo u
+    where 1=1
+    <if test="queryObj.t_id!=null">
+      and m.t_id=#{queryObj.t_id}
+    </if>
+    <if test="queryObj.u_id!=null">
+      and m.u_id=#{queryObj.u_id}
+    </if>
+    <if test="queryObj.t_fine_paste!=null">
+      and m.t_fine_paste=#{queryObj.t_fine_paste}
+    </if>
+    and m.u_id=u.u_id
+    <if test="type == 1">
+      ORDER BY m.t_praisenumber DESC
+    </if>
+    <if test="type == 2">
+      ORDER BY m.t_create_time DESC
+    </if>
+    <if test="type==3">
+      ORDER BY m.t_create_time DESC
+    </if>
+    <if test="pageNumber != null and  pageSize!= null">
+      limit #{startRow},#{pageSize}
+    </if>
+  </select>
+  <select id="selectMessageDataByManager" parameterType="com.hafiz.www.po.TravelCollection" resultMap="BaseResultMap">
+
+    select
+    *,(select count(*) from travel_comment r where r.tc_id=m.t_id) as travel_comment
+    from travel_collection m,userinfo u
+    where 1=1
+    <if test="t_title!=null">
+      and m.t_title like concat("%",#{t_title},"%")
+    </if>
+    <if test="t_place!=null">
+      and m.t_place like concat("%",#{t_place},"%")
+    </if>
+    <if test="t_fine_paste!=null">
+      and m.t_fine_paste=#{t_fine_paste}
+    </if>
+    and m.u_id=u.u_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from travel_collection
+    where t_id = #{t_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.TravelCollection" >
+    insert into travel_collection (t_id, u_id, t_title, 
+      t_place, t_remarks, t_praisenumber, 
+      t_create_time, t_travelperson, t_per_capita_consumption, 
+      t_begin_time, t_end_time, t_tourism_strategy,t_fine_paste
+      )
+    values (#{t_id,jdbcType=INTEGER}, #{u_id,jdbcType=INTEGER}, #{t_title,jdbcType=VARCHAR}, 
+      #{t_place,jdbcType=VARCHAR}, #{t_remarks,jdbcType=VARCHAR}, #{t_praisenumber,jdbcType=INTEGER}, 
+      #{t_create_time,jdbcType=VARCHAR}, #{t_travelperson,jdbcType=VARCHAR}, #{t_per_capita_consumption,jdbcType=VARCHAR}, 
+      #{t_begin_time,jdbcType=VARCHAR}, #{t_end_time,jdbcType=VARCHAR}, #{t_tourism_strategy,jdbcType=LONGVARCHAR}, #{t_fine_paste,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.TravelCollection" useGeneratedKeys="true" keyProperty="t_id">
+    insert into travel_collection
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="t_id != null" >
+        t_id,
+      </if>
+      <if test="u_id != null" >
+        u_id,
+      </if>
+      <if test="t_title != null" >
+        t_title,
+      </if>
+      <if test="t_place != null" >
+        t_place,
+      </if>
+      <if test="t_remarks != null" >
+        t_remarks,
+      </if>
+      <if test="t_praisenumber != null" >
+        t_praisenumber,
+      </if>
+      <if test="t_create_time != null" >
+        t_create_time,
+      </if>
+      <if test="t_travelperson != null" >
+        t_travelperson,
+      </if>
+      <if test="t_per_capita_consumption != null" >
+        t_per_capita_consumption,
+      </if>
+      <if test="t_begin_time != null" >
+        t_begin_time,
+      </if>
+      <if test="t_end_time != null" >
+        t_end_time,
+      </if>
+      <if test="t_tourism_strategy != null" >
+        t_tourism_strategy,
+      </if>
+      <if test="t_fine_paste != null" >
+        t_fine_paste,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="t_id != null" >
+        #{t_id,jdbcType=INTEGER},
+      </if>
+      <if test="u_id != null" >
+        #{u_id,jdbcType=INTEGER},
+      </if>
+      <if test="t_title != null" >
+        #{t_title,jdbcType=VARCHAR},
+      </if>
+      <if test="t_place != null" >
+        #{t_place,jdbcType=VARCHAR},
+      </if>
+      <if test="t_remarks != null" >
+        #{t_remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="t_praisenumber != null" >
+        #{t_praisenumber,jdbcType=INTEGER},
+      </if>
+      <if test="t_create_time != null" >
+        #{t_create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="t_travelperson != null" >
+        #{t_travelperson,jdbcType=VARCHAR},
+      </if>
+      <if test="t_per_capita_consumption != null" >
+        #{t_per_capita_consumption,jdbcType=VARCHAR},
+      </if>
+      <if test="t_begin_time != null" >
+        #{t_begin_time,jdbcType=VARCHAR},
+      </if>
+      <if test="t_end_time != null" >
+        #{t_end_time,jdbcType=VARCHAR},
+      </if>
+      <if test="t_tourism_strategy != null" >
+        #{t_tourism_strategy,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="t_fine_paste != null" >
+        #{t_fine_paste,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.TravelCollection" >
+    update travel_collection
+    <set >
+      <if test="u_id != null" >
+        u_id = #{u_id,jdbcType=INTEGER},
+      </if>
+      <if test="t_title != null" >
+        t_title = #{t_title,jdbcType=VARCHAR},
+      </if>
+      <if test="t_place != null" >
+        t_place = #{t_place,jdbcType=VARCHAR},
+      </if>
+      <if test="t_remarks != null" >
+        t_remarks = #{t_remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="t_praisenumber != null" >
+        t_praisenumber = #{t_praisenumber,jdbcType=INTEGER},
+      </if>
+      <if test="t_create_time != null" >
+        t_create_time = #{t_create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="t_travelperson != null" >
+        t_travelperson = #{t_travelperson,jdbcType=VARCHAR},
+      </if>
+      <if test="t_per_capita_consumption != null" >
+        t_per_capita_consumption = #{t_per_capita_consumption,jdbcType=VARCHAR},
+      </if>
+      <if test="t_begin_time != null" >
+        t_begin_time = #{t_begin_time,jdbcType=VARCHAR},
+      </if>
+      <if test="t_end_time != null" >
+        t_end_time = #{t_end_time,jdbcType=VARCHAR},
+      </if>
+      <if test="t_tourism_strategy != null" >
+        t_tourism_strategy = #{t_tourism_strategy,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="t_fine_paste != null" >
+        t_fine_paste = #{t_fine_paste,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where t_id = #{t_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hafiz.www.po.TravelCollection" >
+    update travel_collection
+    set u_id = #{u_id,jdbcType=INTEGER},
+      t_title = #{t_title,jdbcType=VARCHAR},
+      t_place = #{t_place,jdbcType=VARCHAR},
+      t_remarks = #{t_remarks,jdbcType=VARCHAR},
+      t_praisenumber = #{t_praisenumber,jdbcType=INTEGER},
+      t_create_time = #{t_create_time,jdbcType=VARCHAR},
+      t_travelperson = #{t_travelperson,jdbcType=VARCHAR},
+      t_per_capita_consumption = #{t_per_capita_consumption,jdbcType=VARCHAR},
+      t_begin_time = #{t_begin_time,jdbcType=VARCHAR},
+      t_end_time = #{t_end_time,jdbcType=VARCHAR},
+      t_tourism_strategy = #{t_tourism_strategy,jdbcType=LONGVARCHAR},
+      t_fine_paste = #{t_fine_paste,jdbcType=LONGVARCHAR}
+    where t_id = #{t_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.TravelCollection" >
+    update travel_collection
+    set u_id = #{u_id,jdbcType=INTEGER},
+      t_title = #{t_title,jdbcType=VARCHAR},
+      t_place = #{t_place,jdbcType=VARCHAR},
+      t_remarks = #{t_remarks,jdbcType=VARCHAR},
+      t_praisenumber = #{t_praisenumber,jdbcType=INTEGER},
+      t_create_time = #{t_create_time,jdbcType=VARCHAR},
+      t_travelperson = #{t_travelperson,jdbcType=VARCHAR},
+      t_per_capita_consumption = #{t_per_capita_consumption,jdbcType=VARCHAR},
+      t_begin_time = #{t_begin_time,jdbcType=VARCHAR},
+      t_end_time = #{t_end_time,jdbcType=VARCHAR},
+      t_fine_paste = #{t_fine_paste,jdbcType=VARCHAR}
+    where t_id = #{t_id,jdbcType=INTEGER}
+  </update>
+</mapper>

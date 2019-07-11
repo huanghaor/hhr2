@@ -1,0 +1,207 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : 127.0.0.1
+ Source Server Type    : MySQL
+ Source Server Version : 50172
+ Source Host           : localhost:3306
+ Source Schema         : contentmanagement
+
+ Target Server Type    : MySQL
+ Target Server Version : 50172
+ File Encoding         : 65001
+
+ Date: 29/11/2018 17:57:18
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for message_wal
+-- ----------------------------
+DROP TABLE IF EXISTS `message_wal`;
+CREATE TABLE `message_wal`  (
+  `w_id` int(255) NOT NULL COMMENT '数据id',
+  `w_content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '留言内容',
+  `w_uid` int(255) NULL DEFAULT NULL COMMENT '留言人id',
+  `w_praisenumber` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '点赞数',
+  `w_status` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '留言状态  1：正常；0：删除',
+  PRIMARY KEY (`w_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for navigation_bar_record
+-- ----------------------------
+DROP TABLE IF EXISTS `navigation_bar_record`;
+CREATE TABLE `navigation_bar_record`  (
+  `n_id` int(255) NOT NULL COMMENT '数据id',
+  `n_name` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '菜单名称',
+  `n_menu_gradation` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '菜单级次',
+  `n_parent_menu` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '父菜单级次',
+  `n_menu_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '菜单类别',
+  `n_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单系统路径',
+  `n_time` datetime NULL DEFAULT NULL COMMENT '添加时间',
+  `n_person` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '添加人',
+  PRIMARY KEY (`n_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单栏记录表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of navigation_bar_record
+-- ----------------------------
+INSERT INTO `navigation_bar_record` VALUES (1, '首页', '1', '0001', 'nav', 'http://www.baidu.com', NULL, NULL);
+INSERT INTO `navigation_bar_record` VALUES (2, '驴行游记', '1', '0001', 'nav', 'http://www.bootcss.com', NULL, NULL);
+INSERT INTO `navigation_bar_record` VALUES (3, '旅游攻略', '1', '0001', 'nav', NULL, NULL, NULL);
+INSERT INTO `navigation_bar_record` VALUES (4, '技术文章', '1', '0001', 'nav', NULL, NULL, NULL);
+INSERT INTO `navigation_bar_record` VALUES (5, '留言墙', '1', '0001', 'nav', NULL, NULL, NULL);
+INSERT INTO `navigation_bar_record` VALUES (6, '后台管理', '1', '0001', 'nav', NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for technology_module
+-- ----------------------------
+DROP TABLE IF EXISTS `technology_module`;
+CREATE TABLE `technology_module`  (
+  `m_id` int(255) NOT NULL COMMENT '数据id	自增长类型\r\n',
+  `m_publish_personid` int(255) NULL DEFAULT NULL COMMENT '发布人id	外键--用户信息表用户id\r\n',
+  `m_typeid` int(255) NULL DEFAULT NULL COMMENT '文章类型id	外键--文章类型表a_id\r\n',
+  `m_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文章标题',
+  `m_content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文章详细内容\r\n',
+  `m_datatime` datetime NULL DEFAULT NULL COMMENT '发布时间\r\n',
+  `m_readnum` int(255) NULL DEFAULT NULL COMMENT '浏览次数\r\n',
+  PRIMARY KEY (`m_id`) USING BTREE,
+  INDEX `m_publish_personid`(`m_publish_personid`) USING BTREE,
+  INDEX `m_typeid`(`m_typeid`) USING BTREE,
+  CONSTRAINT `technology_module_ibfk_1` FOREIGN KEY (`m_publish_personid`) REFERENCES `userinfo` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `technology_module_ibfk_2` FOREIGN KEY (`m_typeid`) REFERENCES `type_of_article` (`a_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '技术文章表 ' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for technology_module_enclosure
+-- ----------------------------
+DROP TABLE IF EXISTS `technology_module_enclosure`;
+CREATE TABLE `technology_module_enclosure`  (
+  `e_id` int(255) NOT NULL,
+  `m_id` int(255) NULL DEFAULT NULL COMMENT '文章id',
+  `e_enclosure_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '附件路径',
+  `e_dowloads` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '下载次数',
+  PRIMARY KEY (`e_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '技术文章附件下载' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for travel_collection
+-- ----------------------------
+DROP TABLE IF EXISTS `travel_collection`;
+CREATE TABLE `travel_collection`  (
+  `t_id` int(255) NOT NULL COMMENT '数据id	自增长类型\r\n',
+  `u_id` int(255) NULL DEFAULT NULL COMMENT '上传用户id	外键---用户信息表u_id\r\n',
+  `t_tourism_strategy` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '攻略',
+  `t_title` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题',
+  `t_place` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '地点',
+  `t_remarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `t_praisenumber` int(11) NULL DEFAULT NULL COMMENT '点赞次数',
+  `t_create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `t_travelperson` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '出行人数',
+  `t_per_capita_consumption` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '人均消费',
+  `t_begin_time` datetime NULL DEFAULT NULL COMMENT '出行时间',
+  `t_end_time` datetime NULL DEFAULT NULL COMMENT '返程时间',
+  PRIMARY KEY (`t_id`) USING BTREE,
+  INDEX `u_id`(`u_id`) USING BTREE,
+  CONSTRAINT `travel_collection_ibfk_1` FOREIGN KEY (`u_id`) REFERENCES `userinfo` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '驴行游记表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for travel_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `travel_comment`;
+CREATE TABLE `travel_comment`  (
+  `c_id` int(255) NOT NULL COMMENT '数据id',
+  `tc_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '旅行集锦数据id',
+  `c_comment_content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '评论内容',
+  `c_commenttator_id` int(255) NULL DEFAULT NULL COMMENT '评论人id',
+  `c_comment_time` datetime NULL DEFAULT NULL COMMENT '评论时间',
+  PRIMARY KEY (`c_id`) USING BTREE,
+  UNIQUE INDEX `c_id`(`c_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '驴行游记评论' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for travel_picture_url
+-- ----------------------------
+DROP TABLE IF EXISTS `travel_picture_url`;
+CREATE TABLE `travel_picture_url`  (
+  `p_id` int(255) NOT NULL COMMENT '数据id	自增长类型\r\n',
+  `t_id` int(255) NULL DEFAULT NULL COMMENT '旅行集锦数据id	外键---旅行集锦表数据id\r\n',
+  `p_picture_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片存储路径\r\n',
+  `p_picture_size` double NULL DEFAULT NULL COMMENT '图片大小',
+  `p_upload_personid` int(255) NULL DEFAULT NULL COMMENT '上传人id	外键--用户信息表用户id\r\n',
+  `p_upload_time` datetime NULL DEFAULT NULL COMMENT '上传时间',
+  PRIMARY KEY (`p_id`) USING BTREE,
+  INDEX `t_id`(`t_id`) USING BTREE,
+  INDEX `p_upload_personid`(`p_upload_personid`) USING BTREE,
+  CONSTRAINT `travel_picture_url_ibfk_1` FOREIGN KEY (`t_id`) REFERENCES `travel_collection` (`t_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `travel_picture_url_ibfk_2` FOREIGN KEY (`p_upload_personid`) REFERENCES `userinfo` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '旅行集锦图片路径存储表 ' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for type_of_article
+-- ----------------------------
+DROP TABLE IF EXISTS `type_of_article`;
+CREATE TABLE `type_of_article`  (
+  `a_id` int(255) NOT NULL COMMENT '数据id\r\n',
+  `a_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类型名称\r\n',
+  `a_status` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类型状态   1：使用；0：停用',
+  PRIMARY KEY (`a_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '技术文章类型表  ' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for u_logonrecord
+-- ----------------------------
+DROP TABLE IF EXISTS `u_logonrecord`;
+CREATE TABLE `u_logonrecord`  (
+  `r_id` int(255) NOT NULL COMMENT '数据id	自增长类型\r\n',
+  `u_id` int(255) NULL DEFAULT NULL COMMENT '用户id',
+  `u_logintime` datetime NULL DEFAULT NULL COMMENT '用户登录时间',
+  `u_logouttime` datetime NULL DEFAULT NULL COMMENT '登出时间\r\n',
+  PRIMARY KEY (`r_id`) USING BTREE,
+  INDEX `用户id`(`u_id`) USING BTREE,
+  CONSTRAINT `用户id` FOREIGN KEY (`u_id`) REFERENCES `userinfo` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户登录记录表 ' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Table structure for userinfo
+-- ----------------------------
+DROP TABLE IF EXISTS `userinfo`;
+CREATE TABLE `userinfo`  (
+  `u_id` int(255) NOT NULL AUTO_INCREMENT COMMENT '用户id\r\n唯一标志符、自增长类型',
+  `u_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名\r\n',
+  `u_password` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户密码	密文存储\r\n',
+  `u_phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户手机\r\n',
+  `u_create_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户创建时间\r\n',
+  `u_truename` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户真实姓名\r\n',
+  `u_status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户状态\r\n1：正常使用；2：冻结\r\n',
+  `u_remarks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注信息\r\n',
+  `u_userhead` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户头像url',
+  `u_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户邮箱',
+  PRIMARY KEY (`u_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户信息表' ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of userinfo
+-- ----------------------------
+INSERT INTO `userinfo` VALUES (1, 'hhr', '123456', '13594880934', '2018-11-21 17:51:46', '黄浩然', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (2, 'xg', '123456', '13594880934', '2018-11-24 14:35:37', '小刚', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (3, 'fd', '123456', '17338331428', '2018-11-28 13:00:05', '方东', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (4, 'h_17338331428', '29694b301835a51b53c805ab6573007f', '17787499094', '2018-11-28 14:24:46', '小米', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (5, 'xm', 'cf1481b2b1473f2e6b7a592ed079531b', '13452577658', '2018-11-28 16:47:18', '小明', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (6, 'ggg', '3d20e4282a404c20d66cccf0158c3033', '13498787484', '2018-11-28 17:39:06', '嘎嘎嘎', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (7, 'dsfhk', 'bc6ab67c5f98e0df5b168c4cd403fa93', '18787388978', '2018-11-28 22:34:11', '东方航空的', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (8, 'fdsdfsdfdf', '9465912708348c476eeb4142d993581e', '13545435444', '2018-11-28 22:59:51', 'sfsdfsdf', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (9, 'dsfdsf', 'e9bf66032434a5a0f5738417a511fc3d', '13594880934', '2018-11-29 11:49:57', 'dsfdsf', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (10, 'dfgf', '2ce40758a15017bf4989d6105e962493', '13594880934', '2018-11-29 12:30:44', 'dfgfd', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (11, 'ewr', 'ba8a59b327aaf53c947fb9b117a6e69a', '13594880934', '2018-11-29 12:39:48', 'dsfsd', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (12, 'asdsa', '7bbb1317c740c8f7f00e07dc2f60cb5a', '13594880934', '2018-11-29 12:58:09', 'asdsa', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (13, 'hhrs', 'dabb61c6da75be9aa29f7f2821453ea3', '13594880934', '2018-11-29 16:22:04', 'dskf', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (14, 'dsfds', '62fc987a18f44e5cebee7f0e06687c06', '13594880934', '2018-11-29 16:25:24', 'dsfds', '1', NULL, NULL, NULL);
+INSERT INTO `userinfo` VALUES (15, 'hhr_111', '982508e383925a0a739f8905480b2d16', '13594880934', '2018-11-29 16:40:21', '急急急', '1', NULL, NULL, '1056996785@qq.com');
+INSERT INTO `userinfo` VALUES (16, '各个地方给对方', 'a55fe8669db84df9bd35cad6dcb6b00e', '13594880934', '2018-11-29 17:17:18', '规定非官方的风格', '1', NULL, NULL, '1056996785@qq.com');
+
+SET FOREIGN_KEY_CHECKS = 1;

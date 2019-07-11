@@ -1,0 +1,86 @@
+package com.hafiz.www.service.impl;
+
+import com.hafiz.www.mapper.MessageRemarkReplyMapper;
+import com.hafiz.www.po.MessageRemarkReply;
+import com.hafiz.www.service.MessageRemarkReplayService;
+import com.hafiz.www.shiro.SessionUtils;
+import com.hafiz.www.until.GetTheTimeStamp;
+import com.hafiz.www.until.JsonResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+
+@Service
+public class MessageRemarkReplyImpl implements MessageRemarkReplayService{
+    @Autowired
+    private MessageRemarkReplyMapper messageRemarkReplyMapper;
+
+    /**
+     * 保存留言墙评论回复数据
+     * @param record  保存数据
+     * @return  保存状态
+     */
+    public int insertSelective(MessageRemarkReply record) {
+        //先根据对话发起人id和对话接收人id,相关留言id进行查询判断当前是否有值，得出结果进行排序
+
+        int status=0;
+        if(SessionUtils.getLoginUserId()==0){
+            status=-1;
+        }else{
+            try{
+                record.setReply_from_uid(SessionUtils.getLoginUserId());
+                List<MessageRemarkReply> listdata = this.selectReplyData(record);
+                record.setReply_statu("1");
+                record.setReply_add_time(new GetTheTimeStamp().getCurrentTime());
+                if(listdata.size()==0){//则进行新增
+                    int reply_sameid_with_two_person = this.selectMaxWithReply_sameid_with_two_person();
+                    record.setReply_sameid_with_two_person(1);
+                    record.setReply_addid_with_two_person(1);
+                }else{//在已有对话中进行追加
+                    MessageRemarkReply record_1 = new MessageRemarkReply();
+                    record_1.setReply_from_uid(SessionUtils.getLoginUserId());
+                    record_1.setReply_to_uid(record.getReply_to_uid());
+                    record_1.setRemark_id(record.getRemark_id());
+                    int reply_addid_with_two_person = this.selectMaxWithreply_addid_with_two_person(record);
+                    record.setReply_addid_with_two_person(reply_addid_with_two_person+1);
+                    record.setReply_sameid_with_two_person(listdata.get(0).getReply_sameid_with_two_person());
+                }
+                status= messageRemarkReplyMapper.insertSelective(record);
+            }catch (Exception e){
+                e.printStackTrace();
+                status=0;
+            }
+        }
+        return status;
+    }
+
+
+    /**
+     * 根据字段进行查询
+     * @param record 相关字段条件
+     * @return list集合
+     */
+    public List<MessageRemarkReply> selectReplyData(MessageRemarkReply record){
+        return messageRemarkReplyMapper.selectReplyData(record);
+
+    }
+
+
+    /**
+     * 查询表中Reply_sameid_with_two_person字段的最大值
+     * @return 数值
+     */
+    public int selectMaxWithReply_sameid_with_two_person(){
+        return messageRemarkReplyMapper.selectMaxWithReply_sameid_with_two_person();
+    }
+    /**
+     * 根据reply_from_uid，reply_to_uid，remark_id 查询其reply_addid_with_two_person字段的最大值
+     * @param record 查询条件
+     * @return 数值
+     */
+    int selectMaxWithreply_addid_with_two_person(MessageRemarkReply record){
+        return messageRemarkReplyMapper.selectMaxWithreply_addid_with_two_person(record);
+    }
+}

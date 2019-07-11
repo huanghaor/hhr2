@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <description>Shiro Configuration</description>
+    <bean id="CustomRealm" class="com.hafiz.www.shiro.CustomRealm">
+        <!-- 配置密码匹配器 -->
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <!-- 加密算法为MD5 -->
+                <property name="hashAlgorithmName" value="MD5"/>
+                <!-- 加密次数 -->
+                <property name="hashIterations" value="1024"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!--Shiro`s main business-tier object for web-enable applications-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="CustomRealm"/>
+    </bean>
+
+    <!--shiro filter-->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/indexContent.html"/>
+        <property name="successUrl" value=""/>
+        <property name="unauthorizedUrl" value=""/>
+<!--        <property name="filters">
+            <util:map>
+                <entry key="auth">
+                    <bean class="com.hafiz.www.filter.AuthorizeFilter"/>
+                </entry>
+            </util:map>
+        </property>-->
+        <property name="filterChainDefinitions">
+            <value>
+                /index= anon
+                /user/logout = anon
+                /js/** = anon
+                / = anon
+                /** = anon
+            </value>
+        </property>
+    </bean>
+
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+</beans>

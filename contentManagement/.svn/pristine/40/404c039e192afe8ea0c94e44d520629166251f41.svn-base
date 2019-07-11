@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>个人中心</title>
+    <!-- Bootstrap -->
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link href="../../../css/angular.css" rel="stylesheet">
+    <link href="../../../css/index/index.css" rel="stylesheet">
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="js/jquery/html5shiv.min.js"></script>
+    <script src="js/jquery/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../../js/angular-js/angular.js"></script>
+    <script src="../../../js/angular-js/angular-route.min.js"></script>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="../../../js/jquery/jquery1.9.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="../../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../../js/bootstrap/bootstrap-show-password.min.js"></script>
+    <script src="../../../js/functionJS/index/personalCenter.js"></script>
+
+    <style>
+        .inputError{
+            color: red;
+        }
+        .wram{
+            position: relative;
+        }
+        .title{
+            padding: 0px;
+        }
+        .container{
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+        .row{
+            margin-right: 0px;
+        }
+    </style>
+</head>
+<body class="home-template" ng-app="personalCenter" >
+<header class="main-header" style="background-image: url(../../../img/banner.jpg)"></header>
+<nav class="main-navigation">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="navbar-header">
+                    <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                    <span class="sr-only">Toggle navigation</span>
+                    <i class="fa fa-bars"></i>
+                    </span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-menu" style="text-align: center">
+                <ul class="menu" ng-controller="NavCtrl">
+                    <div class="col-lg-8">
+                        <li  class="active" role="presentation" ng-repeat="nav in navLists">
+                            <a href="{{nav.n_url}}"  style="font-size: 16px;cursor: pointer" target="">{{nav.n_name}}</a>
+                        </li>
+                    </div>
+
+                    <div class="col-lg-2" style="text-align: right;margin-top: 10px;" class="dropdown" ng-init="judgeIsLogin()">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"style="margin-right: 5%;">
+                            <img src={{u_userhead}} alt="..." class="img-circle" style="width: 40px;height: 40px;">
+                            <span>{{u_truename}},欢迎您！</span>
+                        </a>
+                        <div class="dropdown-menu pull-center" style="background: rgb(255, 255, 255);width: 120px;overflow: hidden;margin-left: 40%;text-align: center;font-size: 15px;">
+                            <span  data-toggle="modal" data-target="#myModal" style="cursor: pointer">登&emsp;&emsp;陆</span><br/>
+                            <a href="/index/register"  target="_Blank" style="cursor: pointer">注&emsp;&emsp;册</a><br/>
+                            <a href="/index/personalCenter"><span style="cursor: pointer">个人中心</span></a><br/>
+                            <span style="cursor: pointer" ng-click="Sign_out()">退出登陆</span>
+                        </div>
+                    </div>
+                    <!--<button type="button" class="btn btn-default" id="btnlogin" data-toggle="modal" data-target="#myModal">登陆</button>&lt;!&ndash;</a>&ndash;&gt;
+                    <a href="/index/register"  target="_Blank"><button type="button" class="btn btn-default" >注册</button></a>-->
+
+                </ul>
+
+            </div>
+            <!--登陆弹出框-->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="text-align: center">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title" id="myModalLabel">登&emsp;&emsp;陆</h3>
+                        </div>
+                        <div class="modal-body" ng-controller="login">
+                            <div  class="col-lg-8 col-12 px-sm-5 model">
+                                <div  class="col-12 px-sm-5 justify-content-center d-flex align-items-center mh-80 content py-4">
+                                    <cc-login _nghost-c4="">
+                                        <div  class="mt-5">
+                                            <cc-login-password >
+                                                <form  class="mt-5" id="modelForm" name="signUpForm" ng-submit="LoginsubmitForm()">
+                                                    <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_name.$valid}">
+                                                        <span style="font-size: 18px;">Username</span>
+                                                        <input class="form-control" name="u_uname" id="email" type="text" placeholder="账号"
+                                                               ng-model="userdata.u_name" required>
+                                                        <p class="inputError" ng-if="signUpForm.u_name.$error.required && signUpForm.u_name.$touched">请输入账号</p>
+                                                    </div>
+                                                    <div  class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_password.$valid}">
+                                                        <span style="font-size: 18px;">Password</span>
+                                                        <input class="form-control" name="u_password" id="password" type="password" placeholder="密码"
+                                                               ng-model="userdata.u_password" required>
+                                                        <p class="inputError" ng-if="signUpForm.u_password.$error.required && signUpForm.u_password.$touched">请输入密码</p>
+                                                    </div>
+                                                    <div  class="form-group input-group-lg">
+                                                        <div class="row">
+                                                            <div class="col-lg-5 wram" ng-class="{'has-success':signUpForm.code.$valid}">
+                                                                <input class="form-control" name="code" id="yzm" type="text" placeholder="验证码"
+                                                                       ng-model="userdata.code" required>
+                                                                <p class="inputError" ng-if="signUpForm.code.$error.required && signUpForm.code.$touched">请输入验证码</p>
+                                                            </div>
+                                                            <div class="col-lg-6 "><!--src="/user/getImage"-->
+                                                                <img id="imageCode" src="/user/getImage"
+                                                                     title="看不清，点击换一张" style="cursor: pointer;" ng-click="refreshCheckCode()" width="100%" height="45px"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button  ng-disabled="signUpForm.$invalid" type="submit" class="btn btn-lg btn-block w-100 btn-primary  _300 mt-4 radius d-block text-uppercase">
+                                                        <span  translate="">立即登陆</span>
+                                                    </button>
+                                                </form>
+                                            </cc-login-password>
+                                        </div>
+                                        <div class="mt-3 pb-3 px-0 d-flex flex-wrap justify-content-between">
+                                            <div class="row mt3">
+                                                <div class="col-lg-12">
+                                                    <a class="text-muted _300 text-sm px-0 mr-3"  translate="" href="#">Forgot password?</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </cc-login>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
+</nav>
+<!--详细内容-->
+<div class="row title" style="min-height: 700px;"  ng-controller="baseInfo">
+    <section class="content-wrap" style="margin-left: 15px;" ng-init="getContentBody()">
+        <div class="container">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-user">&emsp;个人中心</span></a></li>
+                            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-camera">&emsp;上传头像</span></a></li>
+                            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-wrench">&emsp;修改密码</span></a></li>
+                        </ul>
+                    </div>
+                    <div class="panel-body" style="min-height: 550px;" >
+                        <div class="tab-content">
+                            <!--个人中心-->
+                            <div role="tabpanel" class="tab-pane active" id="home" style="width: 50%;">
+                                <form class="form-horizontal" name="baseForm" ng-submit="submitBaseForm()">
+                                    <div class="form-group input-group-lg wram">
+                                        <label for="inputEmail6" class="col-sm-2 control-label">Account</label>
+                                        <div class="col-sm-10">
+                                            <input id="inputEmail6"  ng-model="u_name"type="text" name="u_name"placeholder="账号"class="form-control"  required style="height: 40px;">
+                                        </div>
+                                    </div>
+                                    <div class="form-group input-group-lg wram">
+                                        <label for="inputEmail1" class="col-sm-2 control-label">Phone</label>
+                                        <div class="col-sm-10">
+                                            <input  id="inputEmail1" type="mible"
+                                                   name="u_phone"
+                                                   placeholder="联系电话"
+                                                    ng-minlength="11"
+                                                    ng-model="u_phone"
+                                                   class="form-control"
+                                                   ng-pattern="/^1[3|5|8|7|9][0-9]\d{8}$/"
+                                                   required>
+                                            <p style="color:red;">{{error}}</p>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group input-group-lg wram" >
+                                        <label for="inputEmail2" class="col-sm-2 control-label">Truename</label>
+                                        <div class="col-sm-10">
+                                            <input ng-model="u_truename"  id="inputEmail2" type="text"name="u_truename"placeholder="系统昵称"class="form-control"
+                                                   required style="height: 40px;">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail4" class="col-sm-2 control-label">E-mail</label>
+                                        <div class="col-sm-10">
+                                            <input ng-model="u_email"  name="u_email" type="email" class="form-control" id="inputEmail4" placeholder="电子邮箱" style="height: 40px;">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            <button type="submit" class="btn btn-default">保  存</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!--上传头像-->
+                            <div role="tabpanel" class="tab-pane" id="profile" style="width: 95%;">
+                                <form class="form-horizontal" enctype="multipart/form-data" name="basePictureForm" METHOD="post" ACTION="/user/updateTheUser_head">
+                                    <div class="col-lg-6">
+                                        <img class="col-sm-offset-8"  src={{url_pic}} style="margin-top: 8%;" class="img-rounded" height="140" width="140">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <img  id="img_upload" src="../../../img/touxiang.svg" onclick="fileSelect();" style="margin-top: 8%;" class="img-rounded" height="140" width="140"><br/>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                    <input type="file" id="fileToUpload" name="u_userhead" onchange="fileSelected(this);" style="display:none;">
+                                    <!--<input type="hidden" id="userhead" name="u_userhead" ng-model="u_userhead_uodata">-->
+                                    <p><small class="col-sm-offset-3" style="color:#95aac9!important">点击选择图片，图片尺寸：150*150，文件大小限制：5M，允许后缀：jpg、jpeg、png、gif、bmp</small></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-5 col-sm-10" style="margin-left: 44%;">
+                                            <button type="submit" class="btn btn-default">保  存</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!--修改密码-->
+                            <div role="tabpanel" class="tab-pane" id="messages" style="width: 50%;">
+                                <form class="form-horizontal" name="updataPasswordForm" ng-submit="submitupdataPasswordForm()">
+                                    <div class="form-group input-group-lg wram" ng-class="{'has-success':updataPasswordForm.u_password.$valid}">
+                                        <label for="inputPassword3_1" class="col-sm-4 control-label">Old Password</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputPassword3_1"  data-toggle="password" name="old_password" ng-model="old_password"
+                                                   data-placement="after"
+                                                   class="form-control"
+                                                   type="password"
+                                                   placeholder="密码"
+                                                   data-eye-class="material-icons"
+                                                   data-eye-open-class="visibility"
+                                                   data-eye-close-class="visibility_off"
+                                                   data-eye-class-position-inside="true"
+                                                   data-message="点击隐藏或显示密码" style="height: 40px;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group input-group-lg wram" ng-class="{'has-success':updataPasswordForm.u_password.$valid}">
+                                        <label for="inputPassword3_2" class="col-sm-4 control-label">New Password</label>
+                                        <div class="col-sm-8">
+                                            <input id="inputPassword3_2" type="password" ng-model="u_password"
+                                                   name="u_password"
+                                                   placeholder="密码"
+                                                   class="form-control"
+                                                   ng-minlength="6"
+                                                   placeholder="请输入6位以上的密码"
+                                                   required style="height: 40px;">
+                                            <p class="fa fa-check moveCheck" ng-if="updataPasswordForm.u_password.$valid"></p>
+                                            <p class="inputError" ng-if="updataPasswordForm.u_password.$error.minlength && updataPasswordForm.u_password.$touched">请输入至少6位的密码</p>
+                                            <p class="inputError" ng-if="updataPasswordForm.u_password.$error.required && updataPasswordForm.u_password.$touched">密码不可为空</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group input-group-lg wram" ng-class="{'has-success':updataPasswordForm.password2.$valid}">
+                                        <label for="inputPassword3_2" class="col-sm-4 control-label">Confirm Password</label>
+                                        <div class="col-sm-8">
+                                            <input type="text"
+                                                   name="password2" ng-model="password2"
+                                                   class="form-control"
+                                                   compare="userdata.u_password"
+                                                   placeholder="确认密码"
+                                                   required style="height: 40px;">
+                                            <p style="color: red">{{error_pass}}</p>
+                                        </div>
+                                    </div>
+                                    <div  class="form-group input-group-lg">
+                                        <div class="col-sm-offset-5 col-sm-10" style="margin-left: 50%;">
+                                        <button  type="submit" ng-disabled="updataPasswordForm.$invalid" class="btn btn-default" id="login" style="background-color: #e67e22;border:1px #e67e22">
+                                            <span  translate="">修改</span>
+                                        </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </section>
+</div>
+
+<footer class="main-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="widget">
+                    <h4 class="title">友链</h4>
+                    <div class="content tag-cloud friend-links">
+                        <a href="http://www.bootcss.com" title="Bootstrap中文网" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Bootstrap中文网'])" target="_blank">Bootstrap中文网</a>
+                        <a href="http://lodashjs.com/" title="Lodash中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Lodash中文文档'])" target="_blank">Lodash中文文档</a>
+                        <a href="https://www.jquery123.com/" title="jQuery中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'jQuery中文文档'])" target="_blank">jQuery中文文档</a>
+                        <a href="https://www.webpackjs.com/" title="Webpack中文网" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Webpack中文网'])" target="_blank">Webpack中文网</a>
+                        <a href="https://www.nodeapp.cn/" title="Node.js中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Node.js中文文档'])" target="_blank">Node.js中文文档</a>
+                        <a href="https://www.quanzhanketang.com/" title="全栈课堂" onclick="_hmt.push(['_trackEvent', 'link', 'click', '全栈课堂'])" target="_blank">全栈课堂</a>
+                        <a href="http://www.91php.com/" title="91PHP" onclick="_hmt.push(['_trackEvent', 'link', 'click', '91PHP'])" target="_blank">91PHP</a>
+                        <a href="https://www.npmjs.com.cn/" title="NPM中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'NPM中文文档'])" target="_blank">NPM中文文档</a>
+                        <a href="http://www.sasschina.com/" title="SASS中文网" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'SASS中文网'])" target="_blank">SASS中文网</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <span>Copyright © <a href="http://www.ghostchina.com/">Ghost中文网</a></span> |
+                <span><a href="http://www.miibeian.gov.cn/" target="_blank">京ICP备11008151号</a></span> |
+                <span>京公网安备11010802014853</span>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="#" id="back-to-top" style="display: none;"><i class="fa fa-angle-up"></i></a>
+</body>
+<script type="text/javascript">
+    function fileSelect() {
+        document.getElementById("fileToUpload").click();
+    }
+
+    function fileSelected(imgFile) {
+        $("#img_upload").attr("src",window.URL.createObjectURL(imgFile.files[0]));
+        /*$("#userhead").attr("value",window.URL.createObjectURL(imgFile.files[0]));*/
+
+    }
+</script>
+</html>

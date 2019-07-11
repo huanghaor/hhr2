@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.TechnologyModuleMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.TechnologyModule" >
+    <id column="m_id" property="m_id" jdbcType="INTEGER" />
+    <result column="m_publish_personid" property="m_publish_personid" jdbcType="INTEGER" />
+    <result column="m_typeid" property="m_typeid" jdbcType="INTEGER" />
+    <result column="m_title" property="m_title" jdbcType="VARCHAR" />
+    <result column="m_datatime" property="m_datatime" jdbcType="VARCHAR" />
+    <result column="m_readnum" property="m_readnum" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hafiz.www.po.TechnologyModule" extends="BaseResultMap" >
+    <result column="m_content" property="m_content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    m_id, m_publish_personid, m_typeid, m_title, m_datatime, m_readnum
+  </sql>
+  <sql id="Blob_Column_List" >
+    m_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from technology_module
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from technology_module
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.TechnologyModule" >
+    insert into technology_module (m_id, m_publish_personid, m_typeid, 
+      m_title, m_datatime, m_readnum, 
+      m_content)
+    values (#{m_id,jdbcType=INTEGER}, #{m_publish_personid,jdbcType=INTEGER}, #{m_typeid,jdbcType=INTEGER}, 
+      #{m_title,jdbcType=VARCHAR}, #{m_datatime,jdbcType=VARCHAR}, #{m_readnum,jdbcType=INTEGER}, 
+      #{m_content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.TechnologyModule" useGeneratedKeys="true" keyProperty="m_id">
+    insert into technology_module
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="m_id != null" >
+        m_id,
+      </if>
+      <if test="m_publish_personid != null" >
+        m_publish_personid,
+      </if>
+      <if test="m_typeid != null" >
+        m_typeid,
+      </if>
+      <if test="m_title != null" >
+        m_title,
+      </if>
+      <if test="m_datatime != null" >
+        m_datatime,
+      </if>
+      <if test="m_readnum != null" >
+        m_readnum,
+      </if>
+      <if test="m_content != null" >
+        m_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="m_id != null" >
+        #{m_id,jdbcType=INTEGER},
+      </if>
+      <if test="m_publish_personid != null" >
+        #{m_publish_personid,jdbcType=INTEGER},
+      </if>
+      <if test="m_typeid != null" >
+        #{m_typeid,jdbcType=INTEGER},
+      </if>
+      <if test="m_title != null" >
+        #{m_title,jdbcType=VARCHAR},
+      </if>
+      <if test="m_datatime != null" >
+        #{m_datatime,jdbcType=VARCHAR},
+      </if>
+      <if test="m_readnum != null" >
+        #{m_readnum,jdbcType=INTEGER},
+      </if>
+      <if test="m_content != null" >
+        #{m_content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.TechnologyModule" >
+    update technology_module
+    <set >
+      <if test="m_publish_personid != null" >
+        m_publish_personid = #{m_publish_personid,jdbcType=INTEGER},
+      </if>
+      <if test="m_typeid != null" >
+        m_typeid = #{m_typeid,jdbcType=INTEGER},
+      </if>
+      <if test="m_title != null" >
+        m_title = #{m_title,jdbcType=VARCHAR},
+      </if>
+      <if test="m_datatime != null" >
+        m_datatime = #{m_datatime,jdbcType=VARCHAR},
+      </if>
+      <if test="m_readnum != null" >
+        m_readnum = #{m_readnum,jdbcType=INTEGER},
+      </if>
+      <if test="m_content != null" >
+        m_content = #{m_content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hafiz.www.po.TechnologyModule" >
+    update technology_module
+    set m_publish_personid = #{m_publish_personid,jdbcType=INTEGER},
+      m_typeid = #{m_typeid,jdbcType=INTEGER},
+      m_title = #{m_title,jdbcType=VARCHAR},
+      m_datatime = #{m_datatime,jdbcType=VARCHAR},
+      m_readnum = #{m_readnum,jdbcType=INTEGER},
+      m_content = #{m_content,jdbcType=LONGVARCHAR}
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.TechnologyModule" >
+    update technology_module
+    set m_publish_personid = #{m_publish_personid,jdbcType=INTEGER},
+      m_typeid = #{m_typeid,jdbcType=INTEGER},
+      m_title = #{m_title,jdbcType=VARCHAR},
+      m_datatime = #{m_datatime,jdbcType=VARCHAR},
+      m_readnum = #{m_readnum,jdbcType=INTEGER}
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </update>
+</mapper>

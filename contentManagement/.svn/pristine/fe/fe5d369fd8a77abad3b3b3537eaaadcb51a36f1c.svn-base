@@ -1,0 +1,116 @@
+package com.hafiz.www.po;
+
+import javax.persistence.Transient;
+
+public class Userinfo {
+    private Integer u_id;
+
+    private String u_name;
+
+    private String u_password;
+
+    private String u_phone;
+
+    private String u_create_time;
+
+    private String u_truename;
+
+    private String u_status;
+
+    private String u_remarks;
+
+    private String u_userhead;
+
+    private String u_email;
+
+    @Transient
+    private  String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Integer getU_id() {
+        return u_id;
+    }
+
+    public void setU_id(Integer u_id) {
+        this.u_id = u_id;
+    }
+
+    public String getU_name() {
+        return u_name;
+    }
+
+    public void setU_name(String u_name) {
+        this.u_name = u_name;
+    }
+
+    public String getU_password() {
+        return u_password;
+    }
+
+    public void setU_password(String u_password) {
+        this.u_password = u_password;
+    }
+
+    public String getU_phone() {
+        return u_phone;
+    }
+
+    public void setU_phone(String u_phone) {
+        this.u_phone = u_phone;
+    }
+
+    public String getU_create_time() {
+        return u_create_time;
+    }
+
+    public void setU_create_time(String u_create_time) {
+        this.u_create_time = u_create_time;
+    }
+
+    public String getU_truename() {
+        return u_truename;
+    }
+
+    public void setU_truename(String u_truename) {
+        this.u_truename = u_truename;
+    }
+
+    public String getU_status() {
+        return u_status;
+    }
+
+    public void setU_status(String u_status) {
+        this.u_status = u_status;
+    }
+
+    public String getU_remarks() {
+        return u_remarks;
+    }
+
+    public void setU_remarks(String u_remarks) {
+        this.u_remarks = u_remarks;
+    }
+
+    public String getU_userhead() {
+        return u_userhead;
+    }
+
+    public void setU_userhead(String u_userhead) {
+        this.u_userhead = u_userhead;
+    }
+
+    public String getU_email() {
+        return u_email;
+    }
+
+    public void setU_email(String u_email) {
+        this.u_email = u_email;
+    }
+}

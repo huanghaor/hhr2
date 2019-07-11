@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hafiz.www.mapper.MessageWalMapper">
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.MessageWal">
+    <!--基础信息-->
+    <id column="w_id" jdbcType="INTEGER" property="w_id" />
+    <result column="w_content" jdbcType="VARCHAR" property="w_content" />
+    <result column="w_uid" jdbcType="INTEGER" property="w_uid" />
+    <result column="w_praisenumber" jdbcType="VARCHAR" property="w_praisenumber" />
+    <result column="w_status" jdbcType="VARCHAR" property="w_status" />
+    <result column="w_addtime" jdbcType="VARCHAR" property="w_addtime" />
+    <result column="count_remark" jdbcType="VARCHAR" property="count_remark" />
+    <!--一对一关系   一条留言信息的用户id-->
+    <association property="userinfo" javaType="com.hafiz.www.po.Userinfo">
+       <id column="u_id" jdbcType="INTEGER" property="u_id" />
+       <result property="u_userhead" column="u_userhead"/>
+      <result property="u_truename" column="u_truename"/>
+    </association>
+    <!--一对多关系  一条留言信息对应多条评论-->
+    <collection property="message_remark" ofType="com.hafiz.www.po.MessageRemark">
+      <id column="remark_id" property="remark_id"/>
+      <result column="remark_id" jdbcType="INTEGER" property="remark_id" />
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    w_id, w_content, w_uid, w_praisenumber, w_status, w_addtime
+  </sql>
+  <sql id="Base_Column_List_1">
+    w_id, w_content, w_uid,u_userhead, w_praisenumber, w_status, w_addtime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+   m.w_id, m.w_content, m.w_uid, m.w_praisenumber, m.w_status, m.w_addtime,
+   (select count(*) from message_remark r where r.remark_message_id=m.w_id) as count_remark
+    from message_wal m,userinfo u
+    where m.w_id = #{w_id,jdbcType=INTEGER}
+  </select>
+
+  <!--<select id="getCount" parameterType="com.hafiz.www.po.PublicPagingQuery" resultType="int">
+     select COUNT (*) from message_wal where w_status=#{queryObj.w_status}
+  </select>-->
+
+  <select id="getCount" parameterType="com.hafiz.www.po.PublicPagingQuery" resultType="Integer">
+    select COUNT(*)from message_wal where 1=1 and w_status=#{queryObj.w_status}
+    <if test="queryObj.w_uid!=null">
+      and w_uid=#{queryObj.w_uid}
+    </if>
+  </select>
+  <select id="selecttMessageDataTopNewPublish" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    *
+    from message_wal m,userinfo u
+    where 1=1
+     and m.w_uid=u.u_id
+    and m.w_id in(
+    select t.w_id from (
+    select d.* from message_wal d order by d.w_praisenumber  desc LIMIT 10)
+    as t ) ORDER BY m.w_praisenumber desc
+  </select>
+  <select id="selectMessageData" parameterType="com.hafiz.www.po.PublicPagingQuery" resultMap="BaseResultMap">
+    select
+    *,(select count(*) from message_remark r where r.remark_message_id=m.w_id) as count_remark
+    from message_wal m,userinfo u
+    where 1=1
+    <if test="queryObj.w_uid!=null">
+      and m.w_uid=#{queryObj.w_uid}
+    </if>
+    and m.w_uid=u.u_id
+    AND w_status=#{queryObj.w_status}
+    <if test="type == 1">
+     ORDER BY m.w_praisenumber DESC
+    </if>
+    <if test="type == 2">
+      ORDER BY m.w_addtime DESC
+    </if>
+    <if test="type ==3">
+      ORDER BY m.w_addtime DESC
+    </if>
+   <if test="pageNumber != null and  pageSize!= null">
+      limit #{startRow},#{pageSize}
+    </if>
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from message_wal
+    where w_id = #{w_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.MessageWal">
+    insert into message_wal (w_id, w_content, w_uid, 
+      w_praisenumber, w_status, w_addtime
+      )
+    values (#{w_id,jdbcType=INTEGER}, #{w_content,jdbcType=VARCHAR}, #{w_uid,jdbcType=INTEGER}, 
+      #{w_praisenumber,jdbcType=VARCHAR}, #{w_status,jdbcType=VARCHAR}, #{w_addtime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.MessageWal">
+    insert into message_wal
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="w_id != null">
+        w_id,
+      </if>
+      <if test="w_content != null">
+        w_content,
+      </if>
+      <if test="w_uid != null">
+        w_uid,
+      </if>
+      <if test="w_praisenumber != null">
+        w_praisenumber,
+      </if>
+      <if test="w_status != null">
+        w_status,
+      </if>
+      <if test="w_addtime != null">
+        w_addtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="w_id != null">
+        #{w_id,jdbcType=INTEGER},
+      </if>
+      <if test="w_content != null">
+        #{w_content,jdbcType=VARCHAR},
+      </if>
+      <if test="w_uid != null">
+        #{w_uid,jdbcType=INTEGER},
+      </if>
+      <if test="w_praisenumber != null">
+        #{w_praisenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="w_status != null">
+        #{w_status,jdbcType=VARCHAR},
+      </if>
+      <if test="w_addtime != null">
+        #{w_addtime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.MessageWal">
+    update message_wal
+    <set>
+      <if test="w_content != null">
+        w_content = #{w_content,jdbcType=VARCHAR},
+      </if>
+      <if test="w_uid != null">
+        w_uid = #{w_uid,jdbcType=INTEGER},
+      </if>
+      <if test="w_praisenumber != null">
+        w_praisenumber = #{w_praisenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="w_status != null">
+        w_status = #{w_status,jdbcType=VARCHAR},
+      </if>
+      <if test="w_addtime != null">
+        w_addtime = #{w_addtime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where w_id = #{w_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.MessageWal">
+    update message_wal
+    set w_content = #{w_content,jdbcType=VARCHAR},
+      w_uid = #{w_uid,jdbcType=INTEGER},
+      w_praisenumber = #{w_praisenumber,jdbcType=VARCHAR},
+      w_status = #{w_status,jdbcType=VARCHAR},
+      w_addtime = #{w_addtime,jdbcType=VARCHAR}
+    where w_id = #{w_id,jdbcType=INTEGER}
+  </update>
+</mapper>

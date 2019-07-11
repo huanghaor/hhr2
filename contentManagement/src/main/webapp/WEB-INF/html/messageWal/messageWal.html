@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>博客主页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/main.css" />
+    <link href="../../../css/angular.css" rel="stylesheet">
+    <link href="../../../css/pagination.css" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="../../../js/jquery/jquery1.9.1.min.js"></script>
+    <script src="../../../js/angular-js/angular.js"></script>
+    <script src="../../../js/angular-js/angular-route.min.js"></script>
+    <script src="../../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../../js/angular-js/tm.pagination.min.js"></script>
+    <script src="../../../js/functionJS/messageWal/messageWal.js"></script>
+    <script src="../../../js/bootstrap/skel.min.js"></script>
+    <script src="../../../js/bootstrap/util.js"></script>
+    <script src="../../../js/bootstrap/main.js"></script>
+    <style>
+        .modal{
+            line-height: 2em;
+            text-align: left;
+            margin-left: 5%;
+        }
+        .close{
+            height: 1em;
+        }
+        #one{
+            font-size: 15px;
+        }
+        button{
+            background-color: #e67e22 !important;
+            /*width: auto !important;*/
+        }
+        .inner1{
+            text-align: right;
+        }
+        .btnlogin{
+            height: 35px !important;
+        }
+        #my{
+            position:relative ;
+            margin-left: 80%;
+        }
+    </style>
+</head>
+<body ng-app="messageWal" style="background-color: #333">
+
+<!-- Header -->
+<header id="header">
+    <div class="inner"  ng-controller="NavCtrl">
+        <div class="col-lg-12">
+            <a href="index.html" class="logo">introspect</a>
+            <nav id="nav" ng-repeat="nav in navLists" >
+                <a class="active" href="{{nav.n_url}}" >{{nav.n_name}}</a>
+            </nav>
+            <span class="dropdown"  ng-init="judgeIsLogin()">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"style="margin-left: 15%;">
+                    <img ng-src="{{u_userhead}}" alt="..." class="img-circle" style="width: 40px;height: 40px;border-radius:55%;">
+                    <span>{{u_truename}}</span>
+                </a>
+                <div class="dropdown-menu pull-center" style="margin-left: 65%;line-height: 3em;background: rgb(30, 30, 30);width: 120px;overflow: hidden;text-align: center;font-size: 15px;">
+                    <a><span  data-toggle="modal" data-target="#myModal" style="cursor: pointer">登&emsp;&emsp;陆</span></a>
+                    <a href="/index/register"  target="_Blank" style="cursor: pointer">注&emsp;&emsp;册</a>
+                    <a href="/index/personalCenter"><span style="cursor: pointer">个人中心</span></a>
+                    <a><span style="cursor: pointer;margin-right: 25px" ng-click="Sign_out()">退出登陆</span></a>
+                </div>
+             </span>
+        </div>
+        <!--登陆弹出框-->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="text-align: center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: #000!important;">&times;</button>
+                        <h3 class="modal-title" id="myModalLabel">登&emsp;&emsp;陆</h3>
+                    </div>
+                    <div class="modal-body" ng-controller="login" style="height: 480px;">
+                        <div  class="col-lg-12 col-12 px-sm-5 model">
+                            <div  class="col-12 px-sm-5 justify-content-center d-flex align-items-center mh-80 content py-4">
+                                <cc-login _nghost-c4="">
+                                    <div  class="mt-5">
+                                        <cc-login-password >
+                                            <form  class="mt-5" id="modelForm" name="signUpForm" ng-submit="LoginsubmitForm()">
+                                                <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_name.$valid}">
+                                                    <span style="font-size: 18px;">Username</span>
+                                                    <input class="form-control" name="u_uname" id="email" type="text" placeholder="账号"
+                                                           ng-model="userdata.u_name" required>
+                                                    <p class="inputError" ng-if="signUpForm.u_name.$error.required && signUpForm.u_name.$touched">请输入账号</p>
+                                                </div>
+                                                <div  class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_password.$valid}">
+                                                    <span style="font-size: 18px;">Password</span>
+                                                    <input class="form-control" name="u_password" id="password" type="password" placeholder="密码"
+                                                           ng-model="userdata.u_password" required>
+                                                    <p class="inputError" ng-if="signUpForm.u_password.$error.required && signUpForm.u_password.$touched">请输入密码</p>
+                                                </div>
+                                                <div  class="form-group input-group-lg">
+                                                    <div class="row">
+                                                        <div class="col-lg-5 wram" ng-class="{'has-success':signUpForm.code.$valid}">
+                                                            <input class="form-control" name="code" id="yzm" type="text" placeholder="验证码"
+                                                                   ng-model="userdata.code" style=" height: 46px;" required>
+                                                            <p class="inputError" ng-if="signUpForm.code.$error.required && signUpForm.code.$touched">请输入验证码</p>
+                                                        </div>
+                                                        <div class="col-lg-6 "><!--src="/user/getImage"-->
+                                                            <img id="imageCode" ng-src="/user/getImage"
+                                                                 title="看不清，点击换一张" style="cursor: pointer;" ng-click="refreshCheckCode()" width="100%" height="45px"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button  ng-disabled="signUpForm.$invalid" type="submit" class="btn btn-lg btn-block w-100 btn-primary  _300 mt-4 radius d-block text-uppercase">
+                                                    <span  translate="">立即登陆</span>
+                                                </button>
+                                            </form>
+                                        </cc-login-password>
+                                    </div>
+                                    <div class="mt-3 pb-3 px-0 d-flex flex-wrap justify-content-between">
+                                        <div class="row mt3">
+                                            <div class="col-lg-12">
+                                                <a class="text-muted _300 text-sm px-0 mr-3"  translate="" href="#" style="color: #9d9d9d">Forgot password?</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </cc-login>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</header>
+<a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+<!-- One -->
+<section id="one" >
+    <div class="container" ng-controller="messageData">
+        <div class="panel panel-default"  id="ssss">
+            <div class="panel-heading">
+                <div class="row">
+                <div class="col-sm-3">
+                    <h3>留言墙</h3>
+                </div>
+                <div class="col-sm-9" style="text-align: right">
+                    <span class="label label-default">排序：</span>&emsp;&emsp;
+                    <span style="cursor: pointer;" ng-click="moren()">默认</span>&emsp;&emsp;
+                    <span style="cursor: pointer;" ng-click="Traffic_volume()">根据点赞数排列</span>&emsp;&emsp;
+                    <span style="cursor: pointer;" ng-click="updateTime()">根据时间排列</span>&emsp;
+                    <a href="/message/myMessage"><span class="label label-default">我的留言墙</span></a>
+                    <a href="/message/publish"><span class="label label-default">发表</span></a>
+                </div>
+                </div>
+            </div>
+            <div class="panel-body" style="min-height: 700px;background-color: #ebecef" id="content"><!--style="min-height: 480px;"-->
+                <div class="row" ng-repeat="list in messageDatas" repeat-finish>
+                    <div class="col-lg-12">
+                        <div class="media">
+                            <div class="media-left media-top">
+                                <img ng-src="{{list.userinfo.u_userhead}}" class="media-object" style="width:60px;height:60px;">
+                            </div>
+                            <div class="media-body" >
+                                <div class="col-lg-12">{{list.userinfo.u_truename}}</div><br/><br/>
+                                <div class="col-lg-12" ng-bind-html="list.w_content|trusted"></div>
+                            </div>
+                        </div>
+                        <div style="font-size: 14px;">
+                            <div class="col-lg-3" style="text-align: left">
+                                <span >发布时间：{{list.w_addtime}}</span>
+                            </div>
+                            <div class="col-lg-9" style="text-align: right"><!--<span class="glyphicon glyphicon-thumbs-up" style="cursor: pointer">-->
+                                <a href="/messageRemark/messageRemark_jump?w_id={{list.w_id}}"><span style="cursor: pointer">评论({{list.count_remark}})</span></a>&emsp;&emsp;
+                                <span class="glyphicon glyphicon-thumbs-up" ng-click="GiveThumbsUp(list.w_id)"  style="cursor: pointer;color:#e67e22 "></span>
+                                &nbsp;<span style="color:#e67e22 ">{{list.w_praisenumber}}</span> &emsp;&emsp;
+                            </div>
+                        </div>
+                        <div style="margin-top: 3%;">
+                            <hr style="border: 1px solid #d1d4d6"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row paginations">
+                    <!--分页插件使用angularjs-->
+                    <tm-pagination conf="paginationConf"></tm-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Footer -->
+<section id="footer" style="text-align: center">
+    <small>
+        @hhr-个人博客
+    </small>
+</section>
+</body>
+</html>

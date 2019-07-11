@@ -1,0 +1,44 @@
+var app = angular.module('publishMessage',[]);
+
+//发布留言
+//编辑器
+app.controller('publish', function($scope,$http) {
+    //配置wangEditor
+    var E, editor;
+    E = window.wangEditor;
+    editor = new E('#editor'); //id一定要一致
+    editor.customConfig.menus = [
+       'head',  // 标题
+        'bold',  // 粗体
+        'fontSize',  // 字号
+        'fontName',  // 字体
+        'italic',  // 斜体
+        'underline',  // 下划线
+        'foreColor',  // 文字颜色
+        'backColor',  // 背景颜色
+        'link',  // 插入链接
+        'list',  // 列表
+        'justify',  // 对齐方式
+        'emoticon',//表情
+        'image',  // 插入图片
+        'table',  // 表格
+        'video',  // 插入视频
+        'code',  // 插入代码
+        'undo'  // 撤销
+    ];
+    //如果需要使用 base64 编码直接将图片插入到内容中，可参考一下示例配置
+    editor.customConfig.uploadImgShowBase64 = true;
+    // 将图片大小限制为 10M
+    editor.customConfig.uploadImgMaxSize = 10* 1024 * 1024;
+    //隐藏网络图片功能
+    //editor.config.hideLinkImg = true;
+    //上传图片
+    editor.customConfig.uploadImgServer = '/index/nav';
+    //文字内容
+   // alert(editor.txt.html());
+    editor.create();
+    $scope.submitEditorForm=function () {
+        console.log(editor.txt.html());
+        //$("#ddd").innerHTML(editor.txt.html());
+    }
+});

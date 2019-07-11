@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>博客主页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+   <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css" />
+    <link href="css/angular.css" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="js/jquery/jquery1.9.1.min.js"></script>
+    <script src="js/angular-js/angular.js"></script>
+    <script src="js/angular-js/angular-route.min.js"></script>
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="js/functionJS/index.js"></script>
+    <script src="js/bootstrap/skel.min.js"></script>
+    <script src="js/bootstrap/util.js"></script>
+    <script src="js/bootstrap/main.js"></script>
+    <style>
+       .modal{
+           line-height: 2em;
+           text-align: left;
+           margin-left: 5%;
+        }
+        .close{
+            height: 1em;
+        }
+       button{
+           background-color: #e67e22 !important;
+           /* width: auto !important;*/
+       }
+    </style>
+</head>
+<body ng-app="index" ng-controller="NavCtrl">
+
+<!-- Header -->
+<header id="header" >
+    <div class="inner" >
+        <div class="col-lg-12">
+            <a href="index.html" class="logo">introspect</a>
+            <nav id="nav" ng-repeat="nav in navLists" >
+                <a class="active" href="{{nav.n_url}}" >{{nav.n_name}}</a>
+            </nav>
+             <span class="dropdown"  ng-init="judgeIsLogin()">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"style="margin-left: 15%;">
+                    <img src="{{u_userhead}}" alt="..." class="img-circle" style="width: 40px;height: 40px;border-radius:50%;">
+                    <span>{{u_truename}},欢迎您！</span>
+                </a>
+                <div class="dropdown-menu pull-center" style="margin-left: 65%;line-height: 3em;background: rgb(30, 30, 30);width: 120px;overflow: hidden;text-align: center;font-size: 15px;">
+                    <span  data-toggle="modal" data-target="#myModal" style="cursor: pointer">登&emsp;&emsp;陆</span>
+                    <a href="/index/register"  target="_Blank" style="cursor: pointer">注&emsp;&emsp;册</a>
+                    <a href="/index/personalCenter"><span style="cursor: pointer">个人中心</span></a><br/>
+                    <span style="cursor: pointer" ng-click="Sign_out()">退出登陆</span>
+                </div>
+             </span>
+        </div>
+        <!--登陆弹出框-->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="text-align: center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: #000!important;">&times;</button>
+                        <h3 class="modal-title" id="myModalLabel">登&emsp;&emsp;陆</h3>
+                    </div>
+                    <div class="modal-body" ng-controller="login" style="height: 480px;">
+                        <div  class="col-lg-12 col-12 px-sm-5 model">
+                            <div  class="col-12 px-sm-5 justify-content-center d-flex align-items-center mh-80 content py-4">
+                                <cc-login _nghost-c4="">
+                                    <div  class="mt-5">
+                                        <cc-login-password >
+                                          <form  class="mt-5" id="modelForm" name="signUpForm" ng-submit="LoginsubmitForm()">
+                                                <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_name.$valid}">
+                                                    <span style="font-size: 18px;">Username</span>
+                                                    <input class="form-control" name="u_uname" id="email" type="text" placeholder="账号"
+                                                           ng-model="userdata.u_name" required>
+                                                    <p class="inputError" ng-if="signUpForm.u_name.$error.required && signUpForm.u_name.$touched">请输入账号</p>
+                                                </div>
+                                                <div  class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_password.$valid}">
+                                                    <span style="font-size: 18px;">Password</span>
+                                                    <input class="form-control" name="u_password" id="password" type="password" placeholder="密码"
+                                                           ng-model="userdata.u_password" required>
+                                                    <p class="inputError" ng-if="signUpForm.u_password.$error.required && signUpForm.u_password.$touched">请输入密码</p>
+                                                </div>
+                                                <div  class="form-group input-group-lg">
+                                                    <div class="row">
+                                                        <div class="col-lg-5 wram" ng-class="{'has-success':signUpForm.code.$valid}">
+                                                            <input class="form-control" name="code" id="yzm" type="text" placeholder="验证码"
+                                                                   ng-model="userdata.code" style=" height: 46px;" required>
+                                                            <p class="inputError" ng-if="signUpForm.code.$error.required && signUpForm.code.$touched">请输入验证码</p>
+                                                        </div>
+                                                        <div class="col-lg-6 "><!--src="/user/getImage"-->
+                                                            <img id="imageCode" src="/user/getImage"
+                                                                 title="看不清，点击换一张" style="cursor: pointer;" ng-click="refreshCheckCode()" width="100%" height="45px"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button  ng-disabled="signUpForm.$invalid" type="submit" class="btn btn-lg btn-block w-100 btn-primary  _300 mt-4 radius d-block text-uppercase">
+                                                    <span  translate="">立即登陆</span>
+                                                </button>
+                                           </form>
+                                        </cc-login-password>
+                                    </div>
+                                    <div class="mt-3 pb-3 px-0 d-flex flex-wrap justify-content-between">
+                                        <div class="row mt3">
+                                            <div class="col-lg-12">
+                                                <a class="text-muted _300 text-sm px-0 mr-3"  translate="" href="#" style="color: #9d9d9d">Forgot password?</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </cc-login>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</header>
+<a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+
+<!-- Banner -->
+<section id="banner" style="background-image: url(img/banner.jpg)">
+    <div class="inner">
+        <h1>Introspect: <span>A free + fully responsive<br />
+		site template by TEMPLATED</span></h1>
+        <ul class="actions">
+            <li><a href="#" class="button alt">Get Started</a></li>
+        </ul>
+    </div>
+</section>
+
+<!-- One -->
+<section id="one">
+    <div class="inner">
+        <header>
+            <h2>Magna Etiam Lorem</h2>
+        </header>
+        <p>Suspendisse mauris. Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula. Integer adipiscin sem. Nullam quis massa sit amet nibh viverra malesuada. Nunc sem lacus, accumsan quis, faucibus non, congue vel, arcu, erisque hendrerit tellus. Integer sagittis. Vivamus a mauris eget arcu gravida tristique. Nunc iaculis mi in ante.</p>
+        <ul class="actions">
+            <li><a href="#" class="button alt">Learn More</a></li>
+        </ul>
+    </div>
+</section>
+
+<!-- Two -->
+<section id="two">
+    <div class="inner">
+        <article>
+            <div class="content">
+                <header>
+                    <h3>Pellentesque adipis</h3>
+                </header>
+                <div class="image fit">
+                    <img src="images/pic01.jpg" alt="" />
+                </div>
+                <p>Cumsan mollis eros. Pellentesque a diam sit amet mi magna ullamcorper vehicula. Integer adipiscin sem. Nullam quis massa sit amet lorem ipsum feugiat tempus.</p>
+            </div>
+        </article>
+        <article class="alt">
+            <div class="content">
+                <header>
+                    <h3>Morbi interdum mol</h3>
+                </header>
+                <div class="image fit">
+                    <img src="images/pic02.jpg" alt="" />
+                </div>
+                <p>Cumsan mollis eros. Pellentesque a diam sit amet mi magna ullamcorper vehicula. Integer adipiscin sem. Nullam quis massa sit amet lorem ipsum feugiat tempus.</p>
+            </div>
+        </article>
+    </div>
+</section>
+<div class="tlinks">Collect from <a href="http://www.cssmoban.com/" >手机网站模板</a></div>
+<!-- Three -->
+<section id="three">
+    <div class="inner">
+        <article>
+            <div class="content">
+                <span class="icon fa-laptop"></span>
+                <header>
+                    <h3>Tempus Feugiat</h3>
+                </header>
+                <p>Morbi interdum mollis sapien. Sed ac risus. Phasellus lacinia, magna lorem ullamcorper laoreet, lectus arcu.</p>
+                <ul class="actions">
+                    <li><a href="#" class="button alt">Learn More</a></li>
+                </ul>
+            </div>
+        </article>
+        <article>
+            <div class="content">
+                <span class="icon fa-diamond"></span>
+                <header>
+                    <h3>Aliquam Nulla</h3>
+                </header>
+                <p>Ut convallis, sem sit amet interdum consectetuer, odio augue aliquam leo, nec dapibus tortor nibh sed.</p>
+                <ul class="actions">
+                    <li><a href="#" class="button alt">Learn More</a></li>
+                </ul>
+            </div>
+        </article>
+        <article>
+            <div class="content">
+                <span class="icon fa-laptop"></span>
+                <header>
+                    <h3>Sed Magna</h3>
+                </header>
+                <p>Suspendisse mauris. Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper vehicula.</p>
+                <ul class="actions">
+                    <li><a href="#" class="button alt">Learn More</a></li>
+                </ul>
+            </div>
+        </article>
+    </div>
+</section>
+
+<!-- Footer -->
+<section id="footer">
+    <div class="inner">
+
+        <div class="copyright">Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></div>
+    </div>
+</section>
+
+
+</body>
+</html>

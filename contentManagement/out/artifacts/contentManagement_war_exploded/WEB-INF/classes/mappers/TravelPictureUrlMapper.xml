@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.TravelPictureUrlMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.TravelPictureUrl" >
+    <id column="p_id" property="p_id" jdbcType="INTEGER" />
+    <result column="t_id" property="t_id" jdbcType="INTEGER" />
+    <result column="p_picture_url" property="p_picture_url" jdbcType="VARCHAR" />
+    <result column="p_picture_size" property="p_picture_size" jdbcType="VARCHAR" />
+    <result column="p_upload_personid" property="p_upload_personid" jdbcType="INTEGER" />
+    <result column="p_upload_time" property="p_upload_time" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    p_id, t_id, p_picture_url, p_picture_size, p_upload_personid, p_upload_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from travel_picture_url
+    where p_id = #{p_id,jdbcType=INTEGER}
+  </select>
+  <select id="selectTravleIDDataByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from travel_picture_url
+    where t_id=#{t_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from travel_picture_url
+    where p_id = #{p_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="java.util.List" >
+    insert into travel_picture_url (p_id, t_id, p_picture_url, 
+      p_picture_size, p_upload_personid, p_upload_time
+      )
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.p_id,jdbcType=INTEGER}, #{item.t_id,jdbcType=INTEGER}, #{item.p_picture_url,jdbcType=VARCHAR},
+      #{item.p_picture_size,jdbcType=VARCHAR}, #{item.p_upload_personid,jdbcType=INTEGER}, #{item.p_upload_time,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.TravelPictureUrl" >
+    insert into travel_picture_url
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="p_id != null" >
+        p_id,
+      </if>
+      <if test="t_id != null" >
+        t_id,
+      </if>
+      <if test="p_picture_url != null" >
+        p_picture_url,
+      </if>
+      <if test="p_picture_size != null" >
+        p_picture_size,
+      </if>
+      <if test="p_upload_personid != null" >
+        p_upload_personid,
+      </if>
+      <if test="p_upload_time != null" >
+        p_upload_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="p_id != null" >
+        #{p_id,jdbcType=INTEGER},
+      </if>
+      <if test="t_id != null" >
+        #{t_id,jdbcType=INTEGER},
+      </if>
+      <if test="p_picture_url != null" >
+        #{p_picture_url,jdbcType=VARCHAR},
+      </if>
+      <if test="p_picture_size != null" >
+        #{p_picture_size,jdbcType=VARCHAR},
+      </if>
+      <if test="p_upload_personid != null" >
+        #{p_upload_personid,jdbcType=INTEGER},
+      </if>
+      <if test="p_upload_time != null" >
+        #{p_upload_time,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.TravelPictureUrl" >
+    update travel_picture_url
+    <set >
+      <if test="t_id != null" >
+        t_id = #{t_id,jdbcType=INTEGER},
+      </if>
+      <if test="p_picture_url != null" >
+        p_picture_url = #{p_picture_url,jdbcType=VARCHAR},
+      </if>
+      <if test="p_picture_size != null" >
+        p_picture_size = #{p_picture_size,jdbcType=VARCHAR},
+      </if>
+      <if test="p_upload_personid != null" >
+        p_upload_personid = #{p_upload_personid,jdbcType=INTEGER},
+      </if>
+      <if test="p_upload_time != null" >
+        p_upload_time = #{p_upload_time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where p_id = #{p_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.TravelPictureUrl" >
+    update travel_picture_url
+    set t_id = #{t_id,jdbcType=INTEGER},
+      p_picture_url = #{p_picture_url,jdbcType=VARCHAR},
+      p_picture_size = #{p_picture_size,jdbcType=VARCHAR},
+      p_upload_personid = #{p_upload_personid,jdbcType=INTEGER},
+      p_upload_time = #{p_upload_time,jdbcType=VARCHAR}
+    where p_id = #{p_id,jdbcType=INTEGER}
+  </update>
+</mapper>

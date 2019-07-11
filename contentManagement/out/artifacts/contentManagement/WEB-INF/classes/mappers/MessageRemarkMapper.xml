@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hafiz.www.mapper.MessageRemarkMapper">
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.MessageRemark">
+    <id column="remark_id" jdbcType="INTEGER" property="remark_id" />
+    <result column="remark_from_uid" jdbcType="INTEGER" property="remark_from_uid" />
+    <result column="remark_message_id" jdbcType="INTEGER" property="remark_message_id" />
+    <result column="remark_praisenumber" jdbcType="INTEGER" property="remark_praisenumber" />
+    <result column="remark_statu" jdbcType="VARCHAR" property="remark_statu" />
+    <result column="remark_add_time" jdbcType="VARCHAR" property="remark_add_time" />
+    <!--一对一关系   一条留言信息的用户id-->
+    <association property="userinfo" javaType="com.hafiz.www.po.Userinfo">
+      <id column="u_id" jdbcType="INTEGER" property="u_id" />
+      <result property="u_userhead" column="u_userhead"/>
+      <result property="u_truename" column="u_truename"/>
+    </association>
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.hafiz.www.po.MessageRemark">
+    <result column="remark_content" jdbcType="LONGVARCHAR" property="remark_content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    remark_id, remark_from_uid, remark_message_id, remark_praisenumber, remark_statu, 
+    remark_add_time
+  </sql>
+  <sql id="Blob_Column_List">
+    remark_content
+  </sql>
+
+  <select id="selectRemarkAndReplyData" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select
+    *
+    from message_remark m,userinfo u
+    where  m.remark_from_uid=u.u_id
+    AND
+    m.remark_message_id = #{remark_message_id,jdbcType=INTEGER}
+    ORDER  BY  m.remark_add_time DESC
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from message_remark
+    where remark_id = #{remark_id,jdbcType=INTEGER}
+    ORDER BY remark_add_time DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from message_remark
+    where remark_id = #{remark_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.MessageRemark">
+    insert into message_remark (remark_id, remark_from_uid, remark_message_id, 
+      remark_praisenumber, remark_statu, remark_add_time, 
+      remark_content)
+    values (#{remark_id,jdbcType=INTEGER}, #{remark_from_uid,jdbcType=INTEGER}, #{remark_message_id,jdbcType=INTEGER}, 
+      #{remark_praisenumber,jdbcType=INTEGER}, #{remark_statu,jdbcType=VARCHAR}, #{remark_add_time,jdbcType=VARCHAR}, 
+      #{remark_content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.MessageRemark">
+    insert into message_remark
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="remark_id != null">
+        remark_id,
+      </if>
+      <if test="remark_from_uid != null">
+        remark_from_uid,
+      </if>
+      <if test="remark_message_id != null">
+        remark_message_id,
+      </if>
+      <if test="remark_praisenumber != null">
+        remark_praisenumber,
+      </if>
+      <if test="remark_statu != null">
+        remark_statu,
+      </if>
+      <if test="remark_add_time != null">
+        remark_add_time,
+      </if>
+      <if test="remark_content != null">
+        remark_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="remark_id != null">
+        #{remark_id,jdbcType=INTEGER},
+      </if>
+      <if test="remark_from_uid != null">
+        #{remark_from_uid,jdbcType=INTEGER},
+      </if>
+      <if test="remark_message_id != null">
+        #{remark_message_id,jdbcType=INTEGER},
+      </if>
+      <if test="remark_praisenumber != null">
+        #{remark_praisenumber,jdbcType=INTEGER},
+      </if>
+      <if test="remark_statu != null">
+        #{remark_statu,jdbcType=VARCHAR},
+      </if>
+      <if test="remark_add_time != null">
+        #{remark_add_time,jdbcType=VARCHAR},
+      </if>
+      <if test="remark_content != null">
+        #{remark_content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.MessageRemark">
+    update message_remark
+    <set>
+      <if test="remark_from_uid != null">
+        remark_from_uid = #{remark_from_uid,jdbcType=INTEGER},
+      </if>
+      <if test="remark_message_id != null">
+        remark_message_id = #{remark_message_id,jdbcType=INTEGER},
+      </if>
+      <if test="remark_praisenumber != null">
+        remark_praisenumber = #{remark_praisenumber,jdbcType=INTEGER},
+      </if>
+      <if test="remark_statu != null">
+        remark_statu = #{remark_statu,jdbcType=VARCHAR},
+      </if>
+      <if test="remark_add_time != null">
+        remark_add_time = #{remark_add_time,jdbcType=VARCHAR},
+      </if>
+      <if test="remark_content != null">
+        remark_content = #{remark_content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where remark_id = #{remark_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hafiz.www.po.MessageRemark">
+    update message_remark
+    set remark_from_uid = #{remark_from_uid,jdbcType=INTEGER},
+      remark_message_id = #{remark_message_id,jdbcType=INTEGER},
+      remark_praisenumber = #{remark_praisenumber,jdbcType=INTEGER},
+      remark_statu = #{remark_statu,jdbcType=VARCHAR},
+      remark_add_time = #{remark_add_time,jdbcType=VARCHAR},
+      remark_content = #{remark_content,jdbcType=LONGVARCHAR}
+    where remark_id = #{remark_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.MessageRemark">
+    update message_remark
+    set remark_from_uid = #{remark_from_uid,jdbcType=INTEGER},
+      remark_message_id = #{remark_message_id,jdbcType=INTEGER},
+      remark_praisenumber = #{remark_praisenumber,jdbcType=INTEGER},
+      remark_statu = #{remark_statu,jdbcType=VARCHAR},
+      remark_add_time = #{remark_add_time,jdbcType=VARCHAR}
+    where remark_id = #{remark_id,jdbcType=INTEGER}
+  </update>
+</mapper>

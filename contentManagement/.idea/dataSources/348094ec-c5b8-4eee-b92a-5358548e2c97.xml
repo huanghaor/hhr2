@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="contentManagement@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.4">
+    <root id="1"/>
+    <schema id="2" parent="1" name="contentmanagement">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="activiti"/>
+    <schema id="4" parent="1" name="appeat"/>
+    <schema id="5" parent="1" name="db_java456_com"/>
+    <schema id="6" parent="1" name="exam_system"/>
+    <schema id="7" parent="1" name="information_schema"/>
+    <schema id="8" parent="1" name="mysql"/>
+    <schema id="9" parent="1" name="performance_schema"/>
+    <schema id="10" parent="1" name="test"/>
+    <schema id="11" parent="1" name="tourpal"/>
+    <schema id="12" parent="1" name="vip"/>
+    <table id="13" parent="2" name="message_wal"/>
+    <table id="14" parent="2" name="navigation_bar_record">
+      <Comment>菜单栏记录表</Comment>
+    </table>
+    <table id="15" parent="2" name="technology_module">
+      <Comment>技术文章表 </Comment>
+    </table>
+    <table id="16" parent="2" name="technology_module_enclosure">
+      <Comment>技术文章附件下载</Comment>
+    </table>
+    <table id="17" parent="2" name="travel_collection">
+      <Comment>驴行游记表</Comment>
+    </table>
+    <table id="18" parent="2" name="travel_comment">
+      <Comment>驴行游记评论</Comment>
+    </table>
+    <table id="19" parent="2" name="travel_picture_url">
+      <Comment>旅行集锦图片路径存储表 </Comment>
+    </table>
+    <table id="20" parent="2" name="type_of_article">
+      <Comment>技术文章类型表  </Comment>
+    </table>
+    <table id="21" parent="2" name="u_logonrecord">
+      <Comment>用户登录记录表 </Comment>
+    </table>
+    <table id="22" parent="2" name="userinfo">
+      <Comment>用户信息表</Comment>
+    </table>
+    <column id="23" parent="13" name="w_id">
+      <Position>1</Position>
+      <Comment>数据id</Comment>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="24" parent="13" name="w_content">
+      <Position>2</Position>
+      <Comment>留言内容</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="25" parent="13" name="w_uid">
+      <Position>3</Position>
+      <Comment>留言人id</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <column id="26" parent="13" name="w_praisenumber">
+      <Position>4</Position>
+      <Comment>点赞数</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="27" parent="13" name="w_status">
+      <Position>5</Position>
+      <Comment>留言状态  1：正常；0：删除</Comment>
+      <DataType>varchar(1)|0</DataType>
+    </column>
+    <key id="28" parent="13" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>w_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="29" parent="14" name="n_id">
+      <Position>1</Position>
+      <Comment>数据id</Comment>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="30" parent="14" name="n_name">
+      <Position>2</Position>
+      <Comment>菜单名称</Comment>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="31" parent="14" name="n_menu_gradation">
+      <Position>3</Position>
+      <Comment>菜单级次</Comment>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="32" parent="14" name="n_parent_menu">
+      <Position>4</Position>
+      <Comment>父菜单级次</Comment>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="33" parent="14" name="n_menu_type">
+      <Position>5</Position>
+      <Comment>菜单类别</Comment>
+      <DataType>varchar(20)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="34" parent="14" name="n_url">
+      <Position>6</Position>
+      <Comment>菜单系统路径</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="35" parent="14" name="n_time">
+      <Position>7</Position>
+      <Comment>添加时间</Comment>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="36" parent="14" name="n_person">
+      <Position>8</Position>
+      <Comment>添加人</Comment>
+      <DataType>varchar(20)|0</DataType>
+    </column>
+    <key id="37" parent="14" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>n_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="38" parent="15" name="m_id">
+      <Position>1</Position>
+      <Comment>数据id	自增长类型&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="39" parent="15" name="m_publish_personid">
+      <Position>2</Position>
+      <Comment>发布人id	外键--用户信息表用户id&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <column id="40" parent="15" name="m_typeid">
+      <Position>3</Position>
+      <Comment>文章类型id	外键--文章类型表a_id&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <column id="41" parent="15" name="m_title">
+      <Position>4</Position>
+      <Comment>文章标题</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="42" parent="15" name="m_content">
+      <Position>5</Position>
+      <Comment>文章详细内容&#xd;
+</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="43" parent="15" name="m_datatime">
+      <Position>6</Position>
+      <Comment>发布时间&#xd;
+</Comment>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="44" parent="15" name="m_readnum">
+      <Position>7</Position>
+      <Comment>浏览次数&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <index id="45" parent="15" name="m_publish_personid">
+      <ColNames>m_publish_personid</ColNames>
+    </index>
+    <index id="46" parent="15" name="m_typeid">
+      <ColNames>m_typeid</ColNames>
+    </index>
+    <key id="47" parent="15" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>m_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="48" parent="15" name="technology_module_ibfk_1">
+      <ColNames>m_publish_personid</ColNames>
+      <RefSchemaName>contentmanagement</RefSchemaName>
+      <RefTableName>userinfo</RefTableName>
+      <RefColNames>u_id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="49" parent="15" name="technology_module_ibfk_2">
+      <ColNames>m_typeid</ColNames>
+      <RefSchemaName>contentmanagement</RefSchemaName>
+      <RefTableName>type_of_article</RefTableName>
+      <RefColNames>a_id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="50" parent="16" name="e_id">
+      <Position>1</Position>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="51" parent="16" name="m_id">
+      <Position>2</Position>
+      <Comment>文章id</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <column id="52" parent="16" name="e_enclosure_url">
+      <Position>3</Position>
+      <Comment>附件路径</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="53" parent="16" name="e_dowloads">
+      <Position>4</Position>
+      <Comment>下载次数</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <key id="54" parent="16" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>e_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="55" parent="17" name="t_id">
+      <Position>1</Position>
+      <Comment>数据id	自增长类型&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="56" parent="17" name="u_id">
+      <Position>2</Position>
+      <Comment>上传用户id	外键---用户信息表u_id&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <column id="57" parent="17" name="t_tourism_strategy">
+      <Position>3</Position>
+      <Comment>攻略</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="58" parent="17" name="t_title">
+      <Position>4</Position>
+      <Comment>标题</Comment>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="59" parent="17" name="t_place">
+      <Position>5</Position>
+      <Comment>地点</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="60" parent="17" name="t_remarks">
+      <Position>6</Position>
+      <Comment>备注</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="61" parent="17" name="t_praisenumber">
+      <Position>7</Position>
+      <Comment>点赞次数</Comment>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="62" parent="17" name="t_create_time">
+      <Position>8</Position>
+      <Comment>创建时间</Comment>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="63" parent="17" name="t_travelperson">
+      <Position>9</Position>
+      <Comment>出行人数</Comment>
+      <DataType>varchar(11)|0</DataType>
+    </column>
+    <column id="64" parent="17" name="t_per_capita_consumption">
+      <Position>10</Position>
+      <Comment>人均消费</Comment>
+      <DataType>varchar(50)|0</DataType>
+    </column>
+    <column id="65" parent="17" name="t_begin_time">
+      <Position>11</Position>
+      <Comment>出行时间</Comment>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="66" parent="17" name="t_end_time">
+      <Position>12</Position>
+      <Comment>返程时间</Comment>
+      <DataType>datetime|0</DataType>
+    </column>
+    <index id="67" parent="17" name="u_id">
+      <ColNames>u_id</ColNames>
+    </index>
+    <key id="68" parent="17" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>t_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="69" parent="17" name="travel_collection_ibfk_1">
+      <ColNames>u_id</ColNames>
+      <RefSchemaName>contentmanagement</RefSchemaName>
+      <RefTableName>userinfo</RefTableName>
+      <RefColNames>u_id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="70" parent="18" name="c_id">
+      <Position>1</Position>
+      <Comment>数据id</Comment>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="71" parent="18" name="tc_id">
+      <Position>2</Position>
+      <Comment>旅行集锦数据id</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="72" parent="18" name="c_comment_content">
+      <Position>3</Position>
+      <Comment>评论内容</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="73" parent="18" name="c_commenttator_id">
+      <Position>4</Position>
+      <Comment>评论人id</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <column id="74" parent="18" name="c_comment_time">
+      <Position>5</Position>
+      <Comment>评论时间</Comment>
+      <DataType>datetime|0</DataType>
+    </column>
+    <index id="75" parent="18" name="c_id">
+      <ColNames>c_id</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="76" parent="18" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>c_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="77" parent="18" name="c_id">
+      <ColNames>c_id</ColNames>
+      <UnderlyingIndexName>c_id</UnderlyingIndexName>
+    </key>
+    <column id="78" parent="19" name="p_id">
+      <Position>1</Position>
+      <Comment>数据id	自增长类型&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="79" parent="19" name="t_id">
+      <Position>2</Position>
+      <Comment>旅行集锦数据id	外键---旅行集锦表数据id&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <column id="80" parent="19" name="p_picture_url">
+      <Position>3</Position>
+      <Comment>图片存储路径&#xd;
+</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="81" parent="19" name="p_picture_size">
+      <Position>4</Position>
+      <Comment>图片大小</Comment>
+      <DataType>double|0</DataType>
+    </column>
+    <column id="82" parent="19" name="p_upload_personid">
+      <Position>5</Position>
+      <Comment>上传人id	外键--用户信息表用户id&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <column id="83" parent="19" name="p_upload_time">
+      <Position>6</Position>
+      <Comment>上传时间</Comment>
+      <DataType>datetime|0</DataType>
+    </column>
+    <index id="84" parent="19" name="p_upload_personid">
+      <ColNames>p_upload_personid</ColNames>
+    </index>
+    <index id="85" parent="19" name="t_id">
+      <ColNames>t_id</ColNames>
+    </index>
+    <key id="86" parent="19" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>p_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="87" parent="19" name="travel_picture_url_ibfk_1">
+      <ColNames>t_id</ColNames>
+      <RefSchemaName>contentmanagement</RefSchemaName>
+      <RefTableName>travel_collection</RefTableName>
+      <RefColNames>t_id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="88" parent="19" name="travel_picture_url_ibfk_2">
+      <ColNames>p_upload_personid</ColNames>
+      <RefSchemaName>contentmanagement</RefSchemaName>
+      <RefTableName>userinfo</RefTableName>
+      <RefColNames>u_id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="89" parent="20" name="a_id">
+      <Position>1</Position>
+      <Comment>数据id&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="90" parent="20" name="a_type">
+      <Position>2</Position>
+      <Comment>类型名称&#xd;
+</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="91" parent="20" name="a_status">
+      <Position>3</Position>
+      <Comment>类型状态   1：使用；0：停用</Comment>
+      <DataType>varchar(1)|0</DataType>
+    </column>
+    <key id="92" parent="20" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>a_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="93" parent="21" name="r_id">
+      <Position>1</Position>
+      <Comment>数据id	自增长类型&#xd;
+</Comment>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="94" parent="21" name="u_id">
+      <Position>2</Position>
+      <Comment>用户id</Comment>
+      <DataType>int(255)|0</DataType>
+    </column>
+    <column id="95" parent="21" name="u_logintime">
+      <Position>3</Position>
+      <Comment>用户登录时间</Comment>
+      <DataType>datetime|0</DataType>
+    </column>
+    <column id="96" parent="21" name="u_logouttime">
+      <Position>4</Position>
+      <Comment>登出时间&#xd;
+</Comment>
+      <DataType>datetime|0</DataType>
+    </column>
+    <index id="97" parent="21" name="用户id">
+      <ColNames>u_id</ColNames>
+    </index>
+    <key id="98" parent="21" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>r_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="99" parent="21" name="用户id">
+      <ColNames>u_id</ColNames>
+      <RefSchemaName>contentmanagement</RefSchemaName>
+      <RefTableName>userinfo</RefTableName>
+      <RefColNames>u_id</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="100" parent="22" name="u_id">
+      <Position>1</Position>
+      <Comment>用户id&#xd;
+唯一标志符、自增长类型</Comment>
+      <DataType>int(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="101" parent="22" name="u_name">
+      <Position>2</Position>
+      <Comment>用户名&#xd;
+</Comment>
+      <DataType>varchar(50)|0</DataType>
+    </column>
+    <column id="102" parent="22" name="u_password">
+      <Position>3</Position>
+      <Comment>用户密码	密文存储&#xd;
+</Comment>
+      <DataType>varchar(50)|0</DataType>
+    </column>
+    <column id="103" parent="22" name="u_phone">
+      <Position>4</Position>
+      <Comment>用户手机&#xd;
+</Comment>
+      <DataType>varchar(20)|0</DataType>
+    </column>
+    <column id="104" parent="22" name="u_create_time">
+      <Position>5</Position>
+      <Comment>用户创建时间&#xd;
+</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="105" parent="22" name="u_truename">
+      <Position>6</Position>
+      <Comment>用户真实姓名&#xd;
+</Comment>
+      <DataType>varchar(20)|0</DataType>
+    </column>
+    <column id="106" parent="22" name="u_status">
+      <Position>7</Position>
+      <Comment>用户状态&#xd;
+1：正常使用；2：冻结&#xd;
+</Comment>
+      <DataType>varchar(2)|0</DataType>
+    </column>
+    <column id="107" parent="22" name="u_remarks">
+      <Position>8</Position>
+      <Comment>备注信息&#xd;
+</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="108" parent="22" name="u_userhead">
+      <Position>9</Position>
+      <Comment>用户头像url</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <column id="109" parent="22" name="u_email">
+      <Position>10</Position>
+      <Comment>用户邮箱</Comment>
+      <DataType>varchar(255)|0</DataType>
+    </column>
+    <key id="110" parent="22" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>u_id</ColNames>
+      <Primary>1</Primary>
+    </key>
+  </database-model>
+</dataSource>

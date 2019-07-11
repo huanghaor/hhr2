@@ -1,0 +1,6 @@
+var app = angular.module('messageWal',[]);
+
+//留言墙主页
+app.controller('messageData', function($scope,$http) {
+
+})

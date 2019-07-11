@@ -1,0 +1,85 @@
+package com.hafiz.www.po;
+
+import javax.persistence.Transient;
+
+public class TechnologyModule {
+    private Integer m_id;
+
+    private Integer m_publish_personid;
+
+    private Integer m_typeid;
+
+    private String m_title;
+
+    private String m_datatime;
+
+    private Integer m_readnum;
+
+    private String m_content;
+    @Transient
+    private String fileList;
+
+    public String getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(String fileList) {
+        this.fileList = fileList;
+    }
+
+    public Integer getM_id() {
+        return m_id;
+    }
+
+    public void setM_id(Integer m_id) {
+        this.m_id = m_id;
+    }
+
+    public Integer getM_publish_personid() {
+        return m_publish_personid;
+    }
+
+    public void setM_publish_personid(Integer m_publish_personid) {
+        this.m_publish_personid = m_publish_personid;
+    }
+
+    public Integer getM_typeid() {
+        return m_typeid;
+    }
+
+    public void setM_typeid(Integer m_typeid) {
+        this.m_typeid = m_typeid;
+    }
+
+    public String getM_title() {
+        return m_title;
+    }
+
+    public void setM_title(String m_title) {
+        this.m_title = m_title;
+    }
+
+    public String getM_datatime() {
+        return m_datatime;
+    }
+
+    public void setM_datatime(String m_datatime) {
+        this.m_datatime = m_datatime;
+    }
+
+    public Integer getM_readnum() {
+        return m_readnum;
+    }
+
+    public void setM_readnum(Integer m_readnum) {
+        this.m_readnum = m_readnum;
+    }
+
+    public String getM_content() {
+        return m_content;
+    }
+
+    public void setM_content(String m_content) {
+        this.m_content = m_content;
+    }
+}

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.NavigationBarRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.NavigationBarRecord" >
+    <id column="n_id" property="n_id" jdbcType="INTEGER" />
+    <result column="n_name" property="n_name" jdbcType="VARCHAR" />
+    <result column="n_menu_gradation" property="n_menu_gradation" jdbcType="VARCHAR" />
+    <result column="n_parent_menu" property="n_parent_menu" jdbcType="VARCHAR" />
+    <result column="n_menu_type" property="n_menu_type" jdbcType="VARCHAR" />
+    <result column="n_url" property="n_url" jdbcType="VARCHAR" />
+    <result column="n_time" property="n_time" jdbcType="TIMESTAMP" />
+    <result column="n_person" property="n_person" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    n_id, n_name, n_menu_gradation, n_parent_menu, n_menu_type, n_url, n_time, n_person
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from navigation_bar_record
+    where n_id = #{n_id,jdbcType=INTEGER}
+  </select>
+  <select id="getIndexNavLists" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from navigation_bar_record
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from navigation_bar_record
+    where n_id = #{n_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.NavigationBarRecord" >
+    insert into navigation_bar_record (n_id, n_name, n_menu_gradation, 
+      n_parent_menu, n_menu_type, n_url, 
+      n_time, n_person)
+    values (#{n_id,jdbcType=INTEGER}, #{n_name,jdbcType=VARCHAR}, #{n_menu_gradation,jdbcType=VARCHAR}, 
+      #{n_parent_menu,jdbcType=VARCHAR}, #{n_menu_type,jdbcType=VARCHAR}, #{n_url,jdbcType=VARCHAR}, 
+      #{n_time,jdbcType=TIMESTAMP}, #{n_person,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.NavigationBarRecord" >
+    insert into navigation_bar_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="n_id != null" >
+        n_id,
+      </if>
+      <if test="n_name != null" >
+        n_name,
+      </if>
+      <if test="n_menu_gradation != null" >
+        n_menu_gradation,
+      </if>
+      <if test="n_parent_menu != null" >
+        n_parent_menu,
+      </if>
+      <if test="n_menu_type != null" >
+        n_menu_type,
+      </if>
+      <if test="n_url != null" >
+        n_url,
+      </if>
+      <if test="n_time != null" >
+        n_time,
+      </if>
+      <if test="n_person != null" >
+        n_person,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="n_id != null" >
+        #{n_id,jdbcType=INTEGER},
+      </if>
+      <if test="n_name != null" >
+        #{n_name,jdbcType=VARCHAR},
+      </if>
+      <if test="n_menu_gradation != null" >
+        #{n_menu_gradation,jdbcType=VARCHAR},
+      </if>
+      <if test="n_parent_menu != null" >
+        #{n_parent_menu,jdbcType=VARCHAR},
+      </if>
+      <if test="n_menu_type != null" >
+        #{n_menu_type,jdbcType=VARCHAR},
+      </if>
+      <if test="n_url != null" >
+        #{n_url,jdbcType=VARCHAR},
+      </if>
+      <if test="n_time != null" >
+        #{n_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="n_person != null" >
+        #{n_person,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.NavigationBarRecord" >
+    update navigation_bar_record
+    <set >
+      <if test="n_name != null" >
+        n_name = #{n_name,jdbcType=VARCHAR},
+      </if>
+      <if test="n_menu_gradation != null" >
+        n_menu_gradation = #{n_menu_gradation,jdbcType=VARCHAR},
+      </if>
+      <if test="n_parent_menu != null" >
+        n_parent_menu = #{n_parent_menu,jdbcType=VARCHAR},
+      </if>
+      <if test="n_menu_type != null" >
+        n_menu_type = #{n_menu_type,jdbcType=VARCHAR},
+      </if>
+      <if test="n_url != null" >
+        n_url = #{n_url,jdbcType=VARCHAR},
+      </if>
+      <if test="n_time != null" >
+        n_time = #{n_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="n_person != null" >
+        n_person = #{n_person,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where n_id = #{n_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.NavigationBarRecord" >
+    update navigation_bar_record
+    set n_name = #{n_name,jdbcType=VARCHAR},
+      n_menu_gradation = #{n_menu_gradation,jdbcType=VARCHAR},
+      n_parent_menu = #{n_parent_menu,jdbcType=VARCHAR},
+      n_menu_type = #{n_menu_type,jdbcType=VARCHAR},
+      n_url = #{n_url,jdbcType=VARCHAR},
+      n_time = #{n_time,jdbcType=TIMESTAMP},
+      n_person = #{n_person,jdbcType=VARCHAR}
+    where n_id = #{n_id,jdbcType=INTEGER}
+  </update>
+</mapper>

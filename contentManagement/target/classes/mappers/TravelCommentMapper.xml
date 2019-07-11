@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.TravelCommentMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.TravelComment" >
+    <id column="c_id" property="c_id" jdbcType="INTEGER" />
+    <result column="tc_id" property="tc_id" jdbcType="VARCHAR" />
+    <result column="c_comment_content" property="c_comment_content" jdbcType="VARCHAR" />
+    <result column="c_commenttator_id" property="c_commenttator_id" jdbcType="INTEGER" />
+    <result column="c_comment_time" property="c_comment_time" jdbcType="VARCHAR" />
+    <result column="c_praisenumber" property="c_praisenumber" jdbcType="INTEGER" />
+    <result column="c_statu" property="c_statu" jdbcType="VARCHAR" />
+    <!--一对一关系   一条留言信息的用户id-->
+    <association property="userinfo" javaType="com.hafiz.www.po.Userinfo">
+      <id column="u_id" jdbcType="INTEGER" property="u_id" />
+      <result property="u_userhead" column="u_userhead"/>
+      <result property="u_truename" column="u_truename"/>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    c_id, tc_id, c_comment_content, c_commenttator_id, c_comment_time, c_praisenumber, 
+    c_statu
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from travel_comment
+    where c_id = #{c_id,jdbcType=INTEGER}
+  </select>
+  <select id="selectCommentAndReplyData" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    *
+    from travel_comment m,userinfo u
+    where  m.c_commenttator_id=u.u_id
+    AND
+    m.tc_id = #{tc_id,jdbcType=INTEGER}
+    ORDER  BY  m.c_comment_time DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from travel_comment
+    where c_id = #{c_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.TravelComment" >
+    insert into travel_comment (c_id, tc_id, c_comment_content, 
+      c_commenttator_id, c_comment_time, c_praisenumber, 
+      c_statu)
+    values (#{c_id,jdbcType=INTEGER}, #{tc_id,jdbcType=VARCHAR}, #{c_comment_content,jdbcType=VARCHAR}, 
+      #{c_commenttator_id,jdbcType=INTEGER}, #{c_comment_time,jdbcType=VARCHAR}, #{c_praisenumber,jdbcType=INTEGER},
+      #{c_statu,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.TravelComment" >
+    insert into travel_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="c_id != null" >
+        c_id,
+      </if>
+      <if test="tc_id != null" >
+        tc_id,
+      </if>
+      <if test="c_comment_content != null" >
+        c_comment_content,
+      </if>
+      <if test="c_commenttator_id != null" >
+        c_commenttator_id,
+      </if>
+      <if test="c_comment_time != null" >
+        c_comment_time,
+      </if>
+      <if test="c_praisenumber != null" >
+        c_praisenumber,
+      </if>
+      <if test="c_statu != null" >
+        c_statu,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="c_id != null" >
+        #{c_id,jdbcType=INTEGER},
+      </if>
+      <if test="tc_id != null" >
+        #{tc_id,jdbcType=VARCHAR},
+      </if>
+      <if test="c_comment_content != null" >
+        #{c_comment_content,jdbcType=VARCHAR},
+      </if>
+      <if test="c_commenttator_id != null" >
+        #{c_commenttator_id,jdbcType=INTEGER},
+      </if>
+      <if test="c_comment_time != null" >
+        #{c_comment_time,jdbcType=VARCHAR},
+      </if>
+      <if test="c_praisenumber != null" >
+        #{c_praisenumber,jdbcType=INTEGER},
+      </if>
+      <if test="c_statu != null" >
+        #{c_statu,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.TravelComment" >
+    update travel_comment
+    <set >
+      <if test="tc_id != null" >
+        tc_id = #{tc_id,jdbcType=VARCHAR},
+      </if>
+      <if test="c_comment_content != null" >
+        c_comment_content = #{c_comment_content,jdbcType=VARCHAR},
+      </if>
+      <if test="c_commenttator_id != null" >
+        c_commenttator_id = #{c_commenttator_id,jdbcType=INTEGER},
+      </if>
+      <if test="c_comment_time != null" >
+        c_comment_time = #{c_comment_time,jdbcType=VARCHAR},
+      </if>
+      <if test="c_praisenumber != null" >
+        c_praisenumber = #{c_praisenumber,jdbcType=INTEGER},
+      </if>
+      <if test="c_statu != null" >
+        c_statu = #{c_statu,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where c_id = #{c_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.TravelComment" >
+    update travel_comment
+    set tc_id = #{tc_id,jdbcType=VARCHAR},
+      c_comment_content = #{c_comment_content,jdbcType=VARCHAR},
+      c_commenttator_id = #{c_commenttator_id,jdbcType=INTEGER},
+      c_comment_time = #{c_comment_time,jdbcType=VARCHAR},
+      c_praisenumber = #{c_praisenumber,jdbcType=INTEGER},
+      c_statu = #{c_statu,jdbcType=VARCHAR}
+    where c_id = #{c_id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,26 @@
+package com.hafiz.www.service;
+
+import com.hafiz.www.po.Userinfo;
+
+import java.util.List;
+
+/**
+ * Desc:用户表相关的service接口
+ * Created by hafiz.zhang on 2016/8/27.
+ */
+public interface UserService {
+
+    /**
+     * 保存用户信息
+     * @param userinfo
+     * @return
+     */
+    int insertSelective(Userinfo userinfo);
+
+    /**
+     * 根据用户名查询用户信息
+     * @param u_uname
+     * @return
+     */
+    Userinfo selectByUname(String u_uname);
+}

@@ -1,0 +1,4 @@
+<!--保存图片路径-->
+<Context path=”picture” docBase=”D:\uploadFile\picture”/>
+<!--保存文件路径-->
+<Context path=”word” docBase=”D:\uploadFile\word”/>

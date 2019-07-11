@@ -1,0 +1,89 @@
+package com.hafiz.www.service.impl;
+
+import com.hafiz.www.mapper.TechnologyModuleEnclosureMapper;
+import com.hafiz.www.mapper.TechnologyModuleMapper;
+import com.hafiz.www.mapper.TypeOfArticleMapper;
+import com.hafiz.www.po.TechnologyModule;
+import com.hafiz.www.po.TechnologyModuleEnclosure;
+import com.hafiz.www.po.TypeOfArticle;
+import com.hafiz.www.service.ArticleService;
+import com.hafiz.www.shiro.SessionUtils;
+import com.hafiz.www.until.GetTheTimeStamp;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class ArticleServiceImpl implements ArticleService {
+
+    @Autowired
+    private TypeOfArticleMapper typeOfArticleMapper;
+    @Autowired
+    private TechnologyModuleMapper technologyModuleMapper;
+    @Autowired
+    private TechnologyModuleEnclosureMapper technologyModuleEnclosureMapper;
+    /**
+     * 获取技术文章分类列表
+     * @return  LIST列表
+     */
+    public List<TypeOfArticle> getTheTypeOfArtileList() {
+        return typeOfArticleMapper.getTheTypeOfArtileList();
+    }
+
+    /**
+     * 保存新增文章
+     * 1：先将文本内容保存至TechnologyModule表中
+     * 2：将上面保存数据时返回的数据ID和上传的附件文件一起保存至TechnologyModuleEnclosure表中
+     * @param technologyModule  上传数据
+     * @return 返回保存的当前id
+     */
+    @Transactional
+    public int insertSelective(TechnologyModule technologyModule) {
+        //判断当前用户是否登陆
+        int data=0;
+        if(SessionUtils.isLoggedIn()){
+            try {
+                technologyModule.setM_publish_personid(SessionUtils.getLoginUserId());//用户id
+                technologyModule.setM_datatime(new GetTheTimeStamp().getCurrentTime());//当前时间
+                String content=technologyModule.getM_content();
+                String fileList="";
+                TechnologyModuleEnclosure technologyModuleEnclosure = new TechnologyModuleEnclosure();
+
+                if(content.contains("border=\"0\"")){//将上传的留言中如果含有表格则将其border改为1
+                    content=content.replace("border=\"0\"","border=\"1\"");
+                }
+                technologyModule.setM_content(content);
+                data =technologyModuleMapper.insertSelective(technologyModule);
+                //获取返回 的 数据id
+                data = technologyModule.getM_id();
+                List<TechnologyModuleEnclosure> lists = new ArrayList <TechnologyModuleEnclosure>();
+                if(technologyModule.getFileList()!=null && !technologyModule.getFileList().equals("")){
+                    fileList = technologyModule.getFileList();//上传文件保存路径
+                    JSONObject jsonObject =   new JSONObject(fileList);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for(int i=0;i<jsonArray.length();i++){
+                        technologyModuleEnclosure.setE_enclosure_url(jsonArray.getString(i));
+                        technologyModuleEnclosure.setM_id(data);
+                        technologyModuleEnclosure.setE_dowloads("0");
+                        technologyModuleEnclosure.setE_filename("");
+                        lists.add(technologyModuleEnclosure);
+                    }
+                   technologyModuleEnclosureMapper.insert(lists);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                data=-2;
+            }
+
+        }else{
+            data=-1;
+        }
+
+        return data;
+    }
+}

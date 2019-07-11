@@ -1,0 +1,36 @@
+package com.hafiz.www.po;
+
+/**
+ * 技术文章类别
+ */
+public class TypeOfArticle {
+    private Integer a_id;
+
+    private String a_type;
+
+    private String a_status;
+
+    public Integer getA_id() {
+        return a_id;
+    }
+
+    public void setA_id(Integer a_id) {
+        this.a_id = a_id;
+    }
+
+    public String getA_type() {
+        return a_type;
+    }
+
+    public void setA_type(String a_type) {
+        this.a_type = a_type;
+    }
+
+    public String getA_status() {
+        return a_status;
+    }
+
+    public void setA_status(String a_status) {
+        this.a_status = a_status;
+    }
+}

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.IndustryInformationMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.IndustryInformation" >
+    <id column="i_id" property="i_id" jdbcType="INTEGER" />
+    <result column="i_uid" property="i_uid" jdbcType="VARCHAR" />
+    <result column="i_readnumber" property="i_readnumber" jdbcType="VARCHAR" />
+    <result column="i_addtime" property="i_addtime" jdbcType="VARCHAR" />
+    <result column="i_title" property="i_title" jdbcType="VARCHAR" />
+    <result column="i_type" property="i_type" jdbcType="VARCHAR" />
+    <result column="i_resources_mode" property="i_resources_mode" jdbcType="VARCHAR" />
+    <result column="i_resources_mode_url" property="i_resources_mode_url" jdbcType="VARCHAR" />
+    <result column="i_status" property="i_status" jdbcType="VARCHAR" />
+    <result column="i_fine_paste" property="i_fine_paste" jdbcType="VARCHAR" />
+    <result column="i_key_words" property="i_key_words" jdbcType="VARCHAR" />
+    <!--一对一关系   一条留言信息的用户id-->
+    <association property="userinfo" javaType="com.hafiz.www.po.Userinfo">
+      <id column="u_id" jdbcType="INTEGER" property="u_id" />
+      <result property="u_userhead" column="u_userhead"/>
+      <result property="u_truename" column="u_truename"/>
+    </association>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hafiz.www.po.IndustryInformation" extends="BaseResultMap" >
+    <result column="i_content" property="i_content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    i_id, i_uid, i_readnumber, i_addtime, i_title, i_type, i_resources_mode, i_resources_mode_url, 
+    i_status, i_fine_paste,i_key_words
+  </sql>
+  <sql id="Blob_Column_List" >
+    i_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    *
+    from industry_information i,userinfo u
+    where 1=1
+    and i.i_uid=u.u_id
+    AND i.i_id = #{i_id,jdbcType=INTEGER}
+  </select>
+  <select id="getCount" parameterType="com.hafiz.www.po.PublicPagingQuery" resultType="Integer">
+    select COUNT(*)from industry_information i where 1=1
+    <if test="queryObj.i_fine_paste!=null">
+      and i.i_fine_paste=#{queryObj.i_fine_paste}
+    </if>
+    <if test="queryObj.i_status!=null">
+      and i.i_status=#{queryObj.i_status}
+    </if>
+    <if test="queryObj.i_resources_mode!=null">
+      and i.i_resources_mode=#{queryObj.i_resources_mode}
+    </if>
+    <if test="queryObj.i_title!=null">
+      and i.i_title like concat("%",#{queryObj.i_title},"%")
+    </if>
+  </select>
+  <select id="selectIndustryInformationDataByPage" resultMap="ResultMapWithBLOBs" parameterType="com.hafiz.www.po.PublicPagingQuery" >
+    select
+    *
+    from industry_information i,userinfo u
+    where 1=1
+    and i.i_uid=u.u_id
+    <if test="queryObj.i_fine_paste!=null">
+      and i.i_fine_paste=#{queryObj.i_fine_paste}
+    </if>
+    <if test="queryObj.i_status!=null">
+      and i.i_status=#{queryObj.i_status}
+    </if>
+    <if test="queryObj.i_resources_mode!=null">
+      and i.i_resources_mode=#{queryObj.i_resources_mode}
+    </if>
+    <if test="queryObj.i_title!=null">
+      and i.i_title like concat("%",#{queryObj.i_title},"%")
+    </if>
+    <if test="queryObj.i_type!=null">
+      and i.i_type like concat("%",#{queryObj.i_type},"%")
+    </if>
+    <if test="type == 1">
+      ORDER BY m.m_readnum DESC
+    </if>
+    <if test="type == 2">
+      ORDER BY m.m_datatime DESC
+    </if>
+    <if test="type ==3">
+      ORDER BY m.m_datatime DESC
+    </if>
+    <if test="pageNumber != null and  pageSize!= null">
+      limit #{startRow},#{pageSize}
+    </if>
+  </select>
+  <select id="selectIndustryInformationTopTenByFine_paste" resultMap="ResultMapWithBLOBs">
+    select
+    *
+    from  industry_information i,userinfo u
+     where 1=1
+    and i.i_uid=u.u_id
+    and i.i_id in(
+    select t.i_id from (
+    select d.* from industry_information d where d.i_fine_paste='1' order by d.i_addtime  desc LIMIT 10)
+    as t ) ORDER BY i.i_addtime desc
+  </select>
+  <select id="selectIndustryInformationTopTenByTime" resultMap="ResultMapWithBLOBs">
+    select
+    *
+    from  industry_information i,userinfo u
+    where 1=1
+    and i.i_uid=u.u_id
+    and i.i_id in(
+    select t.i_id from (
+    select d.* from industry_information d  order by d.i_addtime  desc LIMIT 10)
+    as t ) ORDER BY i.i_addtime desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from industry_information
+    where i_id = #{i_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByManager" parameterType="com.hafiz.www.po.IndustryInformation" >
+    delete from industry_information
+    where i_id in (#{i_id,jdbcType=INTEGER})
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.IndustryInformation" >
+    insert into industry_information (i_id, i_uid, i_readnumber, 
+      i_addtime, i_title, i_type, 
+      i_resources_mode, i_resources_mode_url, 
+      i_status, i_fine_paste, i_content,i_key_words
+      )
+    values (#{i_id,jdbcType=INTEGER}, #{i_uid,jdbcType=VARCHAR}, #{i_readnumber,jdbcType=VARCHAR}, 
+      #{i_addtime,jdbcType=VARCHAR}, #{i_title,jdbcType=VARCHAR}, #{i_type,jdbcType=VARCHAR}, 
+      #{i_resources_mode,jdbcType=VARCHAR}, #{i_resources_mode_url,jdbcType=VARCHAR}, 
+      #{i_status,jdbcType=VARCHAR}, #{i_fine_paste,jdbcType=VARCHAR}, #{i_content,jdbcType=LONGVARCHAR},
+      #{i_key_words,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelectiveList" parameterType="java.util.List" >
+    insert into industry_information (i_id, i_uid, i_readnumber,
+    i_addtime, i_title, i_type,
+    i_resources_mode, i_resources_mode_url,
+    i_status, i_fine_paste, i_content,i_key_words
+    )
+    values  <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.i_id,jdbcType=INTEGER}, #{item.i_uid,jdbcType=VARCHAR}, #{item.i_readnumber,jdbcType=VARCHAR},
+    #{item.i_addtime,jdbcType=VARCHAR}, #{item.i_title,jdbcType=VARCHAR}, #{item.i_type,jdbcType=VARCHAR},
+    #{item.i_resources_mode,jdbcType=VARCHAR}, #{item.i_resources_mode_url,jdbcType=VARCHAR},
+    #{item.i_status,jdbcType=VARCHAR}, #{item.i_fine_paste,jdbcType=VARCHAR}, #{item.i_content,jdbcType=LONGVARCHAR},
+    #{item.i_key_words,jdbcType=VARCHAR}
+    )
+  </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.IndustryInformation" >
+    insert into industry_information
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="i_id != null" >
+        i_id,
+      </if>
+      <if test="i_uid != null" >
+        i_uid,
+      </if>
+      <if test="i_readnumber != null" >
+        i_readnumber,
+      </if>
+      <if test="i_addtime != null" >
+        i_addtime,
+      </if>
+      <if test="i_title != null" >
+        i_title,
+      </if>
+      <if test="i_type != null" >
+        i_type,
+      </if>
+      <if test="i_resources_mode != null" >
+        i_resources_mode,
+      </if>
+      <if test="i_resources_mode_url != null" >
+        i_resources_mode_url,
+      </if>
+      <if test="i_status != null" >
+        i_status,
+      </if>
+      <if test="i_fine_paste != null" >
+        i_fine_paste,
+      </if>
+      <if test="i_content != null" >
+        i_content,
+      </if>
+      <if test="i_key_words != null" >
+        i_key_words,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="i_id != null" >
+        #{i_id,jdbcType=INTEGER},
+      </if>
+      <if test="i_uid != null" >
+        #{i_uid,jdbcType=VARCHAR},
+      </if>
+      <if test="i_readnumber != null" >
+        #{i_readnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="i_addtime != null" >
+        #{i_addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="i_title != null" >
+        #{i_title,jdbcType=VARCHAR},
+      </if>
+      <if test="i_type != null" >
+        #{i_type,jdbcType=VARCHAR},
+      </if>
+      <if test="i_resources_mode != null" >
+        #{i_resources_mode,jdbcType=VARCHAR},
+      </if>
+      <if test="i_resources_mode_url != null" >
+        #{i_resources_mode_url,jdbcType=VARCHAR},
+      </if>
+      <if test="i_status != null" >
+        #{i_status,jdbcType=VARCHAR},
+      </if>
+      <if test="i_fine_paste != null" >
+        #{i_fine_paste,jdbcType=VARCHAR},
+      </if>
+      <if test="i_content != null" >
+        #{i_content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="i_key_words != null" >
+        #{i_key_words,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.IndustryInformation" >
+    update industry_information
+    <set >
+      <if test="i_uid != null" >
+        i_uid = #{i_uid,jdbcType=VARCHAR},
+      </if>
+      <if test="i_readnumber != null" >
+        i_readnumber = #{i_readnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="i_addtime != null" >
+        i_addtime = #{i_addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="i_title != null" >
+        i_title = #{i_title,jdbcType=VARCHAR},
+      </if>
+      <if test="i_type != null" >
+        i_type = #{i_type,jdbcType=VARCHAR},
+      </if>
+      <if test="i_resources_mode != null" >
+        i_resources_mode = #{i_resources_mode,jdbcType=VARCHAR},
+      </if>
+      <if test="i_resources_mode_url != null" >
+        i_resources_mode_url = #{i_resources_mode_url,jdbcType=VARCHAR},
+      </if>
+      <if test="i_status != null" >
+        i_status = #{i_status,jdbcType=VARCHAR},
+      </if>
+      <if test="i_fine_paste != null" >
+        i_fine_paste = #{i_fine_paste,jdbcType=VARCHAR},
+      </if>
+      <if test="i_content != null" >
+        i_content = #{i_content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="i_key_words != null" >
+        i_key_words = #{i_key_words,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where i_id = #{i_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hafiz.www.po.IndustryInformation" >
+    update industry_information
+    set i_uid = #{i_uid,jdbcType=VARCHAR},
+      i_readnumber = #{i_readnumber,jdbcType=VARCHAR},
+      i_addtime = #{i_addtime,jdbcType=VARCHAR},
+      i_title = #{i_title,jdbcType=VARCHAR},
+      i_type = #{i_type,jdbcType=VARCHAR},
+      i_resources_mode = #{i_resources_mode,jdbcType=VARCHAR},
+      i_resources_mode_url = #{i_resources_mode_url,jdbcType=VARCHAR},
+      i_status = #{i_status,jdbcType=VARCHAR},
+      i_fine_paste = #{i_fine_paste,jdbcType=VARCHAR},
+      i_content = #{i_content,jdbcType=LONGVARCHAR},
+      i_key_words=#{i_key_words,jdbcType=LONGVARCHAR}
+    where i_id = #{i_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.IndustryInformation" >
+    update industry_information
+    set i_uid = #{i_uid,jdbcType=VARCHAR},
+      i_readnumber = #{i_readnumber,jdbcType=VARCHAR},
+      i_addtime = #{i_addtime,jdbcType=VARCHAR},
+      i_title = #{i_title,jdbcType=VARCHAR},
+      i_type = #{i_type,jdbcType=VARCHAR},
+      i_resources_mode = #{i_resources_mode,jdbcType=VARCHAR},
+      i_resources_mode_url = #{i_resources_mode_url,jdbcType=VARCHAR},
+      i_status = #{i_status,jdbcType=VARCHAR},
+      i_fine_paste = #{i_fine_paste,jdbcType=VARCHAR},
+      i_key_words= #{i_key_words,jdbcType=VARCHAR}
+    where i_id = #{i_id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="/mappers.UBlacklistMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.UBlacklist" >
+    <id column="b_id" property="b_id" jdbcType="INTEGER" />
+    <result column="b_add_usrid" property="b_add_usrid" jdbcType="VARCHAR" />
+    <result column="b_addtime" property="b_addtime" jdbcType="VARCHAR" />
+    <result column="b_computer_ip" property="b_computer_ip" jdbcType="VARCHAR" />
+    <result column="b_uid" property="b_uid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    b_id, b_add_usrid, b_addtime, b_computer_ip, b_uid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from u_blacklist
+    where b_id = #{b_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from u_blacklist
+    where b_id = #{b_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.UBlacklist" >
+    insert into u_blacklist (b_id, b_add_usrid, b_addtime, 
+      b_computer_ip, b_uid)
+    values (#{b_id,jdbcType=INTEGER}, #{b_add_usrid,jdbcType=VARCHAR}, #{b_addtime,jdbcType=VARCHAR}, 
+      #{b_computer_ip,jdbcType=VARCHAR}, #{b_uid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.UBlacklist" >
+    insert into u_blacklist
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="b_id != null" >
+        b_id,
+      </if>
+      <if test="b_add_usrid != null" >
+        b_add_usrid,
+      </if>
+      <if test="b_addtime != null" >
+        b_addtime,
+      </if>
+      <if test="b_computer_ip != null" >
+        b_computer_ip,
+      </if>
+      <if test="b_uid != null" >
+        b_uid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="b_id != null" >
+        #{b_id,jdbcType=INTEGER},
+      </if>
+      <if test="b_add_usrid != null" >
+        #{b_add_usrid,jdbcType=VARCHAR},
+      </if>
+      <if test="b_addtime != null" >
+        #{b_addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="b_computer_ip != null" >
+        #{b_computer_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="b_uid != null" >
+        #{b_uid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.UBlacklist" >
+    update u_blacklist
+    <set >
+      <if test="b_add_usrid != null" >
+        b_add_usrid = #{b_add_usrid,jdbcType=VARCHAR},
+      </if>
+      <if test="b_addtime != null" >
+        b_addtime = #{b_addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="b_computer_ip != null" >
+        b_computer_ip = #{b_computer_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="b_uid != null" >
+        b_uid = #{b_uid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where b_id = #{b_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.UBlacklist" >
+    update u_blacklist
+    set b_add_usrid = #{b_add_usrid,jdbcType=VARCHAR},
+      b_addtime = #{b_addtime,jdbcType=VARCHAR},
+      b_computer_ip = #{b_computer_ip,jdbcType=VARCHAR},
+      b_uid = #{b_uid,jdbcType=VARCHAR}
+    where b_id = #{b_id,jdbcType=INTEGER}
+  </update>
+</mapper>

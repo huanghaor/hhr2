@@ -1,0 +1,322 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>博客主页--行业资讯</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/main.css" />
+    <link href="../../../css/angular.css" rel="stylesheet">
+    <link href="../../../js/wangEditor/wangEditor.min.css" rel="stylesheet">
+    <link href="../../../css/pagination.css" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="../../../js/jquery/jquery1.9.1.min.js"></script>
+    <script src="../../../js/angular-js/angular.js"></script>
+    <script src="../../../js/angular-js/angular-route.min.js"></script>
+    <script src="../../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../../js/wangEditor/wangEditor.min.js"></script>
+    <script src="../../../js/angular-js/tm.pagination.min.js"></script>
+    <script src="../../../js/functionJS/IndustryInformation/indeustryInformationIndex.js"></script>
+    <script src="../../../js/bootstrap/skel.min.js"></script>
+    <script src="../../../js/bootstrap/util.js"></script>
+    <script src="../../../js/bootstrap/main.js"></script>
+    <style>
+        .modal{
+            line-height: 2em;
+            text-align: left;
+            margin-left: 5%;
+        }
+        .close{
+            height: 1em;
+        }
+        #one{
+            font-size: 15px;
+        }
+        button{
+            background-color: #e67e22 !important;
+            /*width: auto !important;*/
+        }
+        a{
+            text-decoration:none;
+        }
+        .input-medium{
+            border-radius:15px !important;
+            border: 1px solid #fff !important;
+        }
+        .search{
+            border-radius:15px ;
+            background-color:#e67e22;
+            color: #fff;
+
+        }
+        .search_condition span{
+            cursor: pointer;
+        }
+        #one{
+            padding-top: 0em !important;
+        }
+        .box{
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .box:before{
+            content: "";
+            width: 0;
+            height: 100%;
+           /* background: #000;*/
+            padding: 14px 18px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            opacity: 0;
+            transition: all 500ms cubic-bezier(0.47, 0, 0.745, 0.715) 0s;
+        }
+        .box:hover:before{
+            width: 100%;
+            left: 0;
+            opacity: 0.5;
+        }
+        .box img{
+            width: 100%;
+            height: auto;
+        }
+        .box .box-content{
+            width: 100%;
+            padding: 14px 18px;
+            color: #fff;
+            position: absolute;
+            top: 38%;
+            left: 0;
+        }
+        .box .title{
+            font-size: 25px;
+            font-weight: 600;
+            line-height: 30px;
+            text-transform: uppercase;
+            margin: 0;
+            opacity: 0;
+            transition: all 0.5s ease 0s;
+        }
+        .box .post{
+            font-size: 15px;
+            text-transform: capitalize;
+            opacity: 0;
+            transition: all 0.5s ease 0s;
+        }
+        .box:hover .title,
+        .box:hover .post{
+            opacity: 1;
+            transition-delay: 0.7s;
+        }
+        .box .icon{
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            margin-top: 15px;
+        }
+        .box .icon li{
+            display: inline-block;
+        }
+        .box .icon li a{
+            display: block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background: #f74e55;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            margin-right: 5px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.5s ease 0s;
+        }
+        .box:hover .icon li a{
+            opacity: 1;
+            transform: translateY(0px);
+            transition-delay: 0.5s;
+        }
+        .box:hover .icon li:last-child a{
+            transition-delay: 0.8s;
+        }
+        @media only screen and (max-width:990px){
+            .box{ margin-bottom: 30px; }
+        }
+        .title{
+            color:#7d7979 !important;
+            padding: 1em !important;
+        }
+
+    </style>
+</head>
+<body ng-app="industry" style="background-color: #ebebeb">
+
+<!-- Header -->
+<header id="header">
+    <div class="inner"  ng-controller="NavCtrl">
+        <div class="col-lg-12">
+            <a href="/index.html" class="logo">introspect</a>
+            <nav id="nav" ng-repeat="nav in navLists" >
+                <a class="active" href="{{nav.n_url}}" >{{nav.n_name}}</a>
+            </nav>
+            <span class="dropdown"  ng-init="judgeIsLogin()">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"style="margin-left: 15%;">
+                    <img ng-src="{{u_userhead}}" alt="..." class="img-circle" style="width: 40px;height: 40px;border-radius:55%;">
+                    <span>{{u_truename}}</span>
+                </a>
+                <div class="dropdown-menu pull-center" style="margin-left: 65%;line-height: 3em;background: rgb(30, 30, 30);width: 120px;overflow: hidden;text-align: center;font-size: 15px;">
+                    <a><span  data-toggle="modal" data-target="#myModal" style="cursor: pointer">登&emsp;&emsp;陆</span></a>
+                    <a href="/index/register"  target="_Blank" style="cursor: pointer">注&emsp;&emsp;册</a>
+                    <a href="/index/personalCenter"><span style="cursor: pointer">个人中心</span></a>
+                    <a><span style="cursor: pointer;margin-right: 25px" ng-click="Sign_out()">退出登陆</span></a>
+                </div>
+             </span>
+        </div>
+        <!--登陆弹出框-->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="text-align: center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: #000!important;">&times;</button>
+                        <h3 class="modal-title" id="myModalLabel">登&emsp;&emsp;陆</h3>
+                    </div>
+                    <div class="modal-body" ng-controller="login" style="height: 480px;">
+                        <div  class="col-lg-12 col-12 px-sm-5 model">
+                            <div  class="col-12 px-sm-5 justify-content-center d-flex align-items-center mh-80 content py-4">
+                                <cc-login _nghost-c4="">
+                                    <div  class="mt-5">
+                                        <cc-login-password >
+                                            <form  class="mt-5" id="modelForm" name="signUpForm" ng-submit="LoginsubmitForm()">
+                                                <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_name.$valid}">
+                                                    <span style="font-size: 18px;">Username</span>
+                                                    <input class="form-control" name="u_uname" id="email" type="text" placeholder="账号"
+                                                           ng-model="userdata.u_name" required>
+                                                    <p class="inputError" ng-if="signUpForm.u_name.$error.required && signUpForm.u_name.$touched">请输入账号</p>
+                                                </div>
+                                                <div  class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_password.$valid}">
+                                                    <span style="font-size: 18px;">Password</span>
+                                                    <input class="form-control" name="u_password" id="password" type="password" placeholder="密码"
+                                                           ng-model="userdata.u_password" required>
+                                                    <p class="inputError" ng-if="signUpForm.u_password.$error.required && signUpForm.u_password.$touched">请输入密码</p>
+                                                </div>
+                                                <div  class="form-group input-group-lg">
+                                                    <div class="row">
+                                                        <div class="col-lg-5 wram" ng-class="{'has-success':signUpForm.code.$valid}">
+                                                            <input class="form-control" name="code" id="yzm" type="text" placeholder="验证码"
+                                                                   ng-model="userdata.code" style=" height: 46px;" required>
+                                                            <p class="inputError" ng-if="signUpForm.code.$error.required && signUpForm.code.$touched">请输入验证码</p>
+                                                        </div>
+                                                        <div class="col-lg-6 "><!--src="/user/getImage"-->
+                                                            <img id="imageCode" ng-src="/user/getImage"
+                                                                 title="看不清，点击换一张" style="cursor: pointer;" ng-click="refreshCheckCode()" width="100%" height="45px"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button  ng-disabled="signUpForm.$invalid" type="submit" class="btn btn-lg btn-block w-100 btn-primary  _300 mt-4 radius d-block text-uppercase">
+                                                    <span  translate="">立即登陆</span>
+                                                </button>
+                                            </form>
+                                        </cc-login-password>
+                                    </div>
+                                    <div class="mt-3 pb-3 px-0 d-flex flex-wrap justify-content-between">
+                                        <div class="row mt3">
+                                            <div class="col-lg-12">
+                                                <a class="text-muted _300 text-sm px-0 mr-3"  translate="" href="#" style="color: #9d9d9d">Forgot password?</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </cc-login>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</header>
+<a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+<!-- One -->
+<section id="one">
+    <nav class="main-navigation" style="margin-bottom: 35px;"></nav>
+    <!--详细内容-->
+    <div class="row title" style="min-height: 700px;" ng-controller="industryInformation">
+        <!--<iframe id="mainFrame" name="rightContent" ng-src="/index/indexContent" frameborder="0" marginheight="0" marginwidth="0" frameborder="0" scrolling="auto" width="100%" height="100%"></iframe>-->
+        <section class="content-wrap">
+            <div class="container">
+                <div class="row">
+                    <main class="col-md-8 main-content" style="padding-top:2em;min-height: 500px;background-color: #ffffff">
+                        <article id="112" class="post" ng-repeat="listMain in IndustryListData">
+                            <h4 style="color: #16171a !important;">
+                                <a href="/industryInfomation/jumpToTheindustryInfomationdetail?i_id={{listMain.i_id}}" target="_blank">
+                                    {{listMain.i_title}}
+                                </a>
+                            </h4>
+                            <p ng-bind-html="listMain.i_content|limitTo:100|trusted " style="font-size: 15px;color: #908a8a"> </p>
+                            <p>{{listMain.i_type}}&emsp;&emsp;|&emsp;&emsp;{{listMain.i_resources_mode_url}}&emsp;&emsp;|&emsp;&emsp;{{listMain.i_addtime}}&emsp;|&emsp;关键词：{{listMain.i_key_words}}</p>
+                        </article>
+                        <div class="row paginations">
+                            <!--分页插件使用angularjs-->
+                            <tm-pagination conf="paginationConf"></tm-pagination>
+                        </div>
+                    </main>
+
+                    <aside class="col-md-4 sidebar">
+
+                        <div class="widget" style="background-color: #ffffff">
+                            <h4 class="title" >
+                                <span class="glyphicon glyphicon-bullhorn" style="color: red"></span>&nbsp;<span style="color: #0c0c0c">最新资讯</span>
+                                <!--<span class="glyphicon glyphicon-refresh" style="position: relative;margin-left: 70%;"></span>-->
+                                <hr style="padding: 0em !important;margin: 0em !important;border: 2px solid #ccc5c5  !important;  "/>
+                            </h4>
+                            <div class="content community" style="padding-left: 1em;">
+                                <ul >
+                                    <li  ng-repeat="listZX in newZX">
+                                        <a href="/industryInfomation/jumpToTheindustryInfomationdetail?i_id={{listZX.i_id}}" target="_blank">
+                                             <span style="color: #333">{{listZX.i_title}} </span>
+                                        </a>
+                                        <p><span>|&emsp;</span>{{listZX.i_addtime}}</p></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="widget" style="background-color: #ffffff">
+                            <h4 class="title" >
+                                <span class="glyphicon glyphicon-bookmark" style="color: red"></span>&nbsp;<span style="color: #0c0c0c">推荐资讯</span>
+                                <!--<span class="glyphicon glyphicon-refresh" style="position: relative;margin-left: 70%;"></span>-->
+                                <hr style="padding: 0em !important;margin: 0em !important;border: 2px solid #ccc5c5  !important;  "/>
+                            </h4>
+                            <div class="content download" style="padding-left: 1em;">
+                                <ul >
+                                    <li ng-repeat="listTJ in newTJ">
+                                        <a href="/industryInfomation/jumpToTheindustryInfomationdetail?i_id={{listTJ.i_id}}" target="_blank">
+                                             <span style="color: #333">{{listTJ.i_title}}</span>
+                                        </a>
+                                        <p><span>|&emsp;</span>{{listTJ.i_addtime}}</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </aside>
+
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+<!-- Footer -->
+<section id="footer" style="text-align: center">
+    <small>
+        @hhr-个人博客
+    </small>
+</section>
+</body>
+</html>

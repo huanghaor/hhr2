@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.TypeOfArticleMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.TypeOfArticle" >
+    <id column="a_id" property="a_id" jdbcType="INTEGER" />
+    <result column="a_type" property="a_type" jdbcType="VARCHAR" />
+    <result column="a_status" property="a_status" jdbcType="VARCHAR" />
+    <result column="picture_url" property="picture_url" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    a_id, a_type, a_status, picture_url
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from type_of_article
+    where a_id = #{a_id,jdbcType=INTEGER}
+  </select>
+  <select id="getTheTypeOfArtileList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from type_of_article where a_status=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from type_of_article
+    where a_id = #{a_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.TypeOfArticle" >
+    insert into type_of_article (a_id, a_type, a_status, 
+      picture_url)
+    values (#{a_id,jdbcType=INTEGER}, #{a_type,jdbcType=VARCHAR}, #{a_status,jdbcType=VARCHAR}, 
+      #{picture_url,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.TypeOfArticle" >
+    insert into type_of_article
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="a_id != null" >
+        a_id,
+      </if>
+      <if test="a_type != null" >
+        a_type,
+      </if>
+      <if test="a_status != null" >
+        a_status,
+      </if>
+      <if test="picture_url != null" >
+        picture_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="a_id != null" >
+        #{a_id,jdbcType=INTEGER},
+      </if>
+      <if test="a_type != null" >
+        #{a_type,jdbcType=VARCHAR},
+      </if>
+      <if test="a_status != null" >
+        #{a_status,jdbcType=VARCHAR},
+      </if>
+      <if test="picture_url != null" >
+        #{picture_url,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.TypeOfArticle" >
+    update type_of_article
+    <set >
+      <if test="a_type != null" >
+        a_type = #{a_type,jdbcType=VARCHAR},
+      </if>
+      <if test="a_status != null" >
+        a_status = #{a_status,jdbcType=VARCHAR},
+      </if>
+      <if test="picture_url != null" >
+        picture_url = #{picture_url,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where a_id = #{a_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.TypeOfArticle" >
+    update type_of_article
+    set a_type = #{a_type,jdbcType=VARCHAR},
+      a_status = #{a_status,jdbcType=VARCHAR},
+      picture_url = #{picture_url,jdbcType=VARCHAR}
+    where a_id = #{a_id,jdbcType=INTEGER}
+  </update>
+</mapper>

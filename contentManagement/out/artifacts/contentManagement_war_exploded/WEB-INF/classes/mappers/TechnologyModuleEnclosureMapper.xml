@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.TechnologyModuleEnclosureMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.TechnologyModuleEnclosure" >
+    <id column="e_id" property="e_id" jdbcType="INTEGER" />
+    <result column="m_id" property="m_id" jdbcType="INTEGER" />
+    <result column="e_enclosure_url" property="e_enclosure_url" jdbcType="VARCHAR" />
+    <result column="e_dowloads" property="e_dowloads" jdbcType="VARCHAR" />
+    <result column="e_filename" property="e_filename" jdbcType="VARCHAR" />
+    <result column="e_filetype" jdbcType="VARCHAR" property="e_filetype" />
+    <result column="e_filesize" jdbcType="VARCHAR" property="e_filesize" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    e_id, m_id, e_enclosure_url, e_dowloads, e_filename,e_filetype,e_filesize
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from technology_module_enclosure
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from technology_module_enclosure
+    where e_id = #{e_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="java.util.List" >
+    insert into technology_module_enclosure (e_id, m_id, e_enclosure_url, 
+      e_dowloads, e_filename,e_filetype,e_filesize)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.e_id,jdbcType=INTEGER}, #{item.m_id,jdbcType=INTEGER}, #{item.e_enclosure_url,jdbcType=VARCHAR},
+      #{item.e_dowloads,jdbcType=VARCHAR}, #{item.e_filename,jdbcType=VARCHAR}, #{item.e_filetype,jdbcType=VARCHAR}
+      , #{item.e_filesize,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.TechnologyModuleEnclosure">
+    insert into technology_module_enclosure
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="e_id != null" >
+        e_id,
+      </if>
+      <if test="m_id != null" >
+        m_id,
+      </if>
+      <if test="e_enclosure_url != null" >
+        e_enclosure_url,
+      </if>
+      <if test="e_dowloads != null" >
+        e_dowloads,
+      </if>
+      <if test="e_filename != null" >
+        e_filename,
+      </if>
+      <if test="e_filetype != null" >
+        e_filetype,
+      </if>
+      <if test="e_filesize != null" >
+        e_filesize,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <!--<foreach collection="list" item="item" index= "index" separator =",">-->
+      <if test="e_id != null" >
+        #{e_id,jdbcType=INTEGER},
+      </if>
+      <if test="m_id != null" >
+        #{m_id,jdbcType=INTEGER},
+      </if>
+      <if test="e_enclosure_url != null" >
+        #{e_enclosure_url,jdbcType=VARCHAR},
+      </if>
+      <if test="e_dowloads != null" >
+        #{e_dowloads,jdbcType=VARCHAR},
+      </if>
+      <if test="e_filename != null" >
+        #{e_filename,jdbcType=VARCHAR},
+      </if>
+      <if test="e_filetype != null" >
+        #{e_filetype,jdbcType=VARCHAR},
+      </if>
+      <if test="e_filesize != null" >
+        #{e_filesize,jdbcType=VARCHAR},
+      </if>
+     <!-- </foreach>-->
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.TechnologyModuleEnclosure" >
+    update technology_module_enclosure
+    <set >
+      <if test="m_id != null" >
+        m_id = #{m_id,jdbcType=INTEGER},
+      </if>
+      <if test="e_enclosure_url != null" >
+        e_enclosure_url = #{e_enclosure_url,jdbcType=VARCHAR},
+      </if>
+      <if test="e_dowloads != null" >
+        e_dowloads = #{e_dowloads,jdbcType=VARCHAR},
+      </if>
+      <if test="e_filename != null" >
+        e_filename = #{e_filename,jdbcType=VARCHAR},
+      </if>
+      <if test="e_filetype != null" >
+        #{e_filetype,jdbcType=VARCHAR},
+      </if>
+      <if test="e_filesize != null" >
+        #{e_filesize,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where e_id = #{e_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.TechnologyModuleEnclosure" >
+    update technology_module_enclosure
+    set m_id = #{m_id,jdbcType=INTEGER},
+      e_enclosure_url = #{e_enclosure_url,jdbcType=VARCHAR},
+      e_dowloads = #{e_dowloads,jdbcType=VARCHAR},
+      e_filename = #{e_filename,jdbcType=VARCHAR},
+      e_filetype = #{e_filetype,jdbcType=VARCHAR},
+      e_filesize = #{e_filesize,jdbcType=VARCHAR},
+    where e_id = #{e_id,jdbcType=INTEGER}
+  </update>
+</mapper>

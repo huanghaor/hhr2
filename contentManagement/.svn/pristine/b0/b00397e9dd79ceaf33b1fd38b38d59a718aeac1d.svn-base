@@ -1,0 +1,65 @@
+package com.hafiz.www.shiro;
+
+import com.hafiz.www.po.Userinfo;
+import com.hafiz.www.service.UserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.util.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+public class CustomRealm extends AuthorizingRealm {
+
+    private static final String _WILDCARD = "*";
+    private static final String _PATTERN_APPEND = "+.*";
+
+    @Autowired
+    private UserService userService;
+
+    //授权
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+       return null;
+    }
+
+    //认证
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        String username = token.getUsername();
+        Userinfo user = userService.selectByUname(username);
+        //4.系统管理员存在则进行密码校验，否则，抛出异常：系统管理员不存在;
+        if (user!= null){
+
+            //1)principal：认证的实体信息，可以是username，也可以是数据库表对应的用户的实体对象
+            String u_uname = user.getU_name();
+
+            //将用户名和用户id保存到 session中，便于使用使用
+            SecurityUtils.getSubject().getSession().setAttribute("loginUser",user);
+            SecurityUtils.getSubject().getSession().setAttribute("u_id",user.getU_id());
+            SecurityUtils.getSubject().getSession().setAttribute("u_uname",user.getU_name());
+            SecurityUtils.getSubject().getSession().setAttribute("u_turename",user.getU_truename());
+            //2)credentials：数据库中的密码
+            String u_password = user.getU_password();
+
+            //3)realmName：当前realm对象的name，调用父类的getName()方法即可
+            String realmName = getName();
+
+            //4)credentialsSalt盐值
+            ByteSource credentialsSalt = ByteSource.Util.bytes(username);//使用账号作为盐值
+
+            //根据用户的情况，来构建AuthenticationInfo对象,通常使用的实现类为SimpleAuthenticationInfo
+            //5)与数据库中用户名和密码进行比对，密码盐值加密，第4个参数传入realName。
+            SimpleAuthenticationInfo info  = new SimpleAuthenticationInfo(u_uname, u_password, credentialsSalt, realmName);
+            return info;
+        }else{
+            //6.若用户不存在，可以抛出UnknownAccountException
+            System.out.println("======不存在该用户=========>");
+            throw new UnknownAccountException("不存在该用户");//没找到帐号
+        }
+    }
+}

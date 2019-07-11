@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>博客主页加载内容</title>
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/angular.css" rel="stylesheet">
+    <link href="../../css/index/index.css" rel="stylesheet">
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="../../js/jquery/html5shiv.min.js"></script>
+    <script src="../../js/jquery/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/angular-js/angular.js"></script>
+    <script src="../../js/angular-js/angular-route.min.js"></script>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="../../js/jquery/jquery1.9.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+
+    <style>
+        .inputError{
+            color: red;
+        }
+        .wrapper{
+            width: 200px;
+            margin: 20px auto;
+        }
+        .wram{
+            position: relative;
+        }
+        .moveCheck{
+            position: absolute;
+            top:35px;
+            left: 180px;
+            color: green;
+        }
+        .container{
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+    </style>
+</head>
+<body class="home-template">
+<!--详细内容-->
+<section class="content-wrap">
+    <div class="container">
+        <div class="row">
+            <main class="col-md-8 main-content">
+                <article id="112" class="post">
+
+                    <div class="post-head"></div>
+                    <div class="post-content"></div>
+                    <div class="post-permalink">
+                        <a href="/all-new-ghost-docs-integrations/" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <article id="1162" class="post">
+
+                    <div class="post-head"></div>
+                    <div class="post-content"></div>
+                    <div class="post-permalink">
+                        <a href="/all-new-ghost-docs-integrations/" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <article id="1152" class="post">
+
+                    <div class="post-head"></div>
+                    <div class="post-content"></div>
+                    <div class="post-permalink">
+                        <a href="/all-new-ghost-docs-integrations/" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <article id="1142" class="post">
+
+                    <div class="post-head"></div>
+                    <div class="post-content"></div>
+                    <div class="post-permalink">
+                        <a href="/all-new-ghost-docs-integrations/" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <article id="1132" class="post">
+
+                    <div class="post-head"></div>
+                    <div class="post-content"></div>
+                    <div class="post-permalink">
+                        <a href="/all-new-ghost-docs-integrations/" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <article id="1122" class="post">
+
+                    <div class="post-head"></div>
+                    <div class="post-content"></div>
+                    <div class="post-permalink">
+                        <a href="/all-new-ghost-docs-integrations/" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <article id="1112" class="post">
+
+                    <div class="post-head"></div>
+                    <div class="post-content"></div>
+                    <div class="post-permalink">
+                        <a href="/all-new-ghost-docs-integrations/" class="btn btn-default">阅读全文</a>
+                    </div>
+                    <footer class="post-footer clearfix">
+                        <div class="pull-left tag-list">
+                            <i class="fa fa-folder-open-o"></i>
+                        </div>
+                        <div class="pull-right share">
+                        </div>
+                    </footer>
+                </article>
+                <nav class="pagination" role="navigation">
+                    <span class="page-number">第 1 页 ⁄ 共 9 页</span>
+                    <a class="older-posts" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+                </nav>
+            </main>
+
+            <aside class="col-md-4 sidebar">
+
+                <div class="widget">
+                    <h4 class="title">社区</h4>
+                    <div class="content community">
+                        <p>QQ群：307174632</p>
+                        <p><a href="http://wenda.ghostchina.com/" title="Ghost中文网问答社区" target="_blank" onclick="_hmt.push(['_trackEvent', 'big-button', 'click', '问答社区'])"><i class="fa fa-comments"></i> 问答社区</a></p>
+                        <p><a href="http://weibo.com/ghostchinacom" title="Ghost中文网官方微博" target="_blank" onclick="_hmt.push(['_trackEvent', 'big-button', 'click', '官方微博'])"><i class="fa fa-weibo"></i> 官方微博</a></p>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h4 class="title">下载专区</h4>
+                    <div class="content download">
+                        <a target="_blank" href="https://github.com/TryGhost/Ghost/releases" class="btn btn-default btn-block" onclick="_hmt.push(['_trackEvent', 'big-button', 'click', '下载Ghost'])">Ghost 最新版（0.7.4）</a>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h4 class="title">技术文章</h4>
+                    <div class="content tag-cloud">
+
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</section>
+</body>
+</html>

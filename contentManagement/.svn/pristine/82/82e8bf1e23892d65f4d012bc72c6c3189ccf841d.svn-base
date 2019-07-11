@@ -1,0 +1,22 @@
+package com.hafiz.www.service.impl;
+
+import com.hafiz.www.mapper.NavigationBarRecordMapper;
+import com.hafiz.www.po.NavigationBarRecord;
+import com.hafiz.www.service.IndexService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+@Service
+public class IndexServiceImpl implements IndexService {
+    @Autowired
+    private NavigationBarRecordMapper navigationBarRecordMapper;
+
+    /**
+     * 获取导航栏列表
+     * @return
+     */
+    public List<NavigationBarRecord> getIndexNavList() {
+        return navigationBarRecordMapper.getIndexNavLists();
+    }
+}

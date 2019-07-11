@@ -1,0 +1,25 @@
+package com.hafiz.www.mapper;
+
+import com.hafiz.www.po.MessageWal;
+import com.hafiz.www.po.PublicPagingQuery;
+
+import java.util.List;
+
+public interface MessageWalMapper {
+    int deleteByPrimaryKey(Integer w_id);
+
+    int insert(MessageWal record);
+
+    int insertSelective(MessageWal record);
+
+    MessageWal selectByPrimaryKey(Integer w_id);
+
+    int updateByPrimaryKeySelective(MessageWal record);
+
+    int updateByPrimaryKey(MessageWal record);
+
+    List<MessageWal> selectMessageData(PublicPagingQuery publicPagingQuery);
+
+    //int getCount(PublicPagingQuery publicPagingQuery);
+    int getCount(PublicPagingQuery publicPagingQuery);
+}

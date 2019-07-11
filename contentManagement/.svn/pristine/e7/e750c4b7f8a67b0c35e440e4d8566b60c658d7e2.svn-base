@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+  <!-- 配置驱动 -->
+	<classPathEntry location="H:\lib\mysql-connector-java-5.1.0-bin.jar" />
+
+	<context id="context1">
+
+		<commentGenerator>
+			<property name="suppressDate" value="true" />
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://127.0.0.1:3306/contentManagement"
+			 userId="root"
+			password="root" />
+		<!-- 生成实体类 实体bean文件 -->
+		<javaModelGenerator targetPackage="com.hafiz.www.po"
+			targetProject="src/main/java" />
+		<!-- mappers xml文件 -->
+		<sqlMapGenerator targetPackage="/mappers"
+			targetProject="src/main/resources" />
+		<!-- mappers 接口文件 -->
+		<javaClientGenerator targetPackage="com.hafiz.www.mapper"
+			targetProject="src/main/java" type="XMLMAPPER" />
+		<table schema="" tableName="navigation_bar_record" enableCountByExample="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableSelectByExample="false" selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="true"/></table>
+		<table schema="" tableName="userinfo" enableCountByExample="false"
+			   enableUpdateByExample="false" enableDeleteByExample="false"
+			   enableSelectByExample="false" selectByExampleQueryId="false">
+			<property name="useActualColumnNames" value="true"/></table>
+
+	</context>
+</generatorConfiguration>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>博客</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/angular.css" rel="stylesheet">
+    <link href="css/index/index.css" rel="stylesheet">
+    <!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 -->
+    <!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 -->
+    <!--[if lt IE 9]>
+    <script src="js/jquery/html5shiv.min.js"></script>
+    <script src="js/jquery/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="js/angular-js/angular.js"></script>
+    <script src="js/angular-js/angular-route.min.js"></script>
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="js/jquery/jquery1.9.1.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="js/functionJS/index.js"></script>
+    <style>
+        .inputError{
+            color: red;
+        }
+        .wrapper{
+            width: 200px;
+            margin: 20px auto;
+        }
+        .wram{
+            position: relative;
+        }
+        .moveCheck{
+            position: absolute;
+            top:35px;
+            left: 180px;
+            color: green;
+        }
+    </style>
+</head>
+<body class="home-template" ng-app="myIndexNav">
+    <header class="main-header" style="background-image: url(img/banner.jpg)"></header>
+    <nav class="main-navigation">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header">
+                    <span class="nav-toggle-button collapsed" data-toggle="collapse" data-target="#main-menu">
+                    <span class="sr-only">Toggle navigation</span>
+                    <i class="fa fa-bars"></i>
+                    </span>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu" style="text-align: center">
+                    <ul class="menu" ng-controller="NavCtrl">
+                        <li  role="presentation" ng-repeat="nav in navLists"><a href="{{nav.n_url}}" style="font-size: 16px">{{nav.n_name}}</a></li>
+                        <!--<a href="/index/login">--><button type="button" class="btn btn-default" id="btnlogin" data-toggle="modal" data-target="#myModal">登陆</button><!--</a>-->
+                        <a href="/index/register"  target="_Blank"><button type="button" class="btn btn-default">注册</button></a>
+                    </ul>
+
+                </div>
+                <!--登陆弹出框-->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="text-align: center">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h3 class="modal-title" id="myModalLabel">登&emsp;&emsp;陆</h3>
+                            </div>
+                            <div class="modal-body" ng-controller="login">
+                                <div  class="col-lg-8 col-12 px-sm-5 model">
+                                    <div  class="col-12 px-sm-5 justify-content-center d-flex align-items-center mh-80 content py-4">
+                                        <cc-login _nghost-c4="">
+                                            <div  class="mt-5">
+                                                <cc-login-password >
+                                                    <form  class="mt-5" id="modelForm" name="signUpForm" ng-submit="LoginsubmitForm()">
+                                                        <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_name.$valid}">
+                                                            <span style="font-size: 18px;">Username</span>
+                                                            <input class="form-control" name="u_uname" id="email" type="text" placeholder="用户名"
+                                                                   ng-model="userdata.u_name" required>
+                                                            <p class="inputError" ng-if="signUpForm.u_name.$error.required && signUpForm.u_name.$touched">请输入用户名</p>
+                                                        </div>
+                                                        <div  class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_password.$valid}">
+                                                            <span style="font-size: 18px;">Password</span>
+                                                            <input class="form-control" name="u_password" id="password" type="password" placeholder="密码"
+                                                                   ng-model="userdata.u_password" required>
+                                                            <p class="inputError" ng-if="signUpForm.u_password.$error.required && signUpForm.u_password.$touched">请输入密码</p>
+                                                        </div>
+                                                        <div  class="form-group input-group-lg">
+                                                            <div class="row">
+                                                                <div class="col-lg-5 wram" ng-class="{'has-success':signUpForm.code.$valid}">
+                                                                    <input class="form-control" name="code" id="yzm" type="text" placeholder="验证码"
+                                                                           ng-model="userdata.code" required>
+                                                                    <p class="inputError" ng-if="signUpForm.code.$error.required && signUpForm.code.$touched">请输入验证码</p>
+                                                                </div>
+                                                                <div class="col-lg-6 ">
+                                                                    <img id="imageCode" src="/user/getImage"
+                                                                         title="看不清，点击换一张" style="cursor: pointer;" ng-click="refreshCheckCode()" width="100%" height="45px"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <button  ng-disabled="signUpForm.$invalid" type="submit" class="btn btn-lg btn-block w-100 btn-primary  _300 mt-4 radius d-block text-uppercase">
+                                                            <span  translate="">立即登陆</span>
+                                                        </button>
+                                                    </form>
+                                                </cc-login-password>
+                                            </div>
+                                            <div class="mt-3 pb-3 px-0 d-flex flex-wrap justify-content-between">
+                                                <div class="row mt3">
+                                                    <div class="col-lg-12">
+                                                        <a class="text-muted _300 text-sm px-0 mr-3"  translate="" href="#">Forgot password?</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </cc-login>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!--详细内容-->
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <div ng-view=""></div>
+                <!--<main class="col-md-8 main-content">
+                    <article id="112" class="post">
+
+                        <div class="post-head"></div>
+                        <div class="post-content"></div>
+                        <div class="post-permalink">
+                            <a href="/all-new-ghost-docs-integrations/" class="btn btn-default">阅读全文</a>
+                        </div>
+                        <footer class="post-footer clearfix">
+                            <div class="pull-left tag-list">
+                                <i class="fa fa-folder-open-o"></i>
+                            </div>
+                            <div class="pull-right share">
+                            </div>
+                        </footer>
+                    </article>
+                    <nav class="pagination" role="navigation">
+                        <span class="page-number">第 1 页 ⁄ 共 9 页</span>
+                        <a class="older-posts" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+                    </nav>
+                </main>
+
+                <aside class="col-md-4 sidebar">
+                    &lt;!&ndash; start widget &ndash;&gt;
+                    &lt;!&ndash; end widget &ndash;&gt;
+
+                    &lt;!&ndash; start tag cloud widget &ndash;&gt;
+                    <div class="widget">
+                        <h4 class="title">社区</h4>
+                        <div class="content community">
+                            <p>QQ群：307174632</p>
+                            <p><a href="http://wenda.ghostchina.com/" title="Ghost中文网问答社区" target="_blank" onclick="_hmt.push(['_trackEvent', 'big-button', 'click', '问答社区'])"><i class="fa fa-comments"></i> 问答社区</a></p>
+                            <p><a href="http://weibo.com/ghostchinacom" title="Ghost中文网官方微博" target="_blank" onclick="_hmt.push(['_trackEvent', 'big-button', 'click', '官方微博'])"><i class="fa fa-weibo"></i> 官方微博</a></p>
+                        </div>
+                    </div>
+                    &lt;!&ndash; end tag cloud widget &ndash;&gt;
+
+                    &lt;!&ndash; start widget &ndash;&gt;
+                    <div class="widget">
+                        <h4 class="title">下载专区</h4>
+                        <div class="content download">
+                            <a target="_blank" href="https://github.com/TryGhost/Ghost/releases" class="btn btn-default btn-block" onclick="_hmt.push(['_trackEvent', 'big-button', 'click', '下载Ghost'])">Ghost 最新版（0.7.4）</a>
+                        </div>
+                    </div>
+                    &lt;!&ndash; end widget &ndash;&gt;
+
+                    &lt;!&ndash; start tag cloud widget &ndash;&gt;
+                    <div class="widget">
+                        <h4 class="title">技术文章</h4>
+                        <div class="content tag-cloud">
+
+                        </div>
+                    </div>
+                </aside>-->
+
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="widget">
+                        <h4 class="title">友链</h4>
+                        <div class="content tag-cloud friend-links">
+                            <a href="http://www.bootcss.com" title="Bootstrap中文网" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Bootstrap中文网'])" target="_blank">Bootstrap中文网</a>
+                            <a href="http://lodashjs.com/" title="Lodash中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Lodash中文文档'])" target="_blank">Lodash中文文档</a>
+                            <a href="https://www.jquery123.com/" title="jQuery中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'jQuery中文文档'])" target="_blank">jQuery中文文档</a>
+                            <a href="https://www.webpackjs.com/" title="Webpack中文网" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Webpack中文网'])" target="_blank">Webpack中文网</a>
+                            <a href="https://www.nodeapp.cn/" title="Node.js中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'Node.js中文文档'])" target="_blank">Node.js中文文档</a>
+                            <a href="https://www.quanzhanketang.com/" title="全栈课堂" onclick="_hmt.push(['_trackEvent', 'link', 'click', '全栈课堂'])" target="_blank">全栈课堂</a>
+                            <a href="http://www.91php.com/" title="91PHP" onclick="_hmt.push(['_trackEvent', 'link', 'click', '91PHP'])" target="_blank">91PHP</a>
+                            <a href="https://www.npmjs.com.cn/" title="NPM中文文档" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'NPM中文文档'])" target="_blank">NPM中文文档</a>
+                            <a href="http://www.sasschina.com/" title="SASS中文网" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'SASS中文网'])" target="_blank">SASS中文网</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="widget">
+                        <h4 class="title">标签云</h4>
+                        <div class="content tag-cloud">
+                            <a href="/tag/about-ghost/">Ghost</a>
+                            <a href="/tag/release/">新版本发布</a>
+                            <a href="/tag/javascript/">JavaScript</a>
+                            <a href="/tag/promise/">Promise</a>
+                            <a href="/tag/zhuti/">主题</a>
+                            <a href="/tag/nodejs/">Node.js</a>
+                            <a href="/tag/mysql/">MySQL</a>
+                            <a href="/tag/nginx/">Nginx</a>
+                            <a href="/tag/aliyun-ecs/">阿里云服务器</a>
+                            <a href="/tag/ubuntu/">Ubuntu</a>
+                            <a href="/tag/ghost-in-depth/">深度玩转 Ghost</a>
+                            <a href="/tag/theme/">Theme</a>
+                            <a href="/tag/zhu-shou-han-shu/">助手函数</a>
+                            <a href="/tag/markdown/">Markdown</a>
+                            <a href="/tag/proxy/">反向代理</a>
+
+                            <a href="/tag-cloud/">...</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="widget">
+                        <h4 class="title">合作伙伴</h4>
+                        <div class="content tag-cloud friend-links">
+                            <a href="https://www.upyun.com/" title="又拍云" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'upyun'])" target="_blank">又拍云</a>
+                            <a href="http://www.aliyun.com/" title="阿里云" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'aliyun'])" target="_blank">阿里云</a>
+                            <a href="http://www.qiniu.com/" title="七牛云存储" onclick="_hmt.push(['_trackEvent', 'link', 'click', 'qiniu'])" target="_blank">七牛云存储</a>
+                        </div>
+                    </div></div>
+            </div>
+        </div>
+    </footer>
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <span>Copyright © <a href="http://www.ghostchina.com/">Ghost中文网</a></span> |
+                    <span><a href="http://www.miibeian.gov.cn/" target="_blank">京ICP备11008151号</a></span> |
+                    <span>京公网安备11010802014853</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" id="back-to-top" style="display: none;"><i class="fa fa-angle-up"></i></a>
+
+</body>
+</html>

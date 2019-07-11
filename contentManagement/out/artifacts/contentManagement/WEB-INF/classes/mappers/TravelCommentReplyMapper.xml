@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.TravelCommentReplyMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.TravelCommentReply" >
+    <id column="reply_id" property="reply_id" jdbcType="INTEGER" />
+    <result column="reply_from_uid" property="reply_from_uid" jdbcType="INTEGER" />
+    <result column="reply_to_uid" property="reply_to_uid" jdbcType="INTEGER" />
+    <result column="replyc_id" property="replyc_id" jdbcType="INTEGER" />
+    <result column="reply_praisenumber" property="reply_praisenumber" jdbcType="VARCHAR" />
+    <result column="reply_statu" property="reply_statu" jdbcType="VARCHAR" />
+    <result column="reply_add_time" property="reply_add_time" jdbcType="VARCHAR" />
+    <result column="reply_sameid_with_two_person" property="reply_sameid_with_two_person" jdbcType="VARCHAR" />
+    <result column="reply_addid_with_two_person" property="reply_addid_with_two_person" jdbcType="VARCHAR" />
+    <result column="reply_content" property="reply_content" jdbcType="LONGVARCHAR" />
+    <result column="from_truename" jdbcType="VARCHAR" property="from_truename" />
+    <result column="to_truename" jdbcType="VARCHAR" property="to_truename" />
+    <!--一对一关系   一条留言信息的用户id-->
+    <association property="userinfo" javaType="com.hafiz.www.po.Userinfo">
+      <id column="u_id" jdbcType="INTEGER" property="u_id" />
+      <result property="u_userhead" column="u_userhead"/>
+      <result property="u_truename" column="u_truename"/>
+    </association>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hafiz.www.po.TravelCommentReply" extends="BaseResultMap" >
+    <result column="reply_content" property="reply_content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    reply_id, reply_from_uid, reply_to_uid, replyc_id, reply_praisenumber, reply_statu, 
+    reply_add_time, reply_sameid_with_two_person, reply_addid_with_two_person
+  </sql>
+  <sql id="Blob_Column_List" >
+    reply_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from travel_comment_reply
+    where reply_id = #{reply_id,jdbcType=INTEGER}
+  </select>
+  <select id="getTheTravelCommentReplyByC_id" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select e.*,u1.u_truename as from_truename,u2.u_truename as to_truename from
+    (select * from travel_comment_reply where replyc_id=#{replyc_id,jdbcType=INTEGER}) e
+    LEFT JOIN (SELECT u_id,u_truename from userinfo ) u1 ON u1.u_id=e.reply_from_uid
+    LEFT JOIN (SELECT u_id,u_truename from userinfo ) u2 ON u2.u_id=e.reply_to_uid
+    ORDER BY e.reply_sameid_with_two_person asc , e.reply_add_time asc
+  </select>
+  <select id="selectMaxWithReply_sameid_with_two_person"  resultType="java.lang.Integer">
+    select IFNULL(Max(reply_sameid_with_two_person),0) from travel_comment_reply
+  </select>
+  <select id="selectMaxWithreply_addid_with_two_person"  parameterType="com.hafiz.www.po.TravelCommentReply" resultType="java.lang.Integer">
+    select Max(reply_addid_with_two_person) from travel_comment_reply
+    where (reply_from_uid = #{reply_from_uid,jdbcType=INTEGER} and reply_to_uid= #{reply_to_uid,jdbcType=INTEGER})
+    or  (reply_to_uid=#{reply_to_uid,jdbcType=INTEGER} and reply_from_uid = #{reply_from_uid,jdbcType=INTEGER})
+    AND  replyc_id=#{replyc_id,jdbcType=INTEGER}
+  </select>
+  <select id="selectReplyData" parameterType="com.hafiz.www.po.TravelCommentReply" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from travel_comment_reply
+    where (reply_from_uid = #{reply_from_uid,jdbcType=INTEGER} and reply_to_uid= #{reply_to_uid,jdbcType=INTEGER})
+    or  (reply_to_uid=#{reply_to_uid,jdbcType=INTEGER} and reply_from_uid = #{reply_from_uid,jdbcType=INTEGER})
+    AND  replyc_id=#{replyc_id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from travel_comment_reply
+    where reply_id = #{reply_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.TravelCommentReply" >
+    insert into travel_comment_reply (reply_id, reply_from_uid, reply_to_uid, 
+      replyc_id, reply_praisenumber, reply_statu, 
+      reply_add_time, reply_sameid_with_two_person, 
+      reply_addid_with_two_person, reply_content
+      )
+    values (#{reply_id,jdbcType=INTEGER}, #{reply_from_uid,jdbcType=INTEGER}, #{reply_to_uid,jdbcType=INTEGER}, 
+      #{replyc_id,jdbcType=INTEGER}, #{reply_praisenumber,jdbcType=VARCHAR}, #{reply_statu,jdbcType=VARCHAR}, 
+      #{reply_add_time,jdbcType=VARCHAR}, #{reply_sameid_with_two_person,jdbcType=VARCHAR}, 
+      #{reply_addid_with_two_person,jdbcType=VARCHAR}, #{reply_content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.TravelCommentReply" >
+    insert into travel_comment_reply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="reply_id != null" >
+        reply_id,
+      </if>
+      <if test="reply_from_uid != null" >
+        reply_from_uid,
+      </if>
+      <if test="reply_to_uid != null" >
+        reply_to_uid,
+      </if>
+      <if test="replyc_id != null" >
+        replyc_id,
+      </if>
+      <if test="reply_praisenumber != null" >
+        reply_praisenumber,
+      </if>
+      <if test="reply_statu != null" >
+        reply_statu,
+      </if>
+      <if test="reply_add_time != null" >
+        reply_add_time,
+      </if>
+      <if test="reply_sameid_with_two_person != null" >
+        reply_sameid_with_two_person,
+      </if>
+      <if test="reply_addid_with_two_person != null" >
+        reply_addid_with_two_person,
+      </if>
+      <if test="reply_content != null" >
+        reply_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="reply_id != null" >
+        #{reply_id,jdbcType=INTEGER},
+      </if>
+      <if test="reply_from_uid != null" >
+        #{reply_from_uid,jdbcType=INTEGER},
+      </if>
+      <if test="reply_to_uid != null" >
+        #{reply_to_uid,jdbcType=INTEGER},
+      </if>
+      <if test="replyc_id != null" >
+        #{replyc_id,jdbcType=INTEGER},
+      </if>
+      <if test="reply_praisenumber != null" >
+        #{reply_praisenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_statu != null" >
+        #{reply_statu,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_add_time != null" >
+        #{reply_add_time,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_sameid_with_two_person != null" >
+        #{reply_sameid_with_two_person,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_addid_with_two_person != null" >
+        #{reply_addid_with_two_person,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_content != null" >
+        #{reply_content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.TravelCommentReply" >
+    update travel_comment_reply
+    <set >
+      <if test="reply_from_uid != null" >
+        reply_from_uid = #{reply_from_uid,jdbcType=INTEGER},
+      </if>
+      <if test="reply_to_uid != null" >
+        reply_to_uid = #{reply_to_uid,jdbcType=INTEGER},
+      </if>
+      <if test="replyc_id != null" >
+        replyc_id = #{replyc_id,jdbcType=INTEGER},
+      </if>
+      <if test="reply_praisenumber != null" >
+        reply_praisenumber = #{reply_praisenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_statu != null" >
+        reply_statu = #{reply_statu,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_add_time != null" >
+        reply_add_time = #{reply_add_time,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_sameid_with_two_person != null" >
+        reply_sameid_with_two_person = #{reply_sameid_with_two_person,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_addid_with_two_person != null" >
+        reply_addid_with_two_person = #{reply_addid_with_two_person,jdbcType=VARCHAR},
+      </if>
+      <if test="reply_content != null" >
+        reply_content = #{reply_content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where reply_id = #{reply_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hafiz.www.po.TravelCommentReply" >
+    update travel_comment_reply
+    set reply_from_uid = #{reply_from_uid,jdbcType=INTEGER},
+      reply_to_uid = #{reply_to_uid,jdbcType=INTEGER},
+      replyc_id = #{replyc_id,jdbcType=INTEGER},
+      reply_praisenumber = #{reply_praisenumber,jdbcType=VARCHAR},
+      reply_statu = #{reply_statu,jdbcType=VARCHAR},
+      reply_add_time = #{reply_add_time,jdbcType=VARCHAR},
+      reply_sameid_with_two_person = #{reply_sameid_with_two_person,jdbcType=VARCHAR},
+      reply_addid_with_two_person = #{reply_addid_with_two_person,jdbcType=VARCHAR},
+      reply_content = #{reply_content,jdbcType=LONGVARCHAR}
+    where reply_id = #{reply_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.TravelCommentReply" >
+    update travel_comment_reply
+    set reply_from_uid = #{reply_from_uid,jdbcType=INTEGER},
+      reply_to_uid = #{reply_to_uid,jdbcType=INTEGER},
+      replyc_id = #{replyc_id,jdbcType=INTEGER},
+      reply_praisenumber = #{reply_praisenumber,jdbcType=VARCHAR},
+      reply_statu = #{reply_statu,jdbcType=VARCHAR},
+      reply_add_time = #{reply_add_time,jdbcType=VARCHAR},
+      reply_sameid_with_two_person = #{reply_sameid_with_two_person,jdbcType=VARCHAR},
+      reply_addid_with_two_person = #{reply_addid_with_two_person,jdbcType=VARCHAR}
+    where reply_id = #{reply_id,jdbcType=INTEGER}
+  </update>
+</mapper>

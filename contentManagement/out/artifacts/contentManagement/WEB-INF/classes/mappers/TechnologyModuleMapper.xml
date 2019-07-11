@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hafiz.www.mapper.TechnologyModuleMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.TechnologyModule" >
+    <id column="m_id" property="m_id" jdbcType="INTEGER" />
+    <result column="m_publish_personid" property="m_publish_personid" jdbcType="INTEGER" />
+    <result column="m_typeid" property="m_typeid" jdbcType="INTEGER" />
+    <result column="m_title" property="m_title" jdbcType="VARCHAR" />
+    <result column="m_datatime" property="m_datatime" jdbcType="VARCHAR" />
+    <result column="m_readnum" property="m_readnum" jdbcType="INTEGER" />
+    <result column="m_resources_mode" property="m_resources_mode" jdbcType="INTEGER" />
+    <result column="m_resources_mode_url" property="m_resources_mode_url" jdbcType="INTEGER" />
+    <result column="m_content" property="m_content" jdbcType="LONGVARCHAR" />
+    <!--一对一关系   一条留言信息的用户id-->
+    <association property="userinfo" javaType="com.hafiz.www.po.Userinfo">
+      <id column="u_id" jdbcType="INTEGER" property="u_id" />
+      <result property="u_userhead" column="u_userhead"/>
+      <result property="u_truename" column="u_truename"/>
+    </association>
+    <!--一对一关系  一条i技术对应一种类别-->
+    <association property="type_of_article" javaType="com.hafiz.www.po.TypeOfArticle">
+      <id column="a_id" property="a_id" jdbcType="INTEGER"/>
+      <result column="a_type" jdbcType="VARCHAR" property="a_type" />
+      <result column="picture_url" jdbcType="VARCHAR" property="picture_url" />
+    </association>
+    <collection property="technology_module_enclosure" ofType="com.hafiz.www.po.TechnologyModuleEnclosure">
+      <id column="e_id" property="e_id" jdbcType="INTEGER"/>
+      <result column="e_enclosure_url" jdbcType="VARCHAR" property="e_enclosure_url" />
+      <result column="e_dowloads" jdbcType="VARCHAR" property="e_dowloads" />
+      <result column="e_filename" jdbcType="VARCHAR" property="e_filename" />
+      <result column="e_filetype" jdbcType="VARCHAR" property="e_filetype" />
+      <result column="e_filesize" jdbcType="VARCHAR" property="e_filesize" />
+    </collection>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hafiz.www.po.TechnologyModule" extends="BaseResultMap" >
+    <result column="m_content" property="m_content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    m_id, m_publish_personid, m_typeid, m_title, m_datatime, m_readnum,m_resources_mode,m_resources_mode_url
+  </sql>
+  <sql id="Blob_Column_List" >
+    m_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    *
+    from technology_module m,type_of_article et,userinfo u
+    where 1=1
+    and m.m_typeid=et.a_id
+    and m.m_publish_personid=u.u_id
+    AND m.m_id = #{m_id,jdbcType=INTEGER}
+  </select>
+  <select id="getCount" parameterType="com.hafiz.www.po.PublicPagingQuery" resultType="Integer">
+    select COUNT(*)from technology_module m where 1=1
+    <if test="queryObj.m_publish_personid!=null">
+      and m.m_publish_personid=#{queryObj.m_publish_personid}
+    </if>
+    <if test="queryObj.m_typeid!=null">
+      and m.m_typeid=#{queryObj.m_typeid}
+    </if>
+    <if test="queryObj.m_id!=null">
+      and m.m_id=#{queryObj.m_id}
+    </if>
+  </select>
+  <select id="selectTechnologyModuleAllData" resultMap="ResultMapWithBLOBs" parameterType="com.hafiz.www.po.PublicPagingQuery" >
+    select
+    *
+    from technology_module m,type_of_article et,userinfo u,technology_module_enclosure t
+    where 1=1
+    and m.m_typeid=et.a_id
+    and m.m_publish_personid=u.u_id
+    and m.m_id=t.m_id
+    <if test="queryObj.m_publish_personid!=null">
+      and m.m_publish_personid=#{queryObj.m_publish_personid}
+    </if>
+    <if test="queryObj.m_typeid!=null">
+      and m.m_typeid=#{queryObj.m_typeid}
+    </if>
+    <if test="queryObj.m_id!=null">
+      and m.m_id=#{queryObj.m_id}
+    </if>
+    <if test="type == 1">
+      ORDER BY m.m_readnum DESC
+    </if>
+    <if test="type == 2">
+      ORDER BY m.m_datatime DESC
+    </if>
+    <if test="type ==3">
+      ORDER BY m.m_datatime DESC
+    </if>
+    <if test="pageNumber != null and  pageSize!= null">
+      limit #{startRow},#{pageSize}
+    </if>
+  </select>
+  <select id="selectTechnologyModuleDataTopNewPublish" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    *
+    from technology_module m,type_of_article et,userinfo u
+    where 1=1
+    and m.m_typeid=et.a_id
+    and m.m_publish_personid=u.u_id
+    and m.m_id in(
+    select t.m_id from (
+    select d.* from technology_module d order by d.m_datatime  desc LIMIT 10)
+    as t ) ORDER BY m.m_datatime desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from technology_module
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.TechnologyModule" >
+    insert into technology_module (m_id, m_publish_personid, m_typeid, 
+      m_title, m_datatime, m_readnum, 
+      m_content,m_resources_mode,m_resources_mode_url)
+    values (#{m_id,jdbcType=INTEGER}, #{m_publish_personid,jdbcType=INTEGER}, #{m_typeid,jdbcType=INTEGER}, 
+      #{m_title,jdbcType=VARCHAR}, #{m_datatime,jdbcType=VARCHAR}, #{m_readnum,jdbcType=INTEGER}, 
+      #{m_content,jdbcType=LONGVARCHAR},#{m_resources_mode,jdbcType=LONGVARCHAR},#{m_resources_mode_url,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.TechnologyModule" useGeneratedKeys="true" keyProperty="m_id">
+    insert into technology_module
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="m_id != null" >
+        m_id,
+      </if>
+      <if test="m_publish_personid != null" >
+        m_publish_personid,
+      </if>
+      <if test="m_typeid != null" >
+        m_typeid,
+      </if>
+      <if test="m_title != null" >
+        m_title,
+      </if>
+      <if test="m_datatime != null" >
+        m_datatime,
+      </if>
+      <if test="m_readnum != null" >
+        m_readnum,
+      </if>
+      <if test="m_content != null" >
+        m_content,
+      </if>
+      <if test="m_resources_mode != null" >
+        m_resources_mode,
+      </if>
+      <if test="m_resources_mode_url != null" >
+        m_resources_mode_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="m_id != null" >
+        #{m_id,jdbcType=INTEGER},
+      </if>
+      <if test="m_publish_personid != null" >
+        #{m_publish_personid,jdbcType=INTEGER},
+      </if>
+      <if test="m_typeid != null" >
+        #{m_typeid,jdbcType=INTEGER},
+      </if>
+      <if test="m_title != null" >
+        #{m_title,jdbcType=VARCHAR},
+      </if>
+      <if test="m_datatime != null" >
+        #{m_datatime,jdbcType=VARCHAR},
+      </if>
+      <if test="m_readnum != null" >
+        #{m_readnum,jdbcType=INTEGER},
+      </if>
+      <if test="m_content != null" >
+        #{m_content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="m_resources_mode != null" >
+        #{m_resources_mode,jdbcType=INTEGER},
+      </if>
+      <if test="m_resources_mode_url != null" >
+        #{m_resources_mode_url,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.TechnologyModule" >
+    update technology_module
+    <set >
+      <if test="m_publish_personid != null" >
+        m_publish_personid = #{m_publish_personid,jdbcType=INTEGER},
+      </if>
+      <if test="m_typeid != null" >
+        m_typeid = #{m_typeid,jdbcType=INTEGER},
+      </if>
+      <if test="m_title != null" >
+        m_title = #{m_title,jdbcType=VARCHAR},
+      </if>
+      <if test="m_datatime != null" >
+        m_datatime = #{m_datatime,jdbcType=VARCHAR},
+      </if>
+      <if test="m_readnum != null" >
+        m_readnum = #{m_readnum,jdbcType=INTEGER},
+      </if>
+      <if test="m_content != null" >
+        m_content = #{m_content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="m_resources_mode != null" >
+        #{m_resources_mode,jdbcType=INTEGER},
+      </if>
+      <if test="m_resources_mode_url != null" >
+        #{m_resources_mode_url,jdbcType=INTEGER},
+      </if>
+    </set>
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hafiz.www.po.TechnologyModule" >
+    update technology_module
+    set m_publish_personid = #{m_publish_personid,jdbcType=INTEGER},
+      m_typeid = #{m_typeid,jdbcType=INTEGER},
+      m_title = #{m_title,jdbcType=VARCHAR},
+      m_datatime = #{m_datatime,jdbcType=VARCHAR},
+      m_readnum = #{m_readnum,jdbcType=INTEGER},
+      m_content = #{m_content,jdbcType=LONGVARCHAR},
+      m_resources_mode = #{m_content,jdbcType=LONGVARCHAR},
+      m_resources_mode_url = #{m_resources_mode_url,jdbcType=LONGVARCHAR}
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.TechnologyModule" >
+    update technology_module
+    set m_publish_personid = #{m_publish_personid,jdbcType=INTEGER},
+      m_typeid = #{m_typeid,jdbcType=INTEGER},
+      m_title = #{m_title,jdbcType=VARCHAR},
+      m_datatime = #{m_datatime,jdbcType=VARCHAR},
+      m_readnum = #{m_readnum,jdbcType=INTEGER},
+      m_resources_mode = #{m_content,jdbcType=LONGVARCHAR},
+      m_resources_mode_url = #{m_resources_mode_url,jdbcType=LONGVARCHAR}
+    where m_id = #{m_id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="/mappers.ULogonrecordMapper" >
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.ULogonrecord" >
+    <id column="r_id" property="r_id" jdbcType="INTEGER" />
+    <result column="u_id" property="u_id" jdbcType="INTEGER" />
+    <result column="u_logintime" property="u_logintime" jdbcType="VARCHAR" />
+    <result column="u_logouttime" property="u_logouttime" jdbcType="VARCHAR" />
+    <result column="u_computer_ip" property="u_computer_ip" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    r_id, u_id, u_logintime, u_logouttime, u_computer_ip
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from u_logonrecord
+    where r_id = #{r_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from u_logonrecord
+    where r_id = #{r_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.ULogonrecord" >
+    insert into u_logonrecord (r_id, u_id, u_logintime, 
+      u_logouttime, u_computer_ip)
+    values (#{r_id,jdbcType=INTEGER}, #{u_id,jdbcType=INTEGER}, #{u_logintime,jdbcType=VARCHAR}, 
+      #{u_logouttime,jdbcType=VARCHAR}, #{u_computer_ip,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.ULogonrecord" >
+    insert into u_logonrecord
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="r_id != null" >
+        r_id,
+      </if>
+      <if test="u_id != null" >
+        u_id,
+      </if>
+      <if test="u_logintime != null" >
+        u_logintime,
+      </if>
+      <if test="u_logouttime != null" >
+        u_logouttime,
+      </if>
+      <if test="u_computer_ip != null" >
+        u_computer_ip,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="r_id != null" >
+        #{r_id,jdbcType=INTEGER},
+      </if>
+      <if test="u_id != null" >
+        #{u_id,jdbcType=INTEGER},
+      </if>
+      <if test="u_logintime != null" >
+        #{u_logintime,jdbcType=VARCHAR},
+      </if>
+      <if test="u_logouttime != null" >
+        #{u_logouttime,jdbcType=VARCHAR},
+      </if>
+      <if test="u_computer_ip != null" >
+        #{u_computer_ip,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.ULogonrecord" >
+    update u_logonrecord
+    <set >
+      <if test="u_id != null" >
+        u_id = #{u_id,jdbcType=INTEGER},
+      </if>
+      <if test="u_logintime != null" >
+        u_logintime = #{u_logintime,jdbcType=VARCHAR},
+      </if>
+      <if test="u_logouttime != null" >
+        u_logouttime = #{u_logouttime,jdbcType=VARCHAR},
+      </if>
+      <if test="u_computer_ip != null" >
+        u_computer_ip = #{u_computer_ip,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where r_id = #{r_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.ULogonrecord" >
+    update u_logonrecord
+    set u_id = #{u_id,jdbcType=INTEGER},
+      u_logintime = #{u_logintime,jdbcType=VARCHAR},
+      u_logouttime = #{u_logouttime,jdbcType=VARCHAR},
+      u_computer_ip = #{u_computer_ip,jdbcType=VARCHAR}
+    where r_id = #{r_id,jdbcType=INTEGER}
+  </update>
+</mapper>

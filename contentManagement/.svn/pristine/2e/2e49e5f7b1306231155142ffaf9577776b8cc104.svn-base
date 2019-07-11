@@ -1,0 +1,274 @@
+package com.hafiz.www.controller;
+
+import com.hafiz.www.po.Userinfo;
+import com.hafiz.www.service.UserService;
+import com.hafiz.www.shiro.SessionUtils;
+import com.hafiz.www.until.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+/**
+ * Desc:用户信息控制器
+ * Created by hafiz.zhang on 2016/8/27.
+ */
+@Controller
+@RequestMapping("/user")
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CheckCodeService checkCodeService;
+
+    /**
+     * 判断当前用户是否登陆，如登陆则向前端返回用户名和头像
+     * @return 用户实体
+     */
+    @RequestMapping(value = "/judgeIsLogin",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult judgeIsLogin(){
+        JsonResult jsonResult = new JsonResult();
+        if(SessionUtils.isLoggedIn()){//已经登陆
+           Userinfo userinfo= userService.selectByPrimaryKey(SessionUtils.getLoginUserId());
+
+            jsonResult= jsonResult.newInstanceSucess_d2(userinfo);
+        }else{
+            jsonResult = jsonResult.newInstanceFail("/file/moren.png");
+        }
+        return jsonResult;
+    }
+    /**
+     * 注册
+     * @param userinfo 上传用户表单
+     * @return
+     */
+    @RequestMapping(value = "/register",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult Register(Userinfo userinfo,HttpServletRequest request){
+        JsonResult jsonResult = new JsonResult();
+        //获取session
+        HttpSession   session   =   request.getSession();
+
+        Object code =session.getAttribute("verifyCode");
+        if(userService.selectByEmail(userinfo.getU_email()).size()>0){
+            return JsonResult.newInstanceFail("该邮箱已被注册，请重新输入！");
+        }else {
+            if (userinfo.getCode().equals(code)) {
+                int id = userService.insertSelective(userinfo);
+                if (id == 0) {
+                    jsonResult.setSuccess(false);
+                    jsonResult.setMsg("注册失败");
+                } else if (id == -1) {
+                    jsonResult.setSuccess(false);
+                    jsonResult.setMsg("注册失败！用户名已被使用，请重新输入");
+                } else if (id == -2) {
+                    jsonResult.setSuccess(false);
+                    jsonResult.setMsg("该邮箱已被注册，请重新输入！");
+                }else if(id == -2){
+                    jsonResult.setSuccess(false);
+                    jsonResult.setMsg("系统出错，请稍后再试！");
+                } else {
+                    jsonResult.setSuccess(true);
+                    jsonResult.setMsg("注册成功");
+                }
+            } else {
+                jsonResult.setSuccess(false);
+                jsonResult.setMsg("验证码输入错误");
+            }
+        }
+
+        return jsonResult;
+    }
+
+    /**
+     * 发送邮箱
+     * @param //u_email  接收邮件邮箱
+     * @return  json
+     */
+    @RequestMapping(value = "/sendemail",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult sendEmail(String u_email,HttpServletRequest request){
+        //判断邮箱是否已经存在
+        if(userService.selectByEmail(u_email).size()>0){
+            return JsonResult.newInstanceFail("该邮箱已被注册，请重新输入！");
+        }else{
+            try {
+                //生成验证码
+                String verifyCode = VerifyCodeUtil.generateVerifyCode(6);
+                //将验证码存储到session中
+                HttpSession session = request.getSession(true);
+                session.setAttribute("verifyCode", verifyCode);
+                //邮件主题
+                String emailTitle = "【内容管理平台】邮箱验证";
+                //邮件内容
+                String emailContent = "您正在【内容管理平台】进行邮箱验证，您的验证码为：" + verifyCode + "，请于10分钟内完成验证！";
+                //发送邮件
+                SendmailUtil.sendEmail(u_email, emailTitle, emailContent);
+
+                return JsonResult.newInstanceSucess_d1("邮件发送成功！");
+            }catch (Exception e) {
+                e.printStackTrace();
+                return JsonResult.newInstanceFail("邮件发送失败！");
+            }
+        }
+    }
+    /**
+     * 用户登陆
+     * @param userinfo 上传用户输入信息
+     * @return 登陆状态
+     */
+    @RequestMapping(value = "/land",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult Logins(Userinfo userinfo,HttpServletRequest request){
+        JsonResult jsonResult = new JsonResult();
+        if (userinfo.getU_name() == null) {
+            jsonResult= jsonResult.newInstanceFail("用户名不能为空");
+        }else if (userinfo.getU_password() == null) {
+            jsonResult= jsonResult.newInstanceFail("密码不能为空");
+        }else {
+            jsonResult = SessionUtils.login(userinfo.getU_name(), userinfo.getU_password(),userinfo.getCode(),request);
+        }
+        return jsonResult;
+    }
+
+    /**
+     * 退出登陆
+     * @return 退出信息
+     */
+    @RequestMapping(value = "/logout",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult SignOut(){
+        JsonResult jsonResult = new JsonResult();
+        boolean islogin =SessionUtils.isLoggedIn();
+        if(islogin){
+            try{
+                SessionUtils.logout();
+                jsonResult= jsonResult.newInstanceSucess_d1("退出成功！");
+            }catch (Exception e){
+                e.printStackTrace();
+                jsonResult= jsonResult.newInstanceSucess_d1("操作失败，请稍后再试！");
+            }
+        }else{
+            jsonResult= jsonResult.newInstanceSucess_d1("您还未登陆系统，请勿重复操作！");
+        }
+
+
+        return jsonResult;
+    }
+
+    /**
+     * 生成校验码图片
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping("/getImage")
+    public void getImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 禁止缓存
+        response.setHeader("Pragma", "No-cache");
+        response.setHeader("Cache-Control", "No-cache");
+        response.setDateHeader("Expires", 0);
+        // 指定生成的响应是图片
+        response.setContentType("image/jpeg");
+
+        //String code = checkCodeService.generateRandomNumberCode();
+        String code = checkCodeService.generateRandomMixedCode();
+        // 将生成的验证码保存到Session中
+        HttpSession session = request.getSession(true);
+        session.setAttribute("checkCode", code);
+        ImageIO.write(checkCodeService.getImage(code),"JPEG",response.getOutputStream());
+    }
+
+    /**
+     * 修改个人信息
+     * @param userinfo 上传用户表单
+     * @return
+     */
+    @RequestMapping(value = "/updateUserinfo",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult UpdataUserinfo(Userinfo userinfo){
+        JsonResult jsonResult = new JsonResult();
+        if(!SessionUtils.isLoggedIn()){
+            return JsonResult.newInstanceFail("请登录系统！");
+        }else {
+            try {
+                if(userinfo.getOld_password()!=null && !"".equals(userinfo.getOld_password())){//用于修改密码
+                    if(!userService.judgeThePassword(userinfo.getOld_password())){
+                        return jsonResult.newInstanceFail("旧密码输入出错，请重新输入！");
+                    }else{
+                        //对密码进行加密保存
+                        Userinfo userinfos = new Userinfo();
+                        userinfos = userService.selectByPrimaryKey(SessionUtils.getLoginUserId());
+                        //对密码进行重新封装到实体中进行加密处理
+                        userinfos.setU_password(userinfo.getU_password());
+                        String new_password=new MD5().SysMd5(userinfos) ;
+                        //将得到的新加密密码进行保存
+                        userinfo.setU_password(new_password);
+                    }
+                }
+                if(userinfo.getU_email()!=null && !"".equals(userinfo.getU_email())){
+                    if(userService.selectByEmail(userinfo.getU_email()).size()>0){
+                        String email = userService.selectByEmail(userinfo.getU_email()).get(0).getU_email();
+                        String email_myself = userService.selectByPrimaryKey(SessionUtils.getLoginUserId()).getU_email();
+                        if(email.equals(userinfo.getU_email()) && !email_myself.equals(userinfo.getU_email())){
+                            return JsonResult.newInstanceFail("该邮箱已被注册，请重新输入！");
+                        }
+                    }
+                }
+                userinfo.setU_id(SessionUtils.getLoginUserId());
+                int id = userService.updateByPrimaryKeySelective(userinfo);
+                if(id==1){
+                    jsonResult = jsonResult.newInstanceSucess_d1("修改成功！");
+                }else{
+                    jsonResult = jsonResult.newInstanceFail("修改失败，请稍后再试");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                jsonResult = jsonResult.newInstanceFail("系统出错，请稍后再试");
+            }
+        }
+        return jsonResult;
+    }
+
+
+    /**
+     * 个人头像图片上传
+     * @param u_userhead  上传图片
+     * @return  返回图片保存路径
+     */
+    @RequestMapping(value="/updateTheUser_head",method = RequestMethod.POST)
+    @ResponseBody
+    public ModelAndView updateTheUser_head(MultipartFile u_userhead){
+        ModelAndView modelAndView = new ModelAndView();
+        SaveThePicture saveThePicture =  new SaveThePicture();
+        String head_url = saveThePicture.savePicture(u_userhead);
+        JSONObject myJsonObject = new JSONObject(head_url);
+        JSONArray jsonArray = myJsonObject.getJSONArray("data");
+        for(int i=0;i<jsonArray.length();i++){
+            head_url=jsonArray.getString(0);
+        }
+        Userinfo userinfo = new Userinfo();
+        userinfo.setU_id(SessionUtils.getLoginUserId());
+        userinfo.setU_userhead(head_url);
+        int id = userService.updateByPrimaryKeySelective(userinfo);
+        if(id>0){
+            modelAndView.setViewName("index/personalCenter");
+        }else{
+            modelAndView.setViewName("error/error1");
+        }
+        return modelAndView;
+    }
+}

@@ -1,0 +1,54 @@
+package com.hafiz.www.controller;
+
+import com.hafiz.www.po.NavigationBarRecord;
+import com.hafiz.www.service.IndexService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+
+/**
+ * 主页
+ */
+@Controller
+@RequestMapping("/index")
+public class IndexController {
+    @Autowired
+    private IndexService indexService;
+
+    /**
+     * 获取主页导航
+     * @return
+     */
+    @RequestMapping(value = "/nav",method=RequestMethod.GET)
+    @ResponseBody
+    public List<NavigationBarRecord> getIndexNav(){
+        return indexService.getIndexNavList();
+    }
+
+    /**
+     * 跳转登陆页面
+     * @param modelAndView 返回modelAndView对象
+     * @return
+     */
+    @RequestMapping(value = "/login",method = RequestMethod.GET)
+    public  ModelAndView  IndexToLogin(ModelAndView modelAndView){
+        modelAndView.setViewName("login");
+        return modelAndView;
+     }
+
+    /**
+     * 跳转注册页面
+     * @param modelAndView 返回modelAndView对象
+     * @return
+     */
+    @RequestMapping(value = "/register",method = RequestMethod.GET)
+    public  ModelAndView  IndexToRegister(ModelAndView modelAndView){
+        modelAndView.setViewName("register");
+        return modelAndView;
+    }
+}

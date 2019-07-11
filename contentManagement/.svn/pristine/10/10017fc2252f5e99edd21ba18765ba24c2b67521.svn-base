@@ -1,0 +1,25 @@
+package com.hafiz.www.service;
+
+import com.hafiz.www.po.TechnologyModule;
+import com.hafiz.www.po.TypeOfArticle;
+
+import java.util.List;
+
+/**
+ * 技术文章相关接口
+ */
+public interface ArticleService {
+
+    /**
+     * 获取技术文章分类列表
+     * @return LIST列表
+     */
+    List<TypeOfArticle> getTheTypeOfArtileList();
+
+    /**
+     * 保存新增文章
+     * @param technologyModule  上传数据
+     * @return 返回保存的当前id
+     */
+    int insertSelective(TechnologyModule technologyModule);
+}

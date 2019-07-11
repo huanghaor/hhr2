@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hafiz.www.mapper.UserinfoMapper">
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.Userinfo">
+    <id column="u_id" jdbcType="INTEGER" property="u_id" />
+    <result column="u_name" jdbcType="VARCHAR" property="u_name" />
+    <result column="u_password" jdbcType="VARCHAR" property="u_password" />
+    <result column="u_phone" jdbcType="VARCHAR" property="u_phone" />
+    <result column="u_create_time" jdbcType="VARCHAR" property="u_create_time" />
+    <result column="u_truename" jdbcType="VARCHAR" property="u_truename" />
+    <result column="u_status" jdbcType="VARCHAR" property="u_status" />
+    <result column="u_remarks" jdbcType="VARCHAR" property="u_remarks" />
+    <result column="u_userhead" jdbcType="VARCHAR" property="u_userhead" />
+    <result column="u_email" jdbcType="VARCHAR" property="u_email" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    u_id, u_name, u_password, u_phone, u_create_time, u_truename, u_status, u_remarks, 
+    u_userhead, u_email
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from userinfo
+    where u_id = #{u_id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUname" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from userinfo
+    where u_name = #{u_name,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByEmail" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from userinfo
+    where u_email = #{u_email,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from userinfo
+    where u_id = #{u_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.Userinfo">
+    insert into userinfo (u_id, u_name, u_password, 
+      u_phone, u_create_time, u_truename, 
+      u_status, u_remarks, u_userhead, 
+      u_email)
+    values (#{u_id,jdbcType=INTEGER}, #{u_name,jdbcType=VARCHAR}, #{u_password,jdbcType=VARCHAR}, 
+      #{u_phone,jdbcType=VARCHAR}, #{u_create_time,jdbcType=VARCHAR}, #{u_truename,jdbcType=VARCHAR}, 
+      #{u_status,jdbcType=VARCHAR}, #{u_remarks,jdbcType=VARCHAR}, #{u_userhead,jdbcType=VARCHAR}, 
+      #{u_email,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.Userinfo">
+    insert into userinfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="u_id != null">
+        u_id,
+      </if>
+      <if test="u_name != null">
+        u_name,
+      </if>
+      <if test="u_password != null">
+        u_password,
+      </if>
+      <if test="u_phone != null">
+        u_phone,
+      </if>
+      <if test="u_create_time != null">
+        u_create_time,
+      </if>
+      <if test="u_truename != null">
+        u_truename,
+      </if>
+      <if test="u_status != null">
+        u_status,
+      </if>
+      <if test="u_remarks != null">
+        u_remarks,
+      </if>
+      <if test="u_userhead != null">
+        u_userhead,
+      </if>
+      <if test="u_email != null">
+        u_email,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="u_id != null">
+        #{u_id,jdbcType=INTEGER},
+      </if>
+      <if test="u_name != null">
+        #{u_name,jdbcType=VARCHAR},
+      </if>
+      <if test="u_password != null">
+        #{u_password,jdbcType=VARCHAR},
+      </if>
+      <if test="u_phone != null">
+        #{u_phone,jdbcType=VARCHAR},
+      </if>
+      <if test="u_create_time != null">
+        #{u_create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="u_truename != null">
+        #{u_truename,jdbcType=VARCHAR},
+      </if>
+      <if test="u_status != null">
+        #{u_status,jdbcType=VARCHAR},
+      </if>
+      <if test="u_remarks != null">
+        #{u_remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="u_userhead != null">
+        #{u_userhead,jdbcType=VARCHAR},
+      </if>
+      <if test="u_email != null">
+        #{u_email,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.Userinfo">
+    update userinfo
+    <set>
+      <if test="u_name != null">
+        u_name = #{u_name,jdbcType=VARCHAR},
+      </if>
+      <if test="u_password != null">
+        u_password = #{u_password,jdbcType=VARCHAR},
+      </if>
+      <if test="u_phone != null">
+        u_phone = #{u_phone,jdbcType=VARCHAR},
+      </if>
+      <if test="u_create_time != null">
+        u_create_time = #{u_create_time,jdbcType=VARCHAR},
+      </if>
+      <if test="u_truename != null">
+        u_truename = #{u_truename,jdbcType=VARCHAR},
+      </if>
+      <if test="u_status != null">
+        u_status = #{u_status,jdbcType=VARCHAR},
+      </if>
+      <if test="u_remarks != null">
+        u_remarks = #{u_remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="u_userhead != null">
+        u_userhead = #{u_userhead,jdbcType=VARCHAR},
+      </if>
+      <if test="u_email != null">
+        u_email = #{u_email,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where u_id = #{u_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.Userinfo">
+    update userinfo
+    set u_name = #{u_name,jdbcType=VARCHAR},
+      u_password = #{u_password,jdbcType=VARCHAR},
+      u_phone = #{u_phone,jdbcType=VARCHAR},
+      u_create_time = #{u_create_time,jdbcType=VARCHAR},
+      u_truename = #{u_truename,jdbcType=VARCHAR},
+      u_status = #{u_status,jdbcType=VARCHAR},
+      u_remarks = #{u_remarks,jdbcType=VARCHAR},
+      u_userhead = #{u_userhead,jdbcType=VARCHAR},
+      u_email = #{u_email,jdbcType=VARCHAR}
+    where u_id = #{u_id,jdbcType=INTEGER}
+  </update>
+</mapper>

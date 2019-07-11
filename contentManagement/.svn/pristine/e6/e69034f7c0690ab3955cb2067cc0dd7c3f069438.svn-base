@@ -1,0 +1,11 @@
+package com.hafiz.www.until;
+
+import org.springframework.stereotype.Service;
+
+/**
+ * 保存用户上传图片
+ */
+@Service
+public class SaveThePicture {
+
+}

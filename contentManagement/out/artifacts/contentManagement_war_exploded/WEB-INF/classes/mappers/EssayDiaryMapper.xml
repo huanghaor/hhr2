@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hafiz.www.mapper.EssayDiaryMapper">
+  <resultMap id="BaseResultMap" type="com.hafiz.www.po.EssayDiary">
+    <id column="e_id" jdbcType="INTEGER" property="e_id" />
+    <result column="e_uid" jdbcType="INTEGER" property="e_uid" />
+    <result column="e_readnumber" jdbcType="INTEGER" property="e_readnumber" />
+    <result column="e_status" jdbcType="VARCHAR" property="e_status" />
+    <result column="e_addtime" jdbcType="VARCHAR" property="e_addtime" />
+    <result column="e_type" jdbcType="VARCHAR" property="e_type" />
+    <result column="e_title" jdbcType="VARCHAR" property="e_title" />
+    <result column="e_url" jdbcType="VARCHAR" property="e_url" />
+    <result column="e_resources_mode" jdbcType="VARCHAR" property="e_resources_mode" />
+    <result column="e_resources_mode_url" jdbcType="VARCHAR" property="e_resources_mode_url" />
+    <result column="e_fine_paste" jdbcType="VARCHAR" property="e_fine_paste" />
+    <result column="e_content" property="e_content" jdbcType="LONGVARCHAR" />
+    <!--一对一关系   一条留言信息的用户id-->
+    <association property="userinfo" javaType="com.hafiz.www.po.Userinfo">
+      <id column="u_id" jdbcType="INTEGER" property="u_id" />
+      <result property="u_userhead" column="u_userhead"/>
+      <result property="u_truename" column="u_truename"/>
+    </association>
+    <association property="essay_diary_type" javaType="com.hafiz.www.po.EssayDiaryType">
+      <id column="et_id" jdbcType="INTEGER" property="et_id" />
+      <result property="e_type_name" column="e_type_name"/>
+    </association>
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.hafiz.www.po.EssayDiary">
+    <result column="e_content" jdbcType="LONGVARCHAR" property="e_content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    e_id, e_uid, e_readnumber, e_status, e_addtime, e_type, e_title, e_url,e_resources_mode,e_resources_mode_url,e_fine_paste
+  </sql>
+  <sql id="Blob_Column_List">
+    e_content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from essay_diary
+    where e_id = #{e_id,jdbcType=INTEGER}
+  </select>
+  <select id="selectEssayDiaryDataTopThree" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    *
+    from essay_diary m,userinfo u,essay_diary_type et
+    where 1=1
+    and m.e_uid=u.u_id
+    and m.e_type =et.et_id
+    and m.e_fine_paste='1'
+    and m.e_readnumber in(
+    select t.e_readnumber from (
+    select d.* from essay_diary d order by d.e_readnumber  desc LIMIT 5)
+    as t )
+  </select>
+  <select id="getCount" parameterType="com.hafiz.www.po.PublicPagingQuery" resultType="Integer">
+    select COUNT(*)from essay_diary where 1=1 and e_status=#{queryObj.e_status}
+    <if test="queryObj.e_uid!=null">
+      and e_uid=#{queryObj.e_uid}
+    </if>
+    <if test="queryObj.e_id!=null">
+      and e_id=#{queryObj.e_id}
+    </if>
+  </select>
+  <select id="selectEssayDiaryData" parameterType="com.hafiz.www.po.PublicPagingQuery" resultMap="BaseResultMap">
+    select
+    *
+    from essay_diary m,userinfo u,essay_diary_type et
+    where 1=1
+    <if test="queryObj.e_id!=null">
+      and m.e_id=#{queryObj.e_id}
+    </if>
+    <if test="queryObj.e_uid!=null">
+      and m.e_uid=#{queryObj.e_uid}
+    </if>
+    and m.e_uid=u.u_id
+    and m.e_type =et.et_id
+    <if test="type == 1">
+      ORDER BY m.e_readnumber DESC
+    </if>
+    <if test="type == 2">
+      ORDER BY m.e_addtime DESC
+    </if>
+    <if test="type == 3">
+      ORDER BY m.e_addtime DESC
+    </if>
+    <if test="pageNumber != null and  pageSize!= null">
+      limit #{startRow},#{pageSize}
+    </if>
+
+  </select>
+  <select id="selectEssayDiaryDataByManager" parameterType="com.hafiz.www.po.EssayDiary" resultMap="BaseResultMap">
+    select
+    *
+    from essay_diary m,userinfo u,essay_diary_type et
+    where 1=1
+    <if test="e_title!=null">
+      and m.e_title like concat("%",#{e_title},"%")
+    </if>
+    <if test="e_resources_mode!=null">
+      and m.e_resources_mode=#{e_resources_mode}
+    </if>
+    <if test="e_fine_paste!=null">
+      and m.e_fine_paste=#{e_fine_paste}
+    </if>
+    <if test="e_type!=null">
+      and m.e_type=#{e_type}
+    </if>
+    and m.e_uid=u.u_id
+    and m.e_type =et.et_id
+    ORDER BY m.e_addtime DESC
+
+
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from essay_diary
+    where e_id = #{e_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteEssayDiaryDataByManager" parameterType="com.hafiz.www.po.EssayDiary">
+    delete from essay_diary
+    where e_id in  (#{e_id,jdbcType=INTEGER})
+  </delete>
+  <insert id="insert" parameterType="com.hafiz.www.po.EssayDiary">
+    insert into essay_diary (e_id, e_uid, e_readnumber, 
+      e_status, e_addtime, e_type, 
+      e_title, e_url, e_content,e_resources_mode,e_resources_mode_url,e_fine_paste
+      )
+    values (#{e_id,jdbcType=INTEGER}, #{e_uid,jdbcType=INTEGER}, #{e_readnumber,jdbcType=INTEGER}, 
+      #{e_status,jdbcType=VARCHAR}, #{e_addtime,jdbcType=VARCHAR}, #{e_type,jdbcType=VARCHAR}, 
+      #{e_title,jdbcType=VARCHAR}, #{e_url,jdbcType=VARCHAR}, #{e_content,jdbcType=LONGVARCHAR},
+      #{e_resources_mode,jdbcType=VARCHAR},#{e_resources_mode_url,jdbcType=VARCHAR},
+      #{e_fine_paste,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hafiz.www.po.EssayDiary">
+    insert into essay_diary
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="e_id != null">
+        e_id,
+      </if>
+      <if test="e_uid != null">
+        e_uid,
+      </if>
+      <if test="e_readnumber != null">
+        e_readnumber,
+      </if>
+      <if test="e_status != null">
+        e_status,
+      </if>
+      <if test="e_addtime != null">
+        e_addtime,
+      </if>
+      <if test="e_type != null">
+        e_type,
+      </if>
+      <if test="e_title != null">
+        e_title,
+      </if>
+      <if test="e_url != null">
+        e_url,
+      </if>
+      <if test="e_content != null">
+        e_content,
+      </if>
+      <if test="e_resources_mode != null">
+        e_resources_mode,
+      </if>
+      <if test="e_resources_mode_url != null">
+        e_resources_mode_url,
+      </if>
+      <if test="e_fine_paste != null">
+        e_fine_paste,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="e_id != null">
+        #{e_id,jdbcType=INTEGER},
+      </if>
+      <if test="e_uid != null">
+        #{e_uid,jdbcType=INTEGER},
+      </if>
+      <if test="e_readnumber != null">
+        #{e_readnumber,jdbcType=INTEGER},
+      </if>
+      <if test="e_status != null">
+        #{e_status,jdbcType=VARCHAR},
+      </if>
+      <if test="e_addtime != null">
+        #{e_addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="e_type != null">
+        #{e_type,jdbcType=VARCHAR},
+      </if>
+      <if test="e_title != null">
+        #{e_title,jdbcType=VARCHAR},
+      </if>
+      <if test="e_url != null">
+        #{e_url,jdbcType=VARCHAR},
+      </if>
+      <if test="e_content != null">
+        #{e_content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="e_resources_mode != null">
+        #{e_resources_mode,jdbcType=VARCHAR},
+      </if>
+      <if test="e_resources_mode_url != null">
+        #{e_resources_mode_url,jdbcType=VARCHAR},
+      </if>
+      <if test="e_fine_paste != null">
+        #{e_fine_paste,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hafiz.www.po.EssayDiary">
+    update essay_diary
+    <set>
+      <if test="e_uid != null">
+        e_uid = #{e_uid,jdbcType=INTEGER},
+      </if>
+      <if test="e_readnumber != null">
+        e_readnumber = #{e_readnumber,jdbcType=INTEGER},
+      </if>
+      <if test="e_status != null">
+        e_status = #{e_status,jdbcType=VARCHAR},
+      </if>
+      <if test="e_addtime != null">
+        e_addtime = #{e_addtime,jdbcType=VARCHAR},
+      </if>
+      <if test="e_type != null">
+        e_type = #{e_type,jdbcType=VARCHAR},
+      </if>
+      <if test="e_title != null">
+        e_title = #{e_title,jdbcType=VARCHAR},
+      </if>
+      <if test="e_url != null">
+        e_url = #{e_url,jdbcType=VARCHAR},
+      </if>
+      <if test="e_content != null">
+        e_content = #{e_content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="e_resources_mode != null">
+        e_resources_mode=#{e_resources_mode,jdbcType=VARCHAR},
+      </if>
+      <if test="e_resources_mode_url != null">
+        e_resources_mode_url=#{e_resources_mode_url,jdbcType=VARCHAR},
+      </if>
+      <if test="e_fine_paste != null">
+        e_fine_paste=#{e_fine_paste,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where e_id = #{e_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hafiz.www.po.EssayDiary">
+    update essay_diary
+    set e_uid = #{e_uid,jdbcType=INTEGER},
+      e_readnumber = #{e_readnumber,jdbcType=INTEGER},
+      e_status = #{e_status,jdbcType=VARCHAR},
+      e_addtime = #{e_addtime,jdbcType=VARCHAR},
+      e_type = #{e_type,jdbcType=VARCHAR},
+      e_title = #{e_title,jdbcType=VARCHAR},
+      e_url = #{e_url,jdbcType=VARCHAR},
+      e_content = #{e_content,jdbcType=LONGVARCHAR},
+      e_resources_mode=#{e_resources_mode,jdbcType=VARCHAR},
+      e_resources_mode_url=#{e_resources_mode_url,jdbcType=VARCHAR},
+      e_fine_paste=#{e_fine_paste,jdbcType=VARCHAR}
+    where e_id = #{e_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hafiz.www.po.EssayDiary">
+    update essay_diary
+    set e_uid = #{e_uid,jdbcType=INTEGER},
+      e_readnumber = #{e_readnumber,jdbcType=INTEGER},
+      e_status = #{e_status,jdbcType=VARCHAR},
+      e_addtime = #{e_addtime,jdbcType=VARCHAR},
+      e_type = #{e_type,jdbcType=VARCHAR},
+      e_title = #{e_title,jdbcType=VARCHAR},
+      e_url = #{e_url,jdbcType=VARCHAR},
+      e_content = #{e_content,jdbcType=LONGVARCHAR},
+      e_resources_mode=#{e_resources_mode,jdbcType=LONGVARCHAR},
+      e_resources_mode_url=#{e_resources_mode_url,jdbcType=VARCHAR},
+      e_fine_paste=#{e_fine_paste,jdbcType=VARCHAR}
+    where e_id = #{e_id,jdbcType=INTEGER}
+  </update>
+</mapper>

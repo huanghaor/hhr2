@@ -1,0 +1,51 @@
+var app = angular.module('myIndexNav', []);
+//获取导航栏列表
+app.controller('NavCtrl', function($scope,$http) {
+    $http({
+        url: '/index/nav',
+        method: 'get'
+    }).then(function ( info ){
+        $scope.navLists = info.data;
+    });
+
+});
+
+//登陆
+
+app.controller('login', function($scope,$http) {
+    //更换验证码
+    $scope.refreshCheckCode=function () {
+        var append = '?clearCache=' + new Date().getTime() + 'a'
+            + Math.random();
+        $('#imageCode').attr('src', $('#imageCode').attr('src') + append);
+    }
+    $scope.userdata={};
+    $scope.LoginsubmitForm = function () {
+        console.log($scope.userdata)
+        if ($scope.signUpForm.$invalid){
+            alert("请检查您的信息！");
+        }else{
+            $http({
+                method:'post',
+                url:'/user/land',
+                data:$.param($scope.userdata),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(
+                function success(resq){
+                    //响应成功的处理方法体
+
+                    if(resq.data.success){
+                        $('#myModal').modal('hide');
+                        $('#modelForm');
+                    }else{
+                        alert(resq.data.msg);
+                    }
+                },function error(resq){
+                    //响应错误的处理方法体
+                    console.log(resq);
+                });
+        }
+    }
+});

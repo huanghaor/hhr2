@@ -1,0 +1,631 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!--页面描述，用于搜索引擎收录-->
+    <meta name="description" content="个人博客---学习与分享两不误"/>
+    <!--页面关键词，用于被搜索引擎收录-->
+    <meta name="keywords" content="博客，旅游，分享"/>
+    <title>博客-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/main.css" />
+    <link href="../../../css/angular.css" rel="stylesheet">
+    <link href="../../../css/bootstrap-table.min.css" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="../../../js/jquery/jquery1.9.1.min.js"></script>
+    <script src="../../../js/angular-js/angular.js"></script>
+    <script src="../../../js/angular-js/angular-route.min.js"></script>
+    <script src="../../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../../js/bootstrap/bootstrap-table.min.js"></script>
+    <script src="../../../js/bootstrap/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../../js/angular-js/tm.pagination.min.js"></script>
+    <script src="../../../js/functionJS/backManagement/backManagement.js"></script>
+    <script src="../../../js/bootstrap/skel.min.js"></script>
+    <script src="../../../js/bootstrap/util.js"></script>
+    <script src="../../../js/bootstrap/main.js"></script>
+    <style>
+        .modal{
+            line-height: 2em;
+            text-align: left;
+            margin-left: 5%;
+        }
+        .close{
+            height: 1em;
+        }
+        #one{
+            font-size: 15px;
+        }
+        button{
+            background-color: #e67e22 !important;
+            /* width: auto !important;*/
+        }
+        .pagination {
+            right: 0px;
+            position: absolute;
+            top: -30px;
+        }
+        nav li {
+            cursor: pointer;
+        }
+        .form-control{
+            border: 1px solid#cecdcd !important;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body ng-app="BackManagement" style="background-color: #333">
+
+<!-- Header -->
+<header id="header">
+    <div class="inner"  ng-controller="NavCtrl">
+        <div class="col-lg-12">
+            <a href="index.html" class="logo">introspect</a>
+            <nav id="nav" ng-repeat="nav in navLists" >
+                <a class="active" href="{{nav.n_url}}" >{{nav.n_name}}</a>
+            </nav>
+            <span class="dropdown"  ng-init="judgeIsLogin()">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"style="margin-left: 15%;">
+                    <img ng-src="{{u_userhead}}" alt="..." class="img-circle" style="width: 40px;height: 40px;border-radius:55%;">
+                    <span>{{u_truename}}</span>
+                </a>
+                <div class="dropdown-menu pull-center" style="margin-left: 65%;line-height: 3em;background: rgb(30, 30, 30);width: 120px;overflow: hidden;text-align: center;font-size: 15px;">
+                    <a><span  data-toggle="modal" data-target="#myModal" style="cursor: pointer">登&emsp;&emsp;陆</span></a>
+                    <a href="/index/register"  target="_Blank" style="cursor: pointer">注&emsp;&emsp;册</a>
+                    <a href="/index/personalCenter"><span style="cursor: pointer">个人中心</span></a>
+                    <a><span style="cursor: pointer;margin-right: 25px" ng-click="Sign_out()">退出登陆</span></a>
+                </div>
+             </span>
+        </div>
+        <!--登陆弹出框-->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="text-align: center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: #000!important;">&times;</button>
+                        <h3 class="modal-title" id="myModalLabel">登&emsp;&emsp;陆</h3>
+                    </div>
+                    <div class="modal-body" ng-controller="login" style="height: 480px;">
+                        <div  class="col-lg-12 col-12 px-sm-5 model">
+                            <div  class="col-12 px-sm-5 justify-content-center d-flex align-items-center mh-80 content py-4">
+                                <cc-login _nghost-c4="">
+                                    <div  class="mt-5">
+                                        <cc-login-password >
+                                            <form  class="mt-5" id="modelForm" name="signUpForm" ng-submit="LoginsubmitForm()">
+                                                <div class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_name.$valid}">
+                                                    <span style="font-size: 18px;">Username</span>
+                                                    <input class="form-control" name="u_uname" id="email" type="text" placeholder="账号"
+                                                           ng-model="userdata.u_name" required>
+                                                    <p class="inputError" ng-if="signUpForm.u_name.$error.required && signUpForm.u_name.$touched">请输入账号</p>
+                                                </div>
+                                                <div  class="form-group input-group-lg wram" ng-class="{'has-success':signUpForm.u_password.$valid}">
+                                                    <span style="font-size: 18px;">Password</span>
+                                                    <input class="form-control" name="u_password" id="password" type="password" placeholder="密码"
+                                                           ng-model="userdata.u_password" required>
+                                                    <p class="inputError" ng-if="signUpForm.u_password.$error.required && signUpForm.u_password.$touched">请输入密码</p>
+                                                </div>
+                                                <div  class="form-group input-group-lg">
+                                                    <div class="row">
+                                                        <div class="col-lg-5 wram" ng-class="{'has-success':signUpForm.code.$valid}">
+                                                            <input class="form-control" name="code" id="yzm" type="text" placeholder="验证码"
+                                                                   ng-model="userdata.code" style=" height: 46px;" required>
+                                                            <p class="inputError" ng-if="signUpForm.code.$error.required && signUpForm.code.$touched">请输入验证码</p>
+                                                        </div>
+                                                        <div class="col-lg-6 "><!--src="/user/getImage"-->
+                                                            <img id="imageCode" ng-src="/user/getImage"
+                                                                 title="看不清，点击换一张" style="cursor: pointer;" ng-click="refreshCheckCode()" width="100%" height="45px"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button  ng-disabled="signUpForm.$invalid" type="submit" class="btn btn-lg btn-block w-100 btn-primary  _300 mt-4 radius d-block text-uppercase">
+                                                    <span  translate="">立即登陆</span>
+                                                </button>
+                                            </form>
+                                        </cc-login-password>
+                                    </div>
+                                    <div class="mt-3 pb-3 px-0 d-flex flex-wrap justify-content-between">
+                                        <div class="row mt3">
+                                            <div class="col-lg-12">
+                                                <a class="text-muted _300 text-sm px-0 mr-3"  translate="" href="#" style="color: #9d9d9d">Forgot password?</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </cc-login>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</header>
+<a href="#menu" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+<!-- One -->
+<section id="one">
+    <div class="row title" style="min-height: 700px;"  ng-controller="baseInfo">
+        <section class="content-wrap" style="margin-left: 15px;" >
+            <div class="container">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-user" ng-click="getTheUserManage()">&emsp;用户管理</span></a></li>
+                            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-camera" ng-click="getTheDonkeyTrip()">&emsp;游记数据管理</span></a></li>
+                            <li role="presentation"><a href="#article" aria-controls="article" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-wrench" ng-click="getTheArticle()">&emsp;技术文章数据管理</span></a></li>
+                            <li role="presentation"><a href="#essaydiary" aria-controls="essaydiary" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-envelope" ng-click="getTheEssaydiary()">&emsp;日记管理</span></a></li>
+                            <li role="presentation"><a href="#industry" aria-controls="industry" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-facetime-video" ng-click="getTheIndustry()">&emsp;资讯管理</span></a></li>
+                            <!--<li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-lock">&emsp;权限管理</span></a></li>-->
+                            <li role="presentation"><a href="#system" aria-controls="system" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-cog" ng-click="getTheSystem()">&emsp;系统设置</span></a></li>
+                        </ul>
+                    </div>
+                    <div class="panel-body" style="min-height: 550px;" >
+                        <div class="tab-content">
+                            <!--用户管理-->
+                            <div  role="tabpanel" class="tab-pane active" id="home" style="width: 100%;" ng-init="getContentBody()">
+                                <form class="form-inline" name="baseForm" ng-submit="submitUserManagement()">
+                                    <select class="form-control" name="m_typeid" ng-model="m_typeid" ng-change="getTheSelect()">
+                                        <option value="">请选择</option>
+                                        <option value="1">邮箱</option>
+                                        <option value="2">用户名</option>
+                                        <option value="3">联系电话</option>
+                                    </select>
+                                    <input type="text" ng-model="searchText" class="form-control" placeholder="搜索" style="width: 30%;border: 1px solid #ccc !important;border-radius: 5px;">
+                                    <button type="submit" class="btn btn-default" style="height: 40px;width: 5%;">搜索</button>
+                                </form>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>序号</th><th>用户名</th><th>邮箱</th> <th>联系电话</th>
+                                            <th>昵称</th><th>账号状态</th><th>头像url</th><th>用户权限</th><th>注册时间</th><th>操作</th>
+                                        </tr>
+                                        <tr ng-repeat="x in items">
+                                            <td>{{ $index + 1 }}</td>
+                                            <td ng-bind="x.u_name"></td>
+                                            <td ng-bind="x.u_email"></td>
+                                            <td ng-bind="x.u_phone"></td>
+                                            <td ng-bind="x.u_truename"></td>
+                                            <td  ng-if="x.u_status==1"><span class="label label-info" title="禁用"style="cursor: pointer" ng-click="Prohibit(x.u_id)">启用</span></td>
+                                            <td  ng-if="x.u_status==2"><span class="label label-default" title="启用" style="cursor: pointer" ng-click="Enable(x.u_id)">禁用</span></td>
+                                            <td ng-bind="x.u_userhead"></td>
+                                            <!--glyphicon glyphicon-record-->
+                                            <td ng-if="x.u_jurisdiction=='admin'"><span class="glyphicon glyphicon-record" style="color: red" title="设置普通用户" ng-click="setJuris(x.u_id,2)"></span>&nbsp;<span  ng-bind="x.u_jurisdiction"></span></td>
+                                            <td ng-if="x.u_jurisdiction=='customer'"><span class="glyphicon glyphicon-record" style="color:#188a37 " title="设置管理员" ng-click="setJuris(x.u_id,1)"></span>&nbsp;<span  ng-bind="x.u_jurisdiction"></span></td>
+                                            <td ng-bind="x.u_create_time"></td>
+                                            <td style="font-size: 17px;">
+                                                <!--<span class="glyphicon glyphicon-edit" style="color: #1f85f3;cursor: pointer" title="修改"></span>&nbsp;-->
+                                                <span class="glyphicon glyphicon-remove-sign" style="color: red;cursor: pointer" title="删除" ng-click="deleteUser(x.u_id)"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <nav style="position: relative;width:100%;height: 50px;">
+                                    <ul class="pagination">
+                                        <li>
+                                            <a ng-click="Previous()">
+                                                <span>上一页</span>
+                                            </a>
+                                        </li>
+                                        <li ng-repeat="page in pageList" ng-class="{active: isActivePage(page)}" >
+                                            <a ng-click="selectPage(page)" >{{ page }}</a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="Next()">
+                                                <span>下一页</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!--游记数据管理-->
+                            <div role="tabpanel" class="tab-pane" id="profile" style="width: 100%;">
+                                <form class="form-inline" name="baseForm" ng-submit="submitDonkeyTripManagement()">
+                                    <select class="form-control" name="t_typeid" ng-model="t_typeid" ng-change="getTheDonkeyTripSelect()">
+                                        <option value="">请选择</option>
+                                        <option value="1">标题</option>
+                                        <option value="2">地点</option>
+                                        <option value="3">精贴</option>
+                                    </select>
+                                    <input type="text" ng-model="searchDonkeyText" class="form-control" placeholder="搜索" style="width: 30%;border: 1px solid #ccc !important;border-radius: 5px;">
+                                    <button type="submit" class="btn btn-default" style="height: 40px;width: 5%;">搜索</button>
+                                </form>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>序号</th><th>上传用户</th><th>标题</th> <th>地点</th>
+                                            <th>点赞次数</th><th>出行时间</th>
+                                            <th>返程时间</th><th>出行人数</th><th>人均消费</th><th>创建时间</th>
+                                            <th>是否精帖</th><th>操作</th>
+                                        </tr>
+                                        <tr ng-repeat="x in items_Trip">
+                                            <td>{{ $index + 1 }}</td>
+                                            <td ng-bind="x.userinfo.u_truename"></td>
+                                            <td ng-bind="x.t_title"></td>
+                                            <td ng-bind="x.t_place"></td>
+                                            <td ng-bind="x.t_praisenumber"></td>
+                                            <td  ng-bind="x.t_begin_time"></td>
+                                            <td  ng-bind="x.t_end_time"></td>
+                                            <td ng-bind="x.t_travelperson"></td>
+                                            <td ng-bind="x.t_per_capita_consumption"></td>
+                                            <td ng-bind="x.t_create_time"></td>
+                                            <td ng-if="x.t_fine_paste==1"><span class="label label-primary">精帖</span></td>
+                                             <td ng-if="x.t_fine_paste==0"><span class="label label-default">非精帖</span></td>
+                                            <td style="font-size: 17px;">
+                                                <span class="glyphicon glyphicon-heart" style="color: #fb7a09;cursor: pointer" title="设置精帖" ng-click="SettingpUpAccurate(x.t_id)"></span>&nbsp;
+                                                <span class="glyphicon glyphicon-heart-empty" style="color: #fb7a09;cursor: pointer" title="取消精帖" ng-click="cancelUpAccurate(x.t_id)"></span>&nbsp;
+                                                <a href="/donkeytrip/travledetail_jump?t_id={{x.t_id}}">
+                                                    <span class="glyphicon glyphicon-eye-open" style="color: #1f85f3;cursor: pointer" title="详情"></span></a>&nbsp;
+                                                <span class="glyphicon glyphicon-remove-sign" style="color: red;cursor: pointer" title="删除" ng-click="deleteDonkeyTrip(x.t_id)"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <nav style="position: relative;width:100%;height: 50px;">
+                                    <ul class="pagination">
+                                        <li>
+                                            <a ng-click="Previous()">
+                                                <span>上一页</span>
+                                            </a>
+                                        </li>
+                                        <li ng-repeat="page in pageList" ng-class="{active: isActivePage(page)}" >
+                                            <a ng-click="selectPage(page)" >{{ page }}</a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="Next()">
+                                                <span>下一页</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!--技术文章-->
+                            <div role="tabpanel" class="tab-pane" id="article" style="width: 100%;">
+                                <form class="form-inline" name="baseForm" ng-submit="submitArticleManagement()">
+                                    <select class="form-control" name="a_typeid" ng-model="a_typeid" ng-change="getTheArticleSelect()">
+                                        <option value="">请选择</option>
+                                        <option value="1">文章类型</option>
+                                        <option value="2">文章标题</option>
+                                        <option value="3">原创</option>
+                                        <option value="4">转载</option>
+                                        <option value="5">推荐</option>
+                                    </select>
+                                    <select ng-show="isChooseType"class="form-control" name="m_typeid" ng-model="m_typeid" ng-change="getChange()">
+                                        <option value="{{list.a_id}}" ng-repeat=" list in ListArticleData">{{list.a_type}}</option>
+                                    </select>
+                                    <input type="text" ng-show="isSearch" ng-model="searchArticleText" class="form-control" placeholder="搜索" style="width: 30%;border: 1px solid #ccc !important;border-radius: 5px;">
+                                    <button type="submit" class="btn btn-default" style="height: 40px;width: 5%;">搜索</button>
+                                </form>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" style="font-size: 13px;">
+                                        <tr>
+                                            <th>序号</th><th>发布人</th><th style="width: 250px;">标题</th> <th>文章类型</th>
+                                            <th style="width:90px;">发布时间</th><th>浏览次数</th>
+                                            <th>获取方式</th><th style="width: 550px;">资源转载路径</th><th>是否推荐</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        <tr ng-repeat="x in items_Article">
+                                            <td>{{ $index + 1 }}</td>
+                                            <td ng-bind="x.userinfo.u_truename"></td>
+                                            <td ng-bind="x.m_title"></td>
+                                            <td ng-bind="x.type_of_article.a_type"></td>
+                                            <td ng-bind="x.m_datatime|limitTo:10"></td>
+                                            <td  ng-bind="x.m_readnum"></td>
+                                            <td  ng-if="x.m_resources_mode==1">原创</td>
+                                            <td  ng-if="x.m_resources_mode==2">转载</td>
+                                            <td ng-bind="x.m_resources_mode_url"></td>
+                                            <td ng-if="x.m_fine_paste==1"><span class="label label-primary">推荐</span></td>
+                                            <td ng-if="x.m_fine_paste==2"><span class="label label-default">不推荐</span></td>
+                                            <td style="font-size: 17px;">
+                                                <span class="glyphicon glyphicon-heart" style="color: #fb7a09;cursor: pointer" title="设置推荐" ng-click="SettingUpRecommend(x.m_id)"></span>&nbsp;
+                                                <span class="glyphicon glyphicon-heart-empty" style="color: #fb7a09;cursor: pointer" title="取消推荐" ng-click="cancelUpRecommend(x.m_id)"></span>&nbsp;
+                                                <a href="/article/jumpToTheArticleDetailContent?m_id={{x.m_id}}">
+                                                    <span class="glyphicon glyphicon-eye-open" style="color: #1f85f3;cursor: pointer" title="详情"></span></a>&nbsp;
+                                                <span class="glyphicon glyphicon-remove-sign" style="color: red;cursor: pointer" title="删除" ng-click="deleteArticle(x.m_id)"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <nav style="position: relative;width:100%;height: 50px;">
+                                    <ul class="pagination">
+                                        <li>
+                                            <a ng-click="PreviousFirst()">
+                                                <span>首页</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="Previous()">
+                                                <span>上一页</span>
+                                            </a>
+                                        </li>
+                                        <li ng-repeat="page in pageList" ng-class="{active: isActivePage(page)}" >
+                                            <a ng-click="selectPage(page)" >{{ page }}</a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="Next()">
+                                                <span>下一页</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="PreviousLast()">
+                                                <span>最后一页</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!--日记管理-->
+                            <div role="tabpanel" class="tab-pane" id="essaydiary" style="width: 100%;">
+                                <form class="form-inline" name="baseForm" ng-submit="submitessaydiaryManagement()">
+                                    <select class="form-control" name="e_typeid" ng-model="e_typeid" ng-change="getTheessaydiarySelect()">
+                                        <option value="">请选择</option>
+                                        <option value="1">日记类型</option>
+                                        <option value="2">日记标题</option>
+                                        <option value="3">原创</option>
+                                        <option value="4">转载</option>
+                                        <option value="5">推荐</option>
+                                    </select>
+                                    <select ng-show="isessaydiaryType"class="form-control" name="et_id" ng-model="et_id" ng-change="getEssaydiaryChange()">
+                                        <option value="{{list.et_id}}" ng-repeat=" list in ListessaydiaryData">{{list.e_type_name}}</option>
+                                    </select>
+                                    <input type="text" ng-show="isessaydiarySearch" ng-model="searchessaydiaryText" class="form-control" placeholder="搜索" style="width: 30%;border: 1px solid #ccc !important;border-radius: 5px;">
+                                    <button type="submit" class="btn btn-default" style="height: 40px;width: 5%;">搜索</button>
+                                </form>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" style="font-size: 13px;">
+                                        <tr>
+                                            <th>序号</th><th>发布人</th><th style="width: 250px;">标题</th> <th>日记类别</th>
+                                            <th style="width:90px;">发布时间</th><th>阅读量</th>
+                                            <th>获取方式</th><th style="width: 550px;">资源转载路径</th><th>是否推荐</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        <tr ng-repeat="x in items_essaydiary">
+                                            <td>{{ $index + 1 }}</td>
+                                            <td ng-bind="x.userinfo.u_truename"></td>
+                                            <td ng-bind="x.e_title"></td>
+                                            <td ng-bind="x.essay_diary_type.e_type_name"></td>
+                                            <td ng-bind="x.e_addtime|limitTo:10"></td>
+                                            <td  ng-bind="x.e_readnumber"></td>
+                                            <td  ng-if="x.e_resources_mode==1">原创</td>
+                                            <td  ng-if="x.e_resources_mode==2">转载</td>
+                                            <td ng-bind="x.e_resources_mode_url"></td>
+                                            <td ng-if="x.e_fine_paste==1"><span class="label label-primary">推荐</span></td>
+                                            <td ng-if="x.e_fine_paste==0"><span class="label label-default">不推荐</span></td>
+                                            <td style="font-size: 17px;">
+                                                <span class="glyphicon glyphicon-heart" style="color: #fb7a09;cursor: pointer" title="设置推荐" ng-click="SettingUpEssaydiaryRecommend(x.e_id)"></span>&nbsp;
+                                                <span class="glyphicon glyphicon-heart-empty" style="color: #fb7a09;cursor: pointer" title="取消推荐" ng-click="cancelUpEssaydiaryRecommend(x.e_id)"></span>&nbsp;
+                                                <a href="/essaydiary/essaydiarydetail?e_id={{x.e_id}}">
+                                                    <span class="glyphicon glyphicon-eye-open" style="color: #1f85f3;cursor: pointer" title="详情"></span></a>&nbsp;
+                                                <span class="glyphicon glyphicon-remove-sign" style="color: red;cursor: pointer" title="删除" ng-click="deleteEssaydiary(x.e_id)"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <nav style="position: relative;width:100%;height: 50px;">
+                                    <ul class="pagination">
+                                        <li>
+                                            <a ng-click="PreviousFirst()">
+                                                <span>首页</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="Previous()">
+                                                <span>上一页</span>
+                                            </a>
+                                        </li>
+                                        <li ng-repeat="page in pageList" ng-class="{active: isActivePage(page)}" >
+                                            <a ng-click="selectPage(page)" >{{ page }}</a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="Next()">
+                                                <span>下一页</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="PreviousLast()">
+                                                <span>最后一页</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!--行业资讯-->
+                            <div role="tabpanel" class="tab-pane" id="industry" style="width: 100%;">
+                                <form class="form-inline" name="baseForm" ng-submit="submitIndustryManagement()">
+                                    <select class="form-control" name="i_typeid" ng-model="i_typeid" ng-change="getTheIndustrySelect()">
+                                        <option value="">请选择</option>
+                                        <option value="1">资讯标题</option>
+                                        <option value="2">原创</option>
+                                        <option value="3">转载</option>
+                                        <option value="4">推荐</option>
+                                    </select>
+                                    <input type="text" ng-show="isIndustrySearch" ng-model="searchIndustryText" class="form-control" placeholder="搜索" style="width: 30%;border: 1px solid #ccc !important;border-radius: 5px;">
+                                    <button type="submit" class="btn btn-default" style="height: 40px;width: 5%;">搜索</button>
+                                </form>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" style="font-size: 13px;">
+                                        <tr>
+                                            <th>序号</th><th>发布人</th><th style="width: 250px;">标题</th> <th>资讯类别</th>
+                                            <th style="width:90px;">发布时间</th><th>阅读量</th>
+                                            <th>获取方式</th><th>关键词</th><th style="width: 550px;">资源转载路径</th><th>是否推荐</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        <tr ng-repeat="x in items_Industry">
+                                            <td>{{ $index + 1 }}</td>
+                                            <td ng-bind="x.userinfo.u_truename"></td>
+                                            <td ng-bind="x.i_title"></td>
+                                            <td ng-bind="x.i_type"></td>
+                                            <td ng-bind="x.i_addtime|limitTo:10"></td>
+                                            <td  ng-bind="x.i_readnumber"></td>
+                                            <td  ng-if="x.i_resources_mode==1">原创</td>
+                                            <td  ng-if="x.i_resources_mode==2">转载</td>
+                                            <td  ng-bind="x.i_key_words"></td>
+
+                                            <td ng-bind="x.e_resources_mode_url"></td>
+                                            <td ng-if="x.i_fine_paste==1"><span class="label label-primary">推荐</span></td>
+                                            <td ng-if="x.i_fine_paste==0"><span class="label label-default">不推荐</span></td>
+                                            <td style="font-size: 17px;">
+                                                <span class="glyphicon glyphicon-heart" style="color: #fb7a09;cursor: pointer" title="设置推荐" ng-click="SettingUpIndustryRecommend(x.i_id)"></span>&nbsp;
+                                                <span class="glyphicon glyphicon-heart-empty" style="color: #fb7a09;cursor: pointer" title="取消推荐" ng-click="cancelUpIndustryRecommend(x.i_id)"></span>&nbsp;
+                                                <a href="/essaydiary/essaydiarydetail?e_id={{x.e_id}}">
+                                                    <span class="glyphicon glyphicon-eye-open" style="color: #1f85f3;cursor: pointer" title="详情"></span></a>&nbsp;
+                                                <span class="glyphicon glyphicon-remove-sign" style="color: red;cursor: pointer" title="删除" ng-click="deleteIndustry(x.i_id)"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="row paginations">
+                                    <!--分页插件使用angularjs-->
+                                    <tm-pagination conf="paginationConf"></tm-pagination>
+                                </div>
+                            </div>
+                            <!--系统管理-->
+                            <div role="tabpanel" class="tab-pane" id="system" style="width: 100%;">
+                                <p><button class="btn btn-default" type="submit" style="height: 40px;width: 100px;"  data-toggle="modal" data-target="#SystemNav">添&emsp;加</button></p>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>序号</th><th>菜单名称</th><th>菜单级次</th> <th>父菜单级次</th>
+                                            <th>菜单类别</th><th>权限</th><th>菜单路径</th><th>添加时间</th><th>导航栏状态</th><th>操作</th>
+                                        </tr>
+                                        <tr ng-repeat="x in items_nav">
+                                            <td>{{ $index + 1 }}</td>
+                                            <td ng-bind="x.n_name"></td>
+                                            <td ng-bind="x.n_menu_gradation"></td>
+                                            <td ng-bind="x.n_parent_menu"></td>
+                                            <td ng-bind="x.n_menu_type"></td>
+                                            <td ng-if="x.n_jurisdiction=='admin'"><span class="glyphicon glyphicon-record" style="color: red"></span>&nbsp;<span  ng-bind="x.n_jurisdiction"></span></td>
+                                            <td ng-if="x.n_jurisdiction=='customer'"><span class="glyphicon glyphicon-record" style="color:#188a37 "></span>&nbsp;<span  ng-bind="x.n_jurisdiction"></span></td>
+                                            <td  ng-bind="x.n_url"></td>
+                                            <td ng-bind="x.n_time"></td>
+                                            <td  ng-if="x.n_status==1"><span class="label label-info" title="禁用"style="cursor: pointer" ng-click="SystemProhibit(x.n_id)">启用</span></td>
+                                            <td  ng-if="x.n_status==0"><span class="label label-default" title="启用" style="cursor: pointer" ng-click="SystemEnable(x.n_id)">禁用</span></td>
+                                            <td style="font-size: 17px;">
+                                                <span class="glyphicon glyphicon-edit" style="color: #1f85f3;cursor: pointer" title="修改" ng-click="editNav(x.u_id)"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <nav style="position: relative;width:100%;height: 50px;">
+                                    <ul class="pagination">
+                                        <li>
+                                            <a ng-click="Previous()">
+                                                <span>上一页</span>
+                                            </a>
+                                        </li>
+                                        <li ng-repeat="page in pageList" ng-class="{active: isActivePage(page)}" >
+                                            <a ng-click="selectPage(page)" >{{ page }}</a>
+                                        </li>
+                                        <li>
+                                            <a ng-click="Next()">
+                                                <span>下一页</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <!--新增导航模块弹出框-->
+                                <div class="modal fade" id="SystemNav" tabindex="2" role="dialog" aria-labelledby="myModalLabelNav" aria-hidden="true" style="margin-top: 4em;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="text-align: center">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: #000!important;">&times;</button>
+                                                <h3 class="modal-title" id="myModalLabelNav">新增</h3>
+                                            </div>
+                                            <div class="modal-body" >
+                                                <form class="form-horizontal" method="post" action="/index/insertNavigationByManager">
+                                                    <div class="form-group">
+                                                        <label for="n_name" class="col-sm-2 control-label">菜单名称</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" name="n_name" class="form-control" id="n_name" placeholder="菜单名称" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="n_jurisdiction" class="col-sm-2 control-label">菜单权限</label>
+                                                        <div class="col-sm-10">
+                                                            <select class="form-control" name="n_jurisdiction" id="n_jurisdiction" ng-model="n_jurisdiction" required>
+                                                                <option>---请选择---</option>
+                                                                <option value="admin">admin</option>
+                                                                <option value="customer">customer</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="n_menu_gradation" class="col-sm-2 control-label">菜单级次</label>
+                                                        <div class="col-sm-10">
+                                                            <!--<input type="text" class="form-control" id="n_menu_gradation" placeholder="菜单级次">-->
+                                                            <select class="form-control" name="n_menu_gradation" id="n_menu_gradation" ng-model="n_menu_gradation" required>
+                                                                <option>---请选择---</option>
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="4">4</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="n_parent_menu" class="col-sm-2 control-label">父菜单级次</label>
+                                                        <div class="col-sm-10">
+                                                            <!--<input type="text" class="form-control" id="n_parent_menu" placeholder="父菜单级次">-->
+                                                            <select class="form-control" name="n_parent_menu" id="n_parent_menu" ng-model="n_parent_menu" required>
+                                                                <option>---请选择---</option>
+                                                                <option value="0001">0001</option>
+                                                                <option value="0002">0002</option>
+                                                                <option value="0003">0003</option>
+                                                                <option value="0004">0004</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="n_menu_type" class="col-sm-2 control-label">菜单类别</label>
+                                                        <div class="col-sm-10">
+                                                            <!--<input type="text"  class="form-control" id="n_menu_type" placeholder="菜单类别">-->
+                                                            <select class="form-control" name="n_menu_type" id="n_menu_type" ng-model="n_menu_type" required>
+                                                                <option>---请选择---</option>
+                                                                <option value="nav">nav</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="n_url" class="col-sm-2 control-label">菜单路径</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" name="n_url" class="form-control" id="n_url" placeholder="例如：/index/XXXX" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="col-sm-offset-9 col-sm-10">
+                                                            <button type="submit" class="btn btn-default" style="width:100px;height:40px;">提交</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+<!-- Footer -->
+<section id="footer" style="text-align: center">
+    <small>
+        @hhr-个人博客
+    </small>
+</section>
+<script type="text/javascript">
+    function fileSelect() {
+        document.getElementById("fileToUpload").click();
+    }
+
+    function fileSelected(imgFile) {
+        $("#img_upload").attr("src",window.URL.createObjectURL(imgFile.files[0]));
+
+    }
+</script>
+
+</body>
+</html>
